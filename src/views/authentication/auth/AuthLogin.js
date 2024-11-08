@@ -31,7 +31,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => (
           htmlFor="username"
           mb="5px"
         >
-          UserName
+          User
         </Typography>
         <CustomTextField id="username" variant="outlined" fullWidth />
       </Box>

@@ -25,7 +25,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => (
         <Stack>
             <Box>
                 <Typography variant="subtitle1"
-                    fontWeight={600} component="label" htmlFor='username' mb="5px">Username</Typography>
+                    fontWeight={600} component="label" htmlFor='username' mb="5px">User</Typography>
                 <CustomTextField id="username" variant="outlined" fullWidth />
             </Box>
             <Box mt="25px">

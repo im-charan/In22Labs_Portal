@@ -1,66 +1,59 @@
-import React from 'react';
-import {
-    Typography, Box,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Chip
-} from '@mui/material';
-import DashboardCard from '../../../components/shared/DashboardCard';
-import { useNavigate } from 'react-router';
+import { useNavigate } from "react-router"
+import DashboardCard from "../../../components/shared/DashboardCard";
+import { Box } from "@mui/system";
+import { Chip, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+
+
 
 const products = [
-    {
-        id: "1",
-        name: "Sunil Joshi",
-        post: "Web Designer",
-        pname: "Elite Admin",
-        priority: "Low",
-        pbg: "primary.main",
-        budget: "3.9",
-    },
-    {
-        id: "2",
-        name: "Andrew McDownland",
-        post: "Project Manager",
-        pname: "Real Homes WP Theme",
-        priority: "Medium",
-        pbg: "secondary.main",
-        budget: "24.5",
-    },
-    {
-        id: "3",
-        name: "Christopher Jamil",
-        post: "Project Manager",
-        pname: "MedicalPro WP Theme",
-        priority: "High",
-        pbg: "error.main",
-        budget: "12.8",
-    },
-    {
-        id: "4",
-        name: "Nirav Joshi",
-        post: "Frontend Engineer",
-        pname: "Hosting Press HTML",
-        priority: "Critical",
-        pbg: "success.main",
-        budget: "2.4",
-    },
+  {
+      id: "1",
+      name: "ABC Organization",
+      post: "Web Designer",
+      pname: "Elite Admin",
+      priority: "Low",
+      pbg: "primary.main",
+      budget: "3.9",
+  },
+  {
+      id: "2",
+      name: "BCD organization",
+      post: "Project Manager",
+      pname: "Real Homes WP Theme",
+      priority: "Medium",
+      pbg: "secondary.main",
+      budget: "24.5",
+  },
+  {
+      id: "3",
+      name: "CDE Organization",
+      post: "Project Manager",
+      pname: "MedicalPro WP Theme",
+      priority: "High",
+      pbg: "error.main",
+      budget: "12.8",
+  },
+  {
+      id: "4",
+      name: "DEF Organization",
+      post: "Frontend Engineer",
+      pname: "Hosting Press HTML",
+      priority: "Critical",
+      pbg: "success.main",
+      budget: "2.4",
+  },
 ];
 
-
-const ProductPerformance = () => {
+const UserTable = () => {
+  
   const navigate = useNavigate();
 
-  function navigateToMission() {
-    navigate(`/`);
+  const navigatetodashboard = () => {
+    navigate(`/admin/dashboards/`);
   }
 
-    return (
-
-        <DashboardCard title="Product Performance">
+  return (
+    <DashboardCard title="Product Performance">
             <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
                 <Table
                     aria-label="simple table"
@@ -100,7 +93,7 @@ const ProductPerformance = () => {
                     </TableHead>
                     <TableBody>
                         {products.map((product) => (
-                            <TableRow key={product.name} onClick={navigateToMission}>
+                            <TableRow key={product.name} onClick={navigatetodashboard}>
                                 <TableCell>
                                     <Typography
                                         sx={{
@@ -158,7 +151,8 @@ const ProductPerformance = () => {
                 </Table>
             </Box>
         </DashboardCard>
-    );
-};
+  )
 
-export default ProductPerformance;
+}
+
+export default UserTable;

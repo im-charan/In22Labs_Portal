@@ -33,13 +33,13 @@ const AuthLogin = ({ title, subtitle, subtext }) => (
                     fontWeight={600} component="label" htmlFor='password' mb="5px" >Password</Typography>
                 <CustomTextField id="password" type="password" variant="outlined" fullWidth />
             </Box>
-            <Stack justifyContent="space-between" direction="row" alignItems="center" my={2}>
-                <FormGroup>
+            <Stack justifyContent="center" direction="row" alignItems="center" my={2}>
+                {/* <FormGroup>
                     <FormControlLabel
                         control={<Checkbox defaultChecked />}
                         label="Remeber this Device"
                     />
-                </FormGroup>
+                </FormGroup> */}
                 <Typography
                     component={Link}
                     to="/forgotpassword"
@@ -47,6 +47,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => (
                     sx={{
                         textDecoration: 'none',
                         color: 'primary.main',
+                        
                     }}
                 >
                     Forgot Password ?
@@ -63,7 +64,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => (
                 to="/"
                 type="submit"
             >
-                Sign In
+                Login 
             </Button>
         </Box>
         {subtitle}

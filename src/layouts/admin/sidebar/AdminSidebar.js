@@ -1,9 +1,9 @@
 import { useMediaQuery, Box, Drawer } from '@mui/material';
-import SidebarItems from './SidebarItems';
+import SidebarItems from './AdminSidebarItems';
 import { Sidebar, Logo } from 'react-mui-sidebar';
 import logo from '../../../assets/images/logos/dark1-logo.svg'
 
-const MSidebar = (props) => {
+const AdminSidebar = (props) => {
 
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   const sidebarWidth = '200px';
@@ -114,4 +114,4 @@ const MSidebar = (props) => {
     </Drawer>
   );
 };
-export default MSidebar;
+export default AdminSidebar;

@@ -2,6 +2,9 @@ import React, { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import Loadable from '../layouts/full/shared/loadable/Loadable';
 import { element } from 'prop-types';
+import ListUsers from '../views/admin/ListUsers';
+import ListDashboards from '../views/admin/ListDashboards';
+import AdminLayout from '../layouts/admin/AdminLayout';
 
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -16,7 +19,6 @@ const Shadow = Loadable(lazy(() => import('../views/utilities/Shadow')))
 const Error = Loadable(lazy(() => import('../views/authentication/Error')));
 const Register = Loadable(lazy(() => import('../views/authentication/Register')));
 const Login = Loadable(lazy(() => import('../views/authentication/Login')));
-const ForgotPassword = Loadable(lazy(() => import('../views/authentication/auth/ForgotPassworc')));
 
 const Router = [
   {
@@ -40,7 +42,15 @@ const Router = [
       { path: '/auth/register', element: <Register /> },
       { path: '/auth/login', element: <Login /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
-      { path: '/auth/login/forgotpassword', element: <ForgotPassword /> },
+    ],
+  },
+  {
+    path: '/admin',
+    element: <AdminLayout />,
+    children: [
+      { path: '/admin/', element: <Navigate to="/admin/users" /> },
+      { path: '/admin/users', exact: true, element: <ListUsers/> },
+      { path: '/admin/dashboards', exact: true, element: <ListDashboards />},
     ],
   },
 ];

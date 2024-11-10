@@ -44,12 +44,12 @@ const Menuitems = [
     icon: IconLogin,
     href: '/auth/login',
   },
-  {
-    id: uniqueId(),
-    title: 'Register',
-    icon: IconUserPlus,
-    href: '/auth/register',
-  },
+  // {
+  //   id: uniqueId(),
+  //   title: 'Register',
+  //   icon: IconUserPlus,
+  //   href: '/auth/register',
+  // },
   {
     id: uniqueId(),
     title: 'Contact Us',

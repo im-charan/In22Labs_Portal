@@ -5,42 +5,48 @@ import { Chip, Table, TableBody, TableCell, TableHead, TableRow, Typography } fr
 
 
 
-const products = [
+const clients = [
   {
       id: "1",
       name: "ABC Organization",
-      post: "Web Designer",
-      pname: "Elite Admin",
-      priority: "Low",
-      pbg: "primary.main",
-      budget: "3.9",
+      start: "10/11/2020",
+      end: "7/7/2025",
+      count: "3",
   },
   {
       id: "2",
       name: "BCD organization",
-      post: "Project Manager",
-      pname: "Real Homes WP Theme",
-      priority: "Medium",
-      pbg: "secondary.main",
-      budget: "24.5",
+      start: "11/11/2020",
+      end: "8/7/2025",
+      count: "1",
   },
   {
       id: "3",
       name: "CDE Organization",
-      post: "Project Manager",
-      pname: "MedicalPro WP Theme",
-      priority: "High",
-      pbg: "error.main",
-      budget: "12.8",
+      start: "12/11/2020",
+      end: "9/7/2025",
+      count: "1",
   },
   {
       id: "4",
       name: "DEF Organization",
-      post: "Frontend Engineer",
-      pname: "Hosting Press HTML",
-      priority: "Critical",
-      pbg: "success.main",
-      budget: "2.4",
+      start: "13/11/2020",
+      end: "10/7/2025",
+      count: "2",
+  },
+  {
+    id: "5",
+    name: "EFG Organization",
+    start: "14/11/2020",
+    end: "11/7/2025",
+    count: "4",
+  },
+  {
+    id: "6",
+    name: "FGH Organization",
+    start: "15/11/2020",
+    end: "12/7/2025",
+    count: "7",
   },
 ];
 
@@ -48,12 +54,12 @@ const UserTable = () => {
   
   const navigate = useNavigate();
 
-  const navigatetodashboard = () => {
-    navigate(`/admin/dashboards/`);
+  const navigatetodashboard = (id) => {
+    navigate(`/admin/dashboards/${id}`);
   }
 
   return (
-    <DashboardCard title="Product Performance">
+    <DashboardCard>
             <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
                 <Table
                     aria-label="simple table"
@@ -64,87 +70,88 @@ const UserTable = () => {
                 >
                     <TableHead>
                         <TableRow>
-                            <TableCell>
+                            {/* <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
                                     Id
                                 </Typography>
-                            </TableCell>
+                            </TableCell> */}
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Assigned
+                                    Organization
                                 </Typography>
                             </TableCell>
+                            
                             <TableCell>
-                                <Typography variant="subtitle2" fontWeight={600}>
-                                    Name
-                                </Typography>
+                              <Typography variant="subtitle2" fontWeight={600}>
+                                  Start Date
+                              </Typography>
                             </TableCell>
                             <TableCell>
-                                <Typography variant="subtitle2" fontWeight={600}>
-                                    Priority
-                                </Typography>
+                              <Typography variant="subtitle2" fontWeight={600}>
+                                End Date
+                              </Typography>
                             </TableCell>
                             <TableCell align="right">
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Budget
+                                    Dashboards
                                 </Typography>
                             </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {products.map((product) => (
-                            <TableRow key={product.name} onClick={navigatetodashboard}>
-                                <TableCell>
+                        {clients.map((client) => (
+                            <TableRow key={client.name}>
+                                {/* <TableCell>
                                     <Typography
                                         sx={{
                                             fontSize: "15px",
                                             fontWeight: "500",
                                         }}
                                     >
-                                        {product.id}
+                                        {client.id}
                                     </Typography>
-                                </TableCell>
-                                <TableCell>
+                                </TableCell> */}
+                                <TableCell onClick={() => navigatetodashboard(client.id)}>
                                     <Box
                                         sx={{
                                             display: "flex",
                                             alignItems: "center",
+                                            cursor: "pointer",
                                         }}
                                     >
                                         <Box>
                                             <Typography variant="subtitle2" fontWeight={600}>
-                                                {product.name}
+                                                {client.name}
                                             </Typography>
-                                            <Typography
-                                                color="textSecondary"
-                                                sx={{
-                                                    fontSize: "13px",
-                                                }}
-                                            >
-                                                {product.post}
-                                            </Typography>
+                                            
                                         </Box>
                                     </Box>
                                 </TableCell>
                                 <TableCell>
-                                    <Typography color="textSecondary" variant="subtitle2" fontWeight={400}>
-                                        {product.pname}
-                                    </Typography>
+                                      <Box
+                                        sx={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                        }}>
+                                        <Typography variant="subtitle2" fontWeight={600}>
+                                            {client.start}
+                                        </Typography>
+                                      </Box>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip
+                                      <Box
                                         sx={{
-                                            px: "4px",
-                                            backgroundColor: product.pbg,
-                                            color: "#fff",
-                                        }}
-                                        size="small"
-                                        label={product.priority}
-                                    ></Chip>
+                                          display: "flex",
+                                          alignItems: "center",
+                                        }}>
+                                        <Typography variant="subtitle2" fontWeight={600}>
+                                            {client.end}
+                                        </Typography>
+                                      </Box>
                                 </TableCell>
                                 <TableCell align="right">
-                                    <Typography variant="h6">${product.budget}k</Typography>
-                                </TableCell>
+                                   <Typography variant="h6">{client.count}</Typography>
+                                </TableCell> 
                             </TableRow>
                         ))}
                     </TableBody>

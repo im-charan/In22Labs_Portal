@@ -9,11 +9,7 @@ const ListUsers = () => {
     <PageContainer title='Users' description='hehehheh'>
       <Box marginLeft={12} marginTop={5}>
         <Grid container spacing={3}>
-<<<<<<< HEAD
-          <Grid item xs={12} lg={12}>
-=======
         <Grid item xs={12} lg={12}>
->>>>>>> 52dece74c4710d7822f1aa7b8a8c08fbfaa5c184
             <UserTable />
           </Grid>
         </Grid>

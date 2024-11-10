@@ -5,12 +5,9 @@ import { element } from 'prop-types';
 import ListUsers from '../views/admin/ListUsers';
 import ListDashboards from '../views/admin/ListDashboards';
 import AdminLayout from '../layouts/admin/AdminLayout';
-<<<<<<< HEAD
-import ContactUsPage from '../views/authentication/auth/AuthContactUs';
-=======
 import Pbpage from '../views/dashboard/components/Pbpage';
->>>>>>> 52dece74c4710d7822f1aa7b8a8c08fbfaa5c184
-
+// import ContactUsPage from '../views/authentication/auth/AuthContactUs';
+import ContactUsPage from '../views/authentication/auth/AuthContactus';
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')));

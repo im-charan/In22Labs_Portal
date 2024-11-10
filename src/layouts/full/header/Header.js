@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 // components
 import Profile from './Profile';
-import { IconBellRinging, IconMenu } from '@tabler/icons-react';
-
+import {  IconMenu } from '@tabler/icons-react';
+//IconBellRinging
 const Header = (props) => {
 
   // const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
@@ -56,9 +56,9 @@ const Header = (props) => {
             }),
           }}
         >
-          <Badge variant="dot" color="primary">
+          {/* <Badge variant="dot" color="primary">
             <IconBellRinging size="21" stroke="1.5" />
-          </Badge>
+          </Badge> */}
 
         </IconButton>
         <Box flexGrow={1} />

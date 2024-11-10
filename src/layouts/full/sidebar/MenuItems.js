@@ -1,6 +1,7 @@
 import {
   IconAperture, IconCopy, IconLayoutDashboard, IconLogin, IconMoodHappy, IconTypography, IconUserPlus,IconUser,
-  IconUsersGroup
+  IconUsersGroup,
+  IconPhone
 } from '@tabler/icons-react';
 
 import { uniqueId } from 'lodash';
@@ -48,6 +49,12 @@ const Menuitems = [
     title: 'Register',
     icon: IconUserPlus,
     href: '/auth/register',
+  },
+  {
+    id: uniqueId(),
+    title: 'Contact Us',
+    icon: IconPhone,
+    href: '/auth/contactus',
   },
   {
     navlabel: true,

@@ -5,6 +5,7 @@ import { element } from 'prop-types';
 import ListUsers from '../views/admin/ListUsers';
 import ListDashboards from '../views/admin/ListDashboards';
 import AdminLayout from '../layouts/admin/AdminLayout';
+import ContactUsPage from '../views/authentication/auth/AuthContactUs';
 
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -41,6 +42,7 @@ const Router = [
       { path: '404', element: <Error /> },
       { path: '/auth/register', element: <Register /> },
       { path: '/auth/login', element: <Login /> },
+      { path: '/auth/contactus',element:<ContactUsPage/>},
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },

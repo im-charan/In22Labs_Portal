@@ -4,7 +4,7 @@ import { styled } from "@mui/material";
 
 const LinkStyled = styled(Link)(() => ({
   height: "70px",
-  width: "180px",
+  width: "100px",
   overflow: "hidden",
   display: "block",
 }));

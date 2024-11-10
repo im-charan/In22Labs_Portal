@@ -1,6 +1,8 @@
+import { color } from '@mui/system';
 import {
   IconAperture, IconCopy, IconLayoutDashboard, IconLogin, IconMoodHappy, IconTypography, IconUserPlus,IconUser,
-  IconUsersGroup
+  IconUsersGroup,
+  IconLogout
 } from '@tabler/icons-react';
 
 import { uniqueId } from 'lodash';

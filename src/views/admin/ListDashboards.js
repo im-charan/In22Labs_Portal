@@ -1,14 +1,20 @@
 import React from "react"
 import DashboardCard from '../../components/shared/DashboardCard';
 import PageContainer from 'src/components/container/PageContainer';
-import { List, Typography } from "@mui/material";
+import { Grid, List, Typography } from "@mui/material";
+import UserDashboards from "./dashboards/UserDashboards";
+import { Box } from "@mui/system";
 
 const ListDashboards = () => {
   return (
     <PageContainer title='Dashboards'>
-      <DashboardCard title='Dashboards' description='hehehhe'>
-        <Typography>List all the dashboards here</Typography>
-      </DashboardCard>
+      <Box marginLeft={12} marginTop={5}>
+        <Grid container spacing={3}>
+          <Grid xl>
+            <UserDashboards />
+          </Grid>
+        </Grid>
+      </Box>
     </PageContainer>
   )
 }

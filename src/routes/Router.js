@@ -5,6 +5,7 @@ import { element } from 'prop-types';
 import ListUsers from '../views/admin/ListUsers';
 import ListDashboards from '../views/admin/ListDashboards';
 import AdminLayout from '../layouts/admin/AdminLayout';
+import Pbpage from '../views/dashboard/components/Pbpage';
 
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -32,6 +33,8 @@ const Router = [
       { path: '/ui/typography', exact: true, element: <TypographyPage /> },
       { path: '/ui/shadow', exact: true, element: <Shadow /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
+      { path: '/dashboard/product/:id', element: <Pbpage /> },
+      
     ],
   },
   {
@@ -42,6 +45,7 @@ const Router = [
       { path: '/auth/register', element: <Register /> },
       { path: '/auth/login', element: <Login /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
+      
     ],
   },
   {

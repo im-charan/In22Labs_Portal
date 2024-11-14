@@ -18,22 +18,22 @@ const Menuitems = [
     icon: IconLayoutDashboard,
     href: '/dashboard',
   },
-  {
-    navlabel: true,
-    subheader: 'Admin',
-  },
-  {
-    id: uniqueId(),
-    title: 'Users',
-    icon: IconUsersGroup,
-    href: '/admin/users',
-  },
-  {
-    id: uniqueId(),
-    title: 'Dashboards',
-    icon: IconLayoutDashboard,
-    href: '/admin/dashboards',
-  },
+  // {
+  //   navlabel: true,
+  //   subheader: 'Admin',
+  // },
+  // {
+  //   id: uniqueId(),
+  //   title: 'Users',
+  //   icon: IconUsersGroup,
+  //   href: '/admin/users',
+  // },
+  // {
+  //   id: uniqueId(),
+  //   title: 'Dashboards',
+  //   icon: IconLayoutDashboard,
+  //   href: '/admin/dashboards',
+  // },
   {
     navlabel: true,
     subheader: 'Auth',

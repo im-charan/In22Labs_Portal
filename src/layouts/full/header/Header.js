@@ -29,22 +29,7 @@ const Header = (props) => {
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
-        <IconButton
-          color="inherit"
-          aria-label="menu"
-          onClick={props.toggleMobileSidebar}
-          sx={{
-            display: {
-              lg: "none",
-              xs: "inline",
-            },
-          }}
-        >
-          <IconMenu width="20" height="20" />
-        </IconButton>
-
-
-        <IconButton
+        {/* <IconButton
           size="large"
           aria-label="show 11 new notifications"
           color="inherit"
@@ -56,11 +41,11 @@ const Header = (props) => {
             }),
           }}
         >
-          {/* <Badge variant="dot" color="primary">
+          <Badge variant="dot" color="primary">
             <IconBellRinging size="21" stroke="1.5" />
-          </Badge> */}
+          </Badge>
 
-        </IconButton>
+        </IconButton> */}
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
           <Profile />

@@ -1,64 +1,118 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Grid, Box, Card, Stack, Typography } from "@mui/material";
+import { Grid, Box, Card, Stack, Typography, ToggleButtonGroup, ToggleButton} from "@mui/material";
+import {MDBCol} from 'mdb-react-ui-kit';
+// import BG from '../../assets/images/backgrounds/bg_gradient.png';
 
 // components
-import PageContainer from "src/components/container/PageContainer";
-import Logo from "src/layouts/full/shared/logo/Logo";
+import PageContainer from "../../components/container/PageContainer";
+import Logo from "../../layouts/full/shared/logo/Logo";
 import AuthLogin from "./auth/AuthLogin";
+import ReactLogo from "../../layouts/full/shared/logo/Logo";
+import logindesign from '../authentication/login-design.svg';
+import amicodesign from '../../assets/images/backgrounds/Update-amico.svg';
+// import enginedesign from '../../assets/images/backgrounds/Search-engines-bro.svg';
+
 
 const Login2 = () => {
+  // Define alignment with a default value (e.g., 'left')
+  const [alignment, setAlignment] = useState('centre');
+
+  // Handler function to change alignment
+  const handleChange = (event, newAlignment) => {
+    if (newAlignment !== null) {
+      setAlignment(newAlignment);
+    }
+  };
+  
+
   return (
-    <PageContainer title="Login" description="this is Login page">
-      <Box
-        sx={{
-          position: "relative",
-          "&:before": {
-            content: '""',
-            background: "radial-gradient(#d2f1df, #d3d7fa, #bad8f4)",
-            backgroundSize: "400% 400%",
-            animation: "gradient 15s ease infinite",
-            position: "absolute",
-            height: "100%",
-            width: "100%",
-            opacity: "0.3",
-          },
-        }}
-      >
+    <Box
+      sx={{
+        position: "relative",
+        background: 'linear-gradient(to right, #dfe9f3 30%, white 50% , #c8d1da 90% )',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        height: "100vh",
+        "&:before": {
+          content: '""',
+          background: 'linear-gradient(to right, #dfe9f3 30%, white 100%)',
+          backgroundSize: "400% 400%",
+          animation: "gradient 15s ease infinite",
+          position: "absolute",
+          height: "100%",
+          width: "100%",
+          opacity: "0.3",
+        },
+      }}
+    >
+
+      
+      <Grid container sx={{ height: "100vh" }}>
         <Grid
-          container
-          spacing={0}
+          item
+          xs={0}  
+          sm={5}  
+          lg={6}  
+          display="flex"
           justifyContent="center"
-          sx={{ height: "100vh" }}
+          alignItems="center"
         >
-          <Grid
-            item
-            xs={10}
-            sm={12}
-            lg={4}
-            xl={3}
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
+          <img src={amicodesign} alt="Login Design" style={{ width: "70%", height: "auto" }} />
+          
+
+        </Grid>
+
+        <Grid
+          item
+          xs={12}
+          sm={7}
+          lg={6}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Card
+            elevation={9}
+            sx={{ p: 4, zIndex: 1, width: "100%", maxWidth: "400px", borderRadius: "55px", }}
           >
-            <Card
-              elevation={9}
-              sx={{ p: 4, zIndex: 1, width: "100%", maxWidth: "500px" }}
-            >
-              <Box display="flex" alignItems="center" justifyContent="center">
-                <Logo />
-              </Box>
-              <AuthLogin
-              // subtext={
-              //   <Typography variant="subtitle1" textAlign="center" color="textSecondary" mb={1}>
-              //     Your Social Campaigns
-              //   </Typography>
-              // }
+            <Box
+            component="img"
+            src="/src/assets/images/logos/dark1-logo.svg"
+            alt="Logo"
+            sx={{
+              width: 'auto',
+              height: 100,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              mx: 'auto' }} />
+              
+              <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '10vh', // full viewport height to center vertically
+      }}
+    >
+              <ToggleButtonGroup
+              color="primary"
+              value={alignment}
+              exclusive
+              onChange={handleChange}
+              aria-label="Platform"
+              size="small"
+      >
+              <ToggleButton value="Admin">Client</ToggleButton>
+              <ToggleButton value="User" >Admin</ToggleButton>
+              </ToggleButtonGroup>
+    </Box>
+
+            
+            <AuthLogin
               subtitle={
                 <Stack direction="row" spacing={1} justifyContent="center" mt={3}>
-                  {/* <Typography color="textSecondary" variant="h6" fontWeight="500">
-                    New to Modernize?
-                  </Typography> */}
                   <Typography
                     component={Link}
                     to="/auth/register"
@@ -72,13 +126,13 @@ const Login2 = () => {
                   </Typography>
                 </Stack>
               }
-              />
-            </Card>
-          </Grid>
+            />
+          </Card>
         </Grid>
-      </Box>
-    </PageContainer>
+      </Grid>
+    </Box>
   );
 };
+
 
 export default Login2;

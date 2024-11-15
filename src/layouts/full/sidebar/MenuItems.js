@@ -9,14 +9,20 @@ import { uniqueId } from 'lodash';
 const Menuitems = [
   {
     navlabel: true,
-    subheader: 'Home',
+    subheader: "Home",
   },
 
   {
     id: uniqueId(),
-    title: 'Dashboard',
+    title: "Dashboard",
     icon: IconLayoutDashboard,
-    href: '/dashboard',
+    href: "/dashboard",
+  },
+  {
+    id: uniqueId(),
+    title: "Contact Us",
+    icon: IconPhone,
+    href: "/auth/contactus",
   },
   {
     navlabel: true,
@@ -50,28 +56,23 @@ const Menuitems = [
   //   icon: IconUserPlus,
   //   href: '/auth/register',
   // },
-  {
-    id: uniqueId(),
-    title: 'Contact Us',
-    icon: IconPhone,
-    href: '/auth/contactus',
-  },
-  {
-    navlabel: true,
-    subheader: 'Extra',
-  },
-  {
-    id: uniqueId(),
-    title: 'Icons',
-    icon: IconMoodHappy,
-    href: '/icons',
-  },
-  {
-    id: uniqueId(),
-    title: 'Sample Page',
-    icon: IconAperture,
-    href: '/sample-page',
-  },
+
+  // {
+  //   navlabel: true,
+  //   subheader: 'Extra',
+  // },
+  // {
+  //   id: uniqueId(),
+  //   title: 'Icons',
+  //   icon: IconMoodHappy,
+  //   href: '/icons',
+  // },
+  // {
+  //   id: uniqueId(),
+  //   title: 'Sample Page',
+  //   icon: IconAperture,
+  //   href: '/sample-page',
+  // },
 ];
 
 export default Menuitems;

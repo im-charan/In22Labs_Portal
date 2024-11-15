@@ -1,14 +1,16 @@
 import React from 'react';
-import { Box, Link, Typography, Breadcrumbs, AppBar, Toolbar, styled, Stack, IconButton } from '@mui/material';
+import { Box, AppBar, Toolbar, styled, Stack, IconButton, Badge, Button } from '@mui/material';
 import PropTypes from 'prop-types';
-import { useLocation, useParams } from 'react-router-dom';
-import Profile from './Profile';
-import { IconMenu } from '@tabler/icons-react';
 
+// components
+import Profile from './Profile';
+import {  IconMenu } from '@tabler/icons-react';
+//IconBellRinging
 const Header = (props) => {
-  const location = useLocation();
-  const params = useParams();
-  const overviewTitle = location.state?.overviewTitle;
+
+  // const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+  // const lgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'));
+
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',
@@ -19,9 +21,8 @@ const Header = (props) => {
       minHeight: '70px',
     },
   }));
-
   const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
-    width: '100%',
+    width: "100%",
     color: theme.palette.text.secondary,
     display: 'flex',
     justifyContent: 'space-between',
@@ -37,28 +38,40 @@ const Header = (props) => {
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
-        {/* Left Section with IconButton */}
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton
-            color="inherit"
-            aria-label="menu"
-            onClick={props.toggleMobileSidebar}
-            sx={{
-              display: {
-                lg: "none",
-                xs: "inline",
-              },
-            }}
-          >
-            <IconMenu width="20" height="20" />
-          </IconButton>
-        </Box>
+        <IconButton
+          color="inherit"
+          aria-label="menu"
+          onClick={props.toggleMobileSidebar}
+          sx={{
+            display: {
+              lg: "none",
+              xs: "inline",
+            },
+          }}
+        >
+          <IconMenu width="20" height="20" />
+        </IconButton>
 
-        {/* Expandable space between IconButton and Profile */}
-        <Box sx={{ flexGrow: 1 }} />
 
-        {/* Right Section with Profile Component */}
-        <Stack direction="row" spacing={1} alignItems="center" sx={{ display: { xs: 'none', lg: 'flex' } }}>
+        <IconButton
+          size="large"
+          aria-label="show 11 new notifications"
+          color="inherit"
+          aria-controls="msgs-menu"
+          aria-haspopup="true"
+          sx={{
+            ...(typeof anchorEl2 === 'object' && {
+              color: 'primary.main',
+            }),
+          }}
+        >
+          {/* <Badge variant="dot" color="primary">
+            <IconBellRinging size="21" stroke="1.5" />
+          </Badge> */}
+
+        </IconButton>
+        <Box flexGrow={1} />
+        <Stack spacing={1} direction="row" alignItems="center">
           <Profile />
         </Stack>
       </ToolbarStyled>

@@ -9,7 +9,6 @@ import Pbpage from '../views/dashboard/components/Pbpage';
 
 // import ContactUsPage from '../views/authentication/auth/AuthContactUs';
 import ContactUsPage from '../views/authentication/auth/AuthContactus';
-import SpecificDash from '../views/admin/dashboards/SpecificDash';
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')));
@@ -22,34 +21,33 @@ const TypographyPage = Loadable(lazy(() => import('../views/utilities/Typography
 const Shadow = Loadable(lazy(() => import('../views/utilities/Shadow')))
 const Error = Loadable(lazy(() => import('../views/authentication/Error')));
 const Register = Loadable(lazy(() => import('../views/authentication/ForgotPassword')));
-const Login = Loadable(lazy(() => import('../views/authentication/Login')));
+const Login2 = Loadable(lazy(() => import('../views/authentication/Login')));
 
 const Router = [
+  {
+    path: '/auth',
+    element: <BlankLayout />,
+    children: [
+      { path: '/auth', element: <Navigate to="/auth/login" /> },
+      { path: '/auth/login', element: <Login2 /> },
+      { path: '404', element: <Error /> },
+      { path: '/auth/register', element: <Register /> },
+      { path: '/auth/contactus',element:<ContactUsPage/>},
+      { path: '*', element: <Navigate to="/auth/404" /> },
+      
+    ],
+  },
   {
     path: '/',
     element: <FullLayout />,
     children: [
       { path: '/', element: <Navigate to="/dashboard" /> },
-      { path: '/dashboard', exact: true, element: <Dashboard /> },
+      { path: '/dashboard', exact:true, element: <Dashboard /> },
       { path: '/sample-page', exact: true, element: <SamplePage /> },
       { path: '/icons', exact: true, element: <Icons /> },
-      { path: '/ui/typography', exact: true, element: <TypographyPage /> },
-      { path: '/ui/shadow', exact: true, element: <Shadow /> },
       // { path: '*', element: <Navigate to="/auth/404" /> },
       { path: '/dashboard/product/:id', element: <Pbpage /> },
       
-      
-    ],
-  },
-  {
-    path: '/auth',
-    element: <BlankLayout />,
-    children: [
-      { path: '404', element: <Error /> },
-      { path: '/auth/register', element: <Register /> },
-      { path: '/auth/login', element: <Login /> },
-      { path: '/auth/contactus',element:<ContactUsPage/>},
-      { path: '*', element: <Navigate to="/auth/404" /> },
       
     ],
   },

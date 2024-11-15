@@ -32,6 +32,7 @@ const Pbpage = () => {
         breadcrumbRoute2={`/dashboard/product/${product.id}`}
       />
         <BlankCard>
+          <Typography variant='h2'marginBottom={3}>Dashboard / 1</Typography>
             <Typography component="div">
                 <img src={product.photo} alt={product.title} width="100%" />
             </Typography>

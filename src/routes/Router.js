@@ -9,6 +9,8 @@ import Pbpage from '../views/dashboard/components/Pbpage';
 import SpecificDash from '../views/admin/dashboards/SpecificDash';
 // import ContactUsPage from '../views/authentication/auth/AuthContactUs';
 import ContactUsPage from '../views/authentication/auth/AuthContactus';
+import ProfilePage from '../pages/ProfilePage';
+;
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')));
@@ -25,34 +27,32 @@ const Login2 = Loadable(lazy(() => import('../views/authentication/Login')));
 
 const Router = [
   {
-    path: '/auth',
+    path: "/auth",
     element: <BlankLayout />,
     children: [
-      { path: '/auth', element: <Navigate to="/auth/login" /> },
-      { path: '/auth/login', element: <Login2 /> },
-      { path: '404', element: <Error /> },
-      { path: '/auth/register', element: <Register /> },
-      { path: '/auth/contactus',element:<ContactUsPage/>},
-      { path: '*', element: <Navigate to="/auth/404" /> },
-      
+      { path: "/auth", element: <Navigate to="/auth/login" /> },
+      { path: "/auth/login", element: <Login2 /> },
+      { path: "404", element: <Error /> },
+      { path: "/auth/register", element: <Register /> },
+      { path: "/auth/contactus", element: <ContactUsPage /> },
+      { path: "*", element: <Navigate to="/auth/404" /> },
     ],
   },
   {
-    path: '/',
+    path: "/",
     element: <FullLayout />,
     children: [
-      { path: '/', element: <Navigate to="/dashboard" /> },
-      { path: '/dashboard', exact:true, element: <Dashboard /> },
-      { path: '/sample-page', exact: true, element: <SamplePage /> },
-      { path: '/icons', exact: true, element: <Icons /> },
+      { path: "/", element: <Navigate to="/dashboard" /> },
+      { path: "/dashboard", exact: true, element: <Dashboard /> },
+      { path: "/sample-page", exact: true, element: <SamplePage /> },
+      { path: "/icons", exact: true, element: <Icons /> },
       // { path: '*', element: <Navigate to="/auth/404" /> },
-      { path: '/dashboard/product/:id', element: <Pbpage /> },
-      
-      
+      { path: "/dashboard/product/:id", element: <Pbpage /> },
+      { path: "/dashboard/ProfilePage" , element: <ProfilePage/>},
     ],
   },
   {
-    path: '/admin',
+    path: "/admin",
     element: <AdminLayout />,
     children: [
       // Redirects to /admin/users

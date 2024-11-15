@@ -64,7 +64,7 @@ const UserDashboards = () =>{
                       <Typography 
                                 component={Link}
                                 onClick={() => handleClick(product.title)} // Set title on click
-                                to={`/dashboard/${product.title}`}
+                                to={`/dashboards/${product.title}`}
                             >
                                 <img src={product.photo} alt={product.title} width="100%" />
                             </Typography>

@@ -2,28 +2,30 @@ import React from 'react';
 import { Box, Breadcrumbs, Link, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom'; // Import Link from react-router-dom
 
-const BreadcrumbComponent = ({pageTitle,breadcrumbTitle1,
-    breadcrumbRoute1,
-    breadcrumbTitle2,
-    breadcrumbRoute2, }) => {
+const BreadcrumbComponent = ({
+  pageTitle,
+  breadcrumbTitle1,
+  breadcrumbRoute1,
+  breadcrumbTitle2,
+  breadcrumbRoute2,
+  marginTop = 0 // Default marginTop to 0 if not provided
+}) => {
   return (
-    <Box sx={{ flexGrow: 1, textAlign: 'left' }}>
+    <Box sx={{ flexGrow: 1, textAlign: 'left', marginTop: marginTop }}>
       {/* Page Title */}
-     {/* Conditionally Centered Page Title */}
-     {pageTitle && (
-        <Typography 
+      {pageTitle && (
+        <Typography
           variant="h3"
           sx={{
             textAlign: pageTitle === "Welcome to In22labs Analytics Portal" ? 'center' : 'left', // Center only for this specific title
             fontWeight: 'bold',
             color: 'text.primary',
-            mb: 2, 
+            mb: 2, // Margin-bottom for spacing
           }}
         >
           {pageTitle}
         </Typography>
       )}
-      <br />
 
       {/* Breadcrumbs */}
       <Breadcrumbs
@@ -35,7 +37,7 @@ const BreadcrumbComponent = ({pageTitle,breadcrumbTitle1,
           textAlign: 'left',
         }}
       >
-        {/*Breadcrumbs level1 */}
+        {/* Breadcrumb Level 1 */}
         {breadcrumbTitle1 && (
           <Link
             component={RouterLink}
@@ -47,8 +49,7 @@ const BreadcrumbComponent = ({pageTitle,breadcrumbTitle1,
           </Link>
         )}
 
-
-          {/* Breadcrumb Level 2 */}
+        {/* Breadcrumb Level 2 */}
         {breadcrumbTitle2 && (
           <Link
             component={RouterLink}
@@ -59,9 +60,8 @@ const BreadcrumbComponent = ({pageTitle,breadcrumbTitle1,
             {breadcrumbTitle2}
           </Link>
         )}
-       
       </Breadcrumbs>
-      <br />
+     
     </Box>
   );
 };

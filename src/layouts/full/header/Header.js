@@ -1,39 +1,38 @@
-import React from 'react';
-import { Box, AppBar, Toolbar, styled, Stack, IconButton, Badge, Button } from '@mui/material';
-import PropTypes from 'prop-types';
+import React from "react";
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  styled,
+  Stack,
+  IconButton,
+  Typography,
+} from "@mui/material";
+import PropTypes from "prop-types";
 
 // components
-import Profile from './Profile';
-import {  IconMenu } from '@tabler/icons-react';
-//IconBellRinging
+import Profile from "./Profile";
+import { IconMenu } from "@tabler/icons-react";
+const userName = "Abdul";
+const OrganizationName = "ABC ORGANIZATION";
+
 const Header = (props) => {
-
-  // const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
-  // const lgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'));
-
-
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
-    boxShadow: 'none',
-    background: theme.palette.background.paper,
-    justifyContent: 'center',
-    backdropFilter: 'blur(4px)',
-    [theme.breakpoints.up('lg')]: {
-      minHeight: '70px',
-    },
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)", // Adding a subtle shadow
+    // background: "#5d87ff",
+    justifyContent: "center",
+    backdropFilter: "blur(4px)",
+    height: 50,
+    //borderBottom: "2px solid #4a76d3", // Adding a border
+    borderBottom: "2px solid rgba(74, 118, 211, 0.)", // 50% opacity
+
+    borderRadius: "0 0 0px 0px", // Optional for rounded bottom corners
   }));
+
   const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
     width: "100%",
     color: theme.palette.text.secondary,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   }));
-
-  let breadcrumbsTitle = overviewTitle;
-
-  if (params.id) {
-    breadcrumbsTitle = `Overview ${params.id}`;
-  }
 
   return (
     <AppBarStyled position="sticky" color="default">
@@ -72,6 +71,20 @@ const Header = (props) => {
         </IconButton>
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
+          <Box
+            sx={{
+              background: "#ffffff",
+              color: "#5d87ff",
+              padding: "4px 10px",
+              borderRadius: "8px",
+              fontSize: "0.875rem",
+              fontWeight: "bold",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+              marginRight: "8px", // Adjusts space between message and avatar
+            }}
+          >
+            Hi, {userName}
+          </Box>
           <Profile />
         </Stack>
       </ToolbarStyled>
@@ -81,7 +94,6 @@ const Header = (props) => {
 
 Header.propTypes = {
   sx: PropTypes.object,
-  toggleMobileSidebar: PropTypes.func,
 };
 
 export default Header;

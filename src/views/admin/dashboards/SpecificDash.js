@@ -6,6 +6,8 @@ import img2 from 'src/assets/images/products/s5.png';
 import img3 from 'src/assets/images/products/s7.png';
 import img4 from 'src/assets/images/products/s11.png';
 import BlankCard from "../../../components/shared/BlankCard"; // Adjusted path
+import BreadcrumbComponent from '../../../components/shared/BreadCrumbComponent';
+import AdminHeader from '../AdminHeader';
 
 
 
@@ -21,12 +23,15 @@ const SpecificDash = () => {
     console.log('organizationName:', organizationName); 
     return (
         <>
+        <AdminHeader/>
            <BreadcrumbComponent
-              pageTitle="Dashboard"
-              breadcrumbTitle1="Dashboard"
+              pageTitle={organizationName}
+              breadcrumbTitle1="Users"
               breadcrumbRoute1="/admin/dashboard"
               breadcrumbTitle2={organizationName}
               breadcrumbRoute2={`/admin/dashboard/${organizationName}`}
+               marginTop="70px"
+           
            />
             <Grid container spacing={3}>
                 {ecoCard.map((product) => (

@@ -13,11 +13,12 @@ const ListUsers = () => {
     <PageContainer title="Users" description="List of users for the selected organization">
         <AdminHeader/>
 <BreadcrumbComponent  
-        pageTitle="Users" 
+        pageTitle="User Table" 
         breadcrumbTitle1="User"
         breadcrumbRoute1="admin/users"
         breadcrumbTitle2={organizationName}
         breadcrumbRoute2={`/admin/users/${organizationName}`}
+        marginTop="70px"
       />
       {/* Main content layout */}
       <Box marginLeft={12} marginTop={5}>

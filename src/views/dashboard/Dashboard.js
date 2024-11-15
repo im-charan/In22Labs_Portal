@@ -3,19 +3,20 @@ import { Grid, Box, Typography } from '@mui/material';
 import PageContainer from 'src/components/container/PageContainer';
 
 // components
-import SalesOverview from './components/SalesOverview';
-import YearlyBreakup from './components/YearlyBreakup';
-import RecentTransactions from './components/RecentTransactions';
-import ProductPerformance from './components/ProductPerformance';
+// import SalesOverview from './components/SalesOverview';
+// import YearlyBreakup from './components/YearlyBreakup';
+// import RecentTransactions from './components/RecentTransactions';
+// import ProductPerformance from './components/ProductPerformance';
 import Blog from './components/Blog';
-import MonthlyEarnings from './components/MonthlyEarnings';
+// import MonthlyEarnings from './components/MonthlyEarnings';
 
 
 const Dashboard = () => {
-  return (
+  return (<>
     <PageContainer title="Dashboard" description="this is Dashboard">
-      <Typography variant='h2' marginBottom={4}>Dashboard</Typography>
+
       <Box>
+        
         <Grid container spacing={3}>
           
           <Grid item xs={12}>
@@ -24,6 +25,7 @@ const Dashboard = () => {
         </Grid>
       </Box>
     </PageContainer>
+    </>
   );
 };
 

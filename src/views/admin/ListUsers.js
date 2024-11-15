@@ -1,11 +1,14 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom"; // Import useNavigate;
+import { Grid, Box } from "@mui/material";
 import PageContainer from 'src/components/container/PageContainer';
 import { Grid, Button, Typography } from "@mui/material";
 import UserTable from "./users/userTable";
 import { Box } from "@mui/system";
 
 const ListUsers = () => {
+  const { organizationName } = useParams(); // Extract organisationName from URL params
+
   const navigate = useNavigate(); // Initialize navigate function
 
   const handleCreateUserClick = () => {
@@ -13,8 +16,17 @@ const ListUsers = () => {
   };
 
   return (
-    <PageContainer title='Users' description='hehehheh'>
-      <Typography variant="h2">Admin / Users</Typography>
+    <PageContainer title="Users" description="List of users for the selected organization">
+        <AdminHeader/>
+<BreadcrumbComponent  
+        pageTitle="User Table" 
+        breadcrumbTitle1="User"
+        breadcrumbRoute1="admin/users"
+        breadcrumbTitle2={organizationName}
+        breadcrumbRoute2={`/admin/users/${organizationName}`}
+        marginTop="70px"
+      />
+      {/* Main content layout */}
       <Box marginLeft={12} marginTop={5}>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={12}>
@@ -27,6 +39,7 @@ const ListUsers = () => {
           </Grid>
         </Grid>
       </Box>
+
     </PageContainer>
   );
 };

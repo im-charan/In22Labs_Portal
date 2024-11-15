@@ -1,9 +1,7 @@
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router";
 import DashboardCard from "../../../components/shared/DashboardCard";
 import { Box } from "@mui/system";
-import { Chip, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
-
-
+import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 
 const clients = [
   {
@@ -57,110 +55,110 @@ const clients = [
 ];
 
 const UserTable = () => {
-  var count = 1;
   const navigate = useNavigate();
 
-  const navigatetodashboard = (id) => {
-    navigate(`/admin/dashboards/${id}`);
+  // Corrected navigation function
+  const navigatetodashboard = (name) => {
+    navigate(`/admin/dashboards/${name}`);
   }
 
   return (
     <DashboardCard>
-            <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
-                <Table
-                    aria-label="simple table"
-                    sx={{
-                        whiteSpace: "nowrap",
-                        mt: 2
-                    }}
-                >
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>
-                                <Typography variant="h4" align="center" fontWeight={600}>
-                                  S.No
-                                </Typography>
-                            </TableCell>
-                            <TableCell>
-                                <Typography variant="h4" align="center" fontWeight={600}>
-                                    Organization
-                                </Typography>
-                            </TableCell>
-                            
-                            <TableCell>
-                              <Typography variant="h4" align="center" fontWeight={600}>
-                                  Email
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography variant="h4" align="center" fontWeight={600}>
-                                Valid Till
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="center">
-                                <Typography variant="h4" fontWeight={600}>
-                                    Dashboards
-                                </Typography>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {clients.map((client) => (
-                            <TableRow key={client.name}>
-                                <TableCell>
-                                    <Typography variant="subtitle2" align="center">
-                                        {count++}
-                                    </Typography>
-                                </TableCell>
-                                <TableCell onClick={() => navigatetodashboard(client.id)}>
-                                    <Box
-                                        sx={{
-                                            // display: "flex",
-                                            alignItems: "center",
-                                            cursor: "pointer",
-                                        }}
-                                    >
-                                        <Box>
-                                            <Typography variant="subtitle2" align="center" fontWeight={600}>
-                                                {client.name}
-                                            </Typography>
-                                            
-                                        </Box>
-                                    </Box>
-                                </TableCell>
-                                <TableCell>
-                                      <Box
-                                        sx={{
-                                          // display: "flex",
-                                          alignItems: "center",
-                                        }}>
-                                        <Typography variant="subtitle2" align="center" fontWeight={600}>
-                                            {client.email}
-                                        </Typography>
-                                      </Box>
-                                </TableCell>
-                                <TableCell>
-                                      <Box
-                                        sx={{
-                                          // display: "flex",
-                                          alignItems: "center",
-                                        }}>
-                                        <Typography variant="subtitle2" align="center" fontWeight={600}>
-                                            {client.end}
-                                        </Typography>
-                                      </Box>
-                                </TableCell>
-                                <TableCell align="center">
-                                   <Typography variant="h6" align="center" >{client.count}</Typography>
-                                </TableCell> 
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </Box>
-        </DashboardCard>
-  )
+      <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
+        <Table
+          aria-label="simple table"
+          sx={{
+            whiteSpace: "nowrap",
+            mt: 2
+          }}
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <Typography variant="h4" align="center" fontWeight={600}>
+                  S.No
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h4" align="center" fontWeight={600}>
+                  Organization
+                </Typography>
+              </TableCell>
 
+              <TableCell>
+                <Typography variant="h4" align="center" fontWeight={600}>
+                  Email
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h4" align="center" fontWeight={600}>
+                  Valid Till
+                </Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography variant="h4" fontWeight={600}>
+                  Dashboards
+                </Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {clients.map((client, index) => (
+              <TableRow key={client.name}>
+                <TableCell>
+                  <Typography variant="subtitle2" align="center">
+                    {index + 1} {/* Display the index (starting from 1) */}
+                  </Typography>
+                </TableCell>
+                <TableCell onClick={() => navigatetodashboard(client.name)}>
+                  <Box
+                    sx={{
+                      // display: "flex",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Box>
+                      <Typography variant="subtitle2" align="center" fontWeight={600}>
+                        {client.name}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </TableCell>
+                <TableCell>
+                  <Box
+                    sx={{
+                      // display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography variant="subtitle2" align="center" fontWeight={600}>
+                      {client.email}
+                    </Typography>
+                  </Box>
+                </TableCell>
+                <TableCell>
+                  <Box
+                    sx={{
+                      // display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography variant="subtitle2" align="center" fontWeight={600}>
+                      {client.end}
+                    </Typography>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography variant="h6" align="center">{client.count}</Typography>
+                </TableCell> 
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Box>
+    </DashboardCard>
+  );
 }
 
 export default UserTable;

@@ -7,6 +7,8 @@ const LinkStyled = styled(Link)(() => ({
   width: "100px",
   overflow: "hidden",
   display: "block",
+  alignItems: "center",
+  
 }));
 
 const Logo = () => {
@@ -15,7 +17,7 @@ const Logo = () => {
       to="/"
       height={70}
       style={{
-        display: "flex",
+        display: "",
         alignItems: "center",
       }}
     >

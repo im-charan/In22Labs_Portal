@@ -14,6 +14,7 @@ const ListUsers = () => {
 
   return (
     <PageContainer title='Users' description='hehehheh'>
+      <Typography variant="h2">Admin / Users</Typography>
       <Box marginLeft={12} marginTop={5}>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={12}>

@@ -5,6 +5,7 @@ import { element } from 'prop-types';
 import ListUsers from '../views/admin/ListUsers';
 import ListDashboards from '../views/admin/ListDashboards';
 import AdminLayout from '../layouts/admin/AdminLayout';
+import CreateUser from '../views/admin/CreateUsers';
 import Pbpage from '../views/dashboard/components/Pbpage';
 // import ContactUsPage from '../views/authentication/auth/AuthContactUs';
 import ContactUsPage from '../views/authentication/auth/AuthContactus';
@@ -56,7 +57,8 @@ const Router = [
     children: [
       { path: '/admin/', element: <Navigate to="/admin/users" /> },
       { path: '/admin/users', exact: true, element: <ListUsers/> },
-      { path: '/admin/dashboards', exact: true, element: <ListDashboards />},
+      { path: '/admin/dashboards', exact: true, element: <ListDashboards/>},
+      { path: '/admin/createuser', exact: true, element: <CreateUser/>},
     ],
   },
 ];

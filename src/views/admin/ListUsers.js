@@ -1,50 +1,33 @@
-import React from "react"
+import React from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import PageContainer from 'src/components/container/PageContainer';
-import { Grid, Typography } from "@mui/material";
+import { Grid, Button } from "@mui/material";
 import UserTable from "./users/userTable";
 import { Box } from "@mui/system";
 
 const ListUsers = () => {
+  const navigate = useNavigate(); // Initialize navigate function
+
+  const handleCreateUserClick = () => {
+    navigate('/admin/createuser'); // Navigate to the create user page
+  };
+
   return (
     <PageContainer title='Users' description='hehehheh'>
       <Box marginLeft={12} marginTop={5}>
         <Grid container spacing={3}>
-        <Grid item xs={12} lg={12}>
+          <Grid item xs={12} lg={12}>
+            {/* Create User Button outside and aligned to the top right */}
+            <Box display="flex" justifyContent="flex-end" mb={2}>
+              <Button variant="contained" onClick={handleCreateUserClick}>Create User</Button>
+            </Box>
+            {/* User Table */}
             <UserTable />
           </Grid>
         </Grid>
       </Box>
     </PageContainer>
-
-    // <PageContainer title="Dashboard" description="this is Dashboard">
-    //   <Box>
-    //     <Grid container spacing={3}>
-    //       <Grid item xs={12} lg={12}>
-    //         <SalesOverview />
-    //       </Grid>
-    //       <Grid item xs={12} lg={4}>
-    //         <Grid container spacing={3}>
-    //           <Grid item xs={12}>
-    //             <YearlyBreakup />
-    //           </Grid>
-    //           <Grid item xs={12}>
-    //             <MonthlyEarnings />
-    //           </Grid>
-    //         </Grid>
-    //       </Grid>
-    //       <Grid item xs={12} lg={4}>
-    //         <RecentTransactions />
-    //       </Grid>
-    //       <Grid item xs={12} lg={8}>
-    //         <ProductPerformance />
-    //       </Grid>
-    //       <Grid item xs={12}>
-    //         <Blog />
-    //       </Grid>
-    //     </Grid>
-    //   </Box>
-    // </PageContainer>
-  )
-}
+  );
+};
 
 export default ListUsers;

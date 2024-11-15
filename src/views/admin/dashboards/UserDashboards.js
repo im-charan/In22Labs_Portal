@@ -54,23 +54,31 @@ const UserDashboards = () =>{
   }
 
   return (
+   <>
+  
     <DashboardCard>
       <Grid container spacing={3} >
               {ecoCard.map((product, index) => (
                 <Grid item sm={12} md={4} lg={3} key={index} >
                       <BlankCard>
-                          <Typography>
-                              <img src={product.photo} alt="img" width="100%" onClick={ () => navigator(product.id)}/>
-                          </Typography>
+                      <Typography 
+                                component={Link}
+                                onClick={() => handleClick(product.title)} // Set title on click
+                                to={`/dashboard/${product.title}`}
+                            >
+                                <img src={product.photo} alt={product.title} width="100%" />
+                            </Typography>
                           <CardContent sx={{ p: 3, pt: 2 }}>
-                              <Typography variant="h6">{product.title}</Typography>
-                              <Typography variant="subtitle1">{product.organization}</Typography>
+                              <Typography variant="h6">{product.organization}</Typography>
+                              <Typography variant="subtitle1">{product.title}</Typography>
                           </CardContent>
                       </BlankCard>
                   </Grid>
               ))}
         </Grid>
     </DashboardCard>
+    </>
+  
   )
 }
 

@@ -1,50 +1,35 @@
-import React from "react"
+import React from "react";
+import { Grid, Box } from "@mui/material";
 import PageContainer from 'src/components/container/PageContainer';
-import { Grid, Typography } from "@mui/material";
-import UserTable from "./users/userTable";
-import { Box } from "@mui/system";
+import UserTable from "./users/userTable"; // Assuming this is the user table component
+import { useParams } from "react-router-dom";
+import BreadcrumbComponent from "../../components/shared/BreadCrumbComponent";
+import AdminHeader from "./AdminHeader";
 
 const ListUsers = () => {
+  const { organizationName } = useParams(); // Extract organisationName from URL params
+
   return (
-    <PageContainer title='Users' description='hehehheh'>
+    <PageContainer title="Users" description="List of users for the selected organization">
+        <AdminHeader/>
+<BreadcrumbComponent  
+        pageTitle="Users" 
+        breadcrumbTitle1="User"
+        breadcrumbRoute1="admin/users"
+        breadcrumbTitle2={organizationName}
+        breadcrumbRoute2={`/admin/users/${organizationName}`}
+      />
+      {/* Main content layout */}
       <Box marginLeft={12} marginTop={5}>
         <Grid container spacing={3}>
-        <Grid item xs={12} lg={12}>
-            <UserTable />
+          <Grid item xs={12} lg={12}>
+            <UserTable /> {/* Display the user table */}
           </Grid>
         </Grid>
       </Box>
-    </PageContainer>
 
-    // <PageContainer title="Dashboard" description="this is Dashboard">
-    //   <Box>
-    //     <Grid container spacing={3}>
-    //       <Grid item xs={12} lg={12}>
-    //         <SalesOverview />
-    //       </Grid>
-    //       <Grid item xs={12} lg={4}>
-    //         <Grid container spacing={3}>
-    //           <Grid item xs={12}>
-    //             <YearlyBreakup />
-    //           </Grid>
-    //           <Grid item xs={12}>
-    //             <MonthlyEarnings />
-    //           </Grid>
-    //         </Grid>
-    //       </Grid>
-    //       <Grid item xs={12} lg={4}>
-    //         <RecentTransactions />
-    //       </Grid>
-    //       <Grid item xs={12} lg={8}>
-    //         <ProductPerformance />
-    //       </Grid>
-    //       <Grid item xs={12}>
-    //         <Blog />
-    //       </Grid>
-    //     </Grid>
-    //   </Box>
-    // </PageContainer>
-  )
-}
+    </PageContainer>
+  );
+};
 
 export default ListUsers;

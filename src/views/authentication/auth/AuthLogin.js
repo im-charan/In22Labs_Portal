@@ -8,10 +8,15 @@ import {
     Stack,
     Checkbox
 } from '@mui/material';
+import TextField from '@mui/material/TextField';
 import { Link } from 'react-router-dom';
 
 import CustomTextField from '../../../components/forms/theme-elements/CustomTextField';
-
+import { IconLock } from '@tabler/icons-react';
+import InputAdornment from '@mui/material/InputAdornment';
+import { AccountCircle } from '@mui/icons-material';
+import LockIcon from '@mui/icons-material/Lock';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 const AuthLogin = ({ title, subtitle, subtext }) => (
     <>
         {title ? (
@@ -23,51 +28,63 @@ const AuthLogin = ({ title, subtitle, subtext }) => (
         {subtext}
 
         <Stack>
-            <Box>
-                <Typography variant="subtitle1"
-                    fontWeight={600} component="label" htmlFor='username' mb="5px">UserName</Typography>
-                <CustomTextField id="username" variant="outlined" fullWidth />
+            <Box mt="25px">
+              <TextField
+              color='primary'
+              id="outlined-input"
+              label="Username"
+              type="text"
+              size='medium'
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccountCircle color='primary'/>
+                  </InputAdornment>
+                ),
+              }}
+              />
             </Box>
             <Box mt="25px">
-                <Typography variant="subtitle1"
-                    fontWeight={600} component="label" htmlFor='password' mb="5px" >Password</Typography>
-                <CustomTextField id="password" type="password" variant="outlined" fullWidth />
+              <TextField
+              color='primary'
+              id="outlined-password-input"
+              label="Password"
+              type="password"
+              autoComplete="current-password"
+              size='medium'
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockIcon color='primary'/>
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position='end' >
+                    <VisibilityIcon />
+                  </InputAdornment>
+                ),
+              }}
+              />
             </Box>
-            <Stack justifyContent="center" direction="row" alignItems="center" my={2}>
-                {/* <FormGroup>
-                    <FormControlLabel
-                        control={<Checkbox defaultChecked />}
-                        label="Remeber this Device"
-                    />
-                </FormGroup> */}
-                {/* <Typography
-                    component={Link}
-                    to="/forgotpassword"
-                    fontWeight="500"
-                    sx={{
-                        textDecoration: 'none',
-                        color: 'primary.main',
-                        
-                    }}
+            <Stack justifyContent="center" direction="row" alignItems="center" my={2} marginTop={4}>
+              <Box>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  size="small"
+                  component={Link}
+                  to="/dashboard"
+                  type="submit"
                 >
-                    Forgot Password ?
-                </Typography> */}
-            </Stack>
-        </Stack>
-        <Box>
-            <Button
-                color="primary"
-                variant="contained"
-                size="large"
-                fullWidth
-                component={Link}
-                to="/"
-                type="submit"
-            >
                 Login 
-            </Button>
-        </Box>
+                </Button>
+              </Box>
+            </Stack>
         {subtitle}
+        </Stack>
+        
     </>
 );
 

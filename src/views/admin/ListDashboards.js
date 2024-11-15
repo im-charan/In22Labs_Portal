@@ -8,6 +8,7 @@ import { Box } from "@mui/system";
 const ListDashboards = () => {
   return (
     <PageContainer title='Dashboards'>
+      <Typography variant="h2">Admin / Dashboards</Typography>
       <Box marginLeft={12} marginTop={5}>
         <Grid container spacing={3}>
           <Grid xl>

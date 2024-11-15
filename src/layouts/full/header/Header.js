@@ -128,7 +128,6 @@ const Header = (props) => {
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
-        {/* Mobile menu icon */}
         <IconButton
           color="inherit"
           aria-label="menu"
@@ -143,21 +142,25 @@ const Header = (props) => {
           <IconMenu width="20" height="20" />
         </IconButton>
 
-        {/* Centered Company Name */}
-        <Typography
-          variant="h6"
+
+        <IconButton
+          size="large"
+          aria-label="show 11 new notifications"
+          color="inherit"
+          aria-controls="msgs-menu"
+          aria-haspopup="true"
           sx={{
-            color: "",
-            
-            flexGrow: 1,
-            textAlign: "center",
-            fontWeight: 600,
+            ...(typeof anchorEl2 === 'object' && {
+              color: 'primary.main',
+            }),
           }}
         >
-          {/* {OrganizationName } */}
-        </Typography>
+          {/* <Badge variant="dot" color="primary">
+            <IconBellRinging size="21" stroke="1.5" />
+          </Badge> */}
 
-        {/* Profile and permanent welcome message */}
+        </IconButton>
+        <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
           <Box
             sx={{

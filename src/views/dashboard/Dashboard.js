@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Box } from '@mui/material';
+import { Grid, Box, Typography } from '@mui/material';
 import PageContainer from 'src/components/container/PageContainer';
 
 // components
@@ -14,6 +14,7 @@ import MonthlyEarnings from './components/MonthlyEarnings';
 const Dashboard = () => {
   return (
     <PageContainer title="Dashboard" description="this is Dashboard">
+      <Typography variant='h2' marginBottom={4}>Dashboard</Typography>
       <Box>
         <Grid container spacing={3}>
           

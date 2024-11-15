@@ -9,69 +9,70 @@ import { uniqueId } from 'lodash';
 const Menuitems = [
   {
     navlabel: true,
-    subheader: 'Home',
+    subheader: "Home",
   },
 
   {
     id: uniqueId(),
-    title: 'Dashboard',
+    title: "Dashboard",
     icon: IconLayoutDashboard,
-    href: '/dashboard',
-  },
-  {
-    navlabel: true,
-    subheader: 'Admin',
+    href: "/dashboard",
   },
   {
     id: uniqueId(),
-    title: 'Users',
+    title: "Contact Us",
+    icon: IconPhone,
+    href: "/auth/contactus",
+  },
+  {
+    navlabel: true,
+    subheader: "Admin",
+  },
+  {
+    id: uniqueId(),
+    title: "Users",
     icon: IconUsersGroup,
-    href: '/admin/users',
+    href: "/admin/users",
   },
   {
     id: uniqueId(),
-    title: 'Dashboards',
+    title: "Dashboards",
     icon: IconLayoutDashboard,
-    href: '/admin/dashboards',
+    href: "/admin/dashboards",
   },
-  {
-    navlabel: true,
-    subheader: 'Auth',
-  },
-  {
-    id: uniqueId(),
-    title: 'Login',
-    icon: IconLogin,
-    href: '/auth/login',
-  },
+  // {
+  //   navlabel: true,
+  //   subheader: 'Auth',
+  // },
+  // {
+  //   id: uniqueId(),
+  //   title: 'Login',
+  //   icon: IconLogin,
+  //   href: '/auth/login',
+  // },
   // {
   //   id: uniqueId(),
   //   title: 'Register',
   //   icon: IconUserPlus,
   //   href: '/auth/register',
   // },
-  {
-    id: uniqueId(),
-    title: 'Contact Us',
-    icon: IconPhone,
-    href: '/auth/contactus',
-  },
-  {
-    navlabel: true,
-    subheader: 'Extra',
-  },
-  {
-    id: uniqueId(),
-    title: 'Icons',
-    icon: IconMoodHappy,
-    href: '/icons',
-  },
-  {
-    id: uniqueId(),
-    title: 'Sample Page',
-    icon: IconAperture,
-    href: '/sample-page',
-  },
+
+  // {
+  //   navlabel: true,
+  //   subheader: 'Extra',
+  // },
+  // {
+  //   id: uniqueId(),
+  //   title: 'Icons',
+  //   icon: IconMoodHappy,
+  //   href: '/icons',
+  // },
+  // {
+  //   id: uniqueId(),
+  //   title: 'Sample Page',
+  //   icon: IconAperture,
+  //   href: '/sample-page',
+  // },
 ];
 
 export default Menuitems;

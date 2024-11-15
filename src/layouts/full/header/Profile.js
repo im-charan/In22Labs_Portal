@@ -489,7 +489,7 @@ const Profile = () => {
           <ListItemText>
             {/* Link to the ProfilePage when clicking "My Profile" */}
             <Link
-              to="/page/ProfilePage"
+              to="/dashboard/ProfilePage"
               style={{ textDecoration: "none", color: "inherit" }}
             >
               My Profile

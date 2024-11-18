@@ -54,6 +54,7 @@ const AdminHeader = (props) => {
         {/* Add more elements as needed */}
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
+          
           {/* You can add additional elements here like Profile or Notifications */}
         </Stack>
       </ToolbarStyled>

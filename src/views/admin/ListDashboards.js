@@ -22,7 +22,7 @@ const ListDashboards = () => {
       <BreadcrumbComponent  
         pageTitle="Dashboards" 
         breadcrumbTitle1="Dashboard"
-        breadcrumbRoute1="/dashboard"
+        breadcrumbRoute1="/admin/dashboards"
          marginTop="70px"
         
       />

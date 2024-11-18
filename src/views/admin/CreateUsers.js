@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Typography, TextField, Button } from "@mui/material";
-
+import BreadcrumbComponent from '../../components/shared/BreadCrumbComponent';
+import AdminHeader from './AdminHeader'
 const CreateUser = () => {
   const [organisationName, setOrganisationName] = useState('');
   const [pocName, setPocName] = useState(''); // Added state for POC Name
@@ -13,7 +14,17 @@ const CreateUser = () => {
     console.log({ organisationName, pocName, contactNumber, emailId });
   };
 
-  return (
+  return (<>
+  <AdminHeader/>
+    <BreadcrumbComponent  
+        pageTitle="Create User" 
+        breadcrumbTitle1="User"
+        breadcrumbRoute1="/admin/users"
+        breadcrumbTitle2="Create"
+        breadcrumbRoute2="/admin/createuser"
+       marginTop="70px"
+        
+      />
     <Box
       margin={5}
       display="flex"
@@ -83,6 +94,7 @@ const CreateUser = () => {
         </Button>
       </Box>
     </Box>
+    </>
   );
 };
 

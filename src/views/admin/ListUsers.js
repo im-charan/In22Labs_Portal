@@ -23,13 +23,12 @@ const ListUsers = () => {
 <BreadcrumbComponent  
         pageTitle="User Table" 
         breadcrumbTitle1="User"
-        breadcrumbRoute1="admin/users"
-        breadcrumbTitle2={organizationName}
-        breadcrumbRoute2={`/admin/users/${organizationName}`}
+        breadcrumbRoute1="/admin/users"
+      
         marginTop="70px"
       />
       {/* Main content layout */}
-      <Box marginLeft={12} marginTop={5}>
+      <Box marginLeft={12} marginTop={0}>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={12}>
             {/* Create User Button outside and aligned to the top right */}

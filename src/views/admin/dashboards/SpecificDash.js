@@ -26,8 +26,8 @@ const SpecificDash = () => {
         <AdminHeader/>
            <BreadcrumbComponent
               pageTitle={organizationName}
-              breadcrumbTitle1="Users"
-              breadcrumbRoute1="/admin/dashboard"
+              breadcrumbTitle1="User"
+              breadcrumbRoute1="/admin/users"
               breadcrumbTitle2={organizationName}
               breadcrumbRoute2={`/admin/dashboard/${organizationName}`}
                marginTop="70px"

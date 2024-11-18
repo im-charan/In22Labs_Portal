@@ -9,7 +9,7 @@ import CreateUser from '../views/admin/CreateUsers';
 import Pbpage from '../views/dashboard/components/Pbpage';
 import SpecificDash from '../views/admin/dashboards/SpecificDash';
 // import ContactUsPage from '../views/authentication/auth/AuthContactUs';
-import ContactUsPage from '../views/authentication/auth/AuthContactus';
+import ContactUsPage from '../views/dashboard/AuthContactUs';
 import ProfilePage from '../pages/ProfilePage';
 ;
 /* ***Layouts**** */
@@ -50,18 +50,19 @@ const Router = [
       // { path: '*', element: <Navigate to="/auth/404" /> },
       { path: "/dashboard/product/:id", element: <Pbpage /> },
       { path: "/dashboard/ProfilePage" , element: <ProfilePage/>},
+      
     ],
   },
   {
     path: "/admin",
     element: <AdminLayout />,
     children: [
-      // Redirects to /admin/users
+      
       { path: '', element: <Navigate to="users" /> },  
       { path: 'users', exact: true, element: <ListUsers /> },
       { path: 'dashboards', exact: true, element: <ListDashboards /> },
       { path: 'dashboards/:organizationName', element:<SpecificDash/> },
-      { path: '/admin/createuser', element:<CreateUser/> },
+      { path: 'createuser', element:<CreateUser/> },
       // { path: 'dashboards/:product', element:<SpecificDash/> },
      
     ],

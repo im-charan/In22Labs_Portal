@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Grid, Box, Card, Stack, Typography, ToggleButtonGroup, ToggleButton} from "@mui/material";
 import {MDBCol} from 'mdb-react-ui-kit';
-// import BG from '../../assets/images/backgrounds/bg_gradient.png';
+import { useRef } from "react";
 
 // components
 import PageContainer from "../../components/container/PageContainer";
@@ -11,10 +11,14 @@ import AuthLogin from "./auth/AuthLogin";
 import ReactLogo from "../../layouts/full/shared/logo/Logo";
 import logindesign from '../authentication/login-design.svg';
 import amicodesign from '../../assets/images/backgrounds/Update-amico.svg';
-// import enginedesign from '../../assets/images/backgrounds/Search-engines-bro.svg';
+
+
 
 
 const Login2 = () => {
+
+
+  
   // Define alignment with a default value (e.g., 'left')
   const [alignment, setAlignment] = useState('centre');
 
@@ -88,27 +92,8 @@ const Login2 = () => {
               alignItems: 'center',
               mx: 'auto' }} />
               
-              <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '10vh', // full viewport height to center vertically
-      }}
-    >
-              <ToggleButtonGroup
-              color="primary"
-              value={alignment}
-              exclusive
-              onChange={handleChange}
-              aria-label="Platform"
-              size="small"
-      >
-              <ToggleButton value="Admin">Client</ToggleButton>
-              <ToggleButton value="User" >Admin</ToggleButton>
-              </ToggleButtonGroup>
-    </Box>
-
+              
+            
             
             <AuthLogin
               subtitle={

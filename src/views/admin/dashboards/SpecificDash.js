@@ -29,7 +29,7 @@ const SpecificDash = () => {
               breadcrumbTitle1="Organisation"
               breadcrumbRoute1="/admin/organisation"
               breadcrumbTitle2={organizationName}
-              breadcrumbRoute2={`admin/organisation/${organizationName}`}
+              breadcrumbRoute2={`/admin/organisation/${organizationName}`}
                marginTop="70px"
            
            />

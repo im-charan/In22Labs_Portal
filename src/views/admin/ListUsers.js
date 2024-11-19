@@ -5,8 +5,10 @@ import PageContainer from 'src/components/container/PageContainer';
 import { Grid, Button, Typography } from "@mui/material";
 import UserTable from "./users/userTable";
 import { useParams } from "react-router-dom"; // Import useParams
-import AdminHeader from "./AdminHeader";
+
 import BreadcrumbComponent from "../../components/shared/BreadCrumbComponent";
+import Header from "../../layouts/full/header/Header";
+import AdminHeader from "./AdminHeader";
 
 const ListUsers = () => {
   const { organizationName } = useParams(); // Extract organisationName from URL params

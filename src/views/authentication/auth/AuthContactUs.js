@@ -1,9 +1,16 @@
 import React from 'react';
 import { Box, Typography, Grid } from '@mui/material';
 import PageContainer from 'src/components/container/PageContainer';
+import BreadcrumbComponent from '../../../components/shared/BreadCrumbComponent';
 
 const ContactUsPage = () => (
     <PageContainer title= "Contact Us" description ="This is contact us" > 
+    <BreadcrumbComponent 
+     breadcrumbTitle1="Users"
+     breadcrumbRoute1="/dashboard"
+     breadcrumbTitle2="Contact Us"
+     breadcrumbRoute2={`/dashboard/ContactUsPage`}
+     marginTop="30px"/>
     <Box
         display="flex"
         justifyContent="center"
@@ -20,7 +27,7 @@ const ContactUsPage = () => (
                     alt="Customer Support"
                     sx={{
                         width: '100%',
-                        maxWidth: '700px',
+                        maxWidth: '600px',
                         borderRadius: '8px' // Optional: adds rounded corners
                     }}
                 />

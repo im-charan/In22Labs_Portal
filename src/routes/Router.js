@@ -50,6 +50,7 @@ const Router = [
       // { path: '*', element: <Navigate to="/auth/404" /> },
       { path: "/dashboard/product/:id", element: <Pbpage /> },
       { path: "/dashboard/ProfilePage" , element: <ProfilePage/>},
+      { path: "/dashboard/ContactUsPage" , element: <ContactUsPage/>},
     ],
   },
   {

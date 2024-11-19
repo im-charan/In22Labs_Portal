@@ -17,43 +17,36 @@ const ecoCard = [
 ];
 
 const SpecificDash = () => {
-  const { organizationName } = useParams();
-  console.log("organizationName:", organizationName);
-
-  return (
-    <>
-      <AdminHeader />
-      {/* Breadcrumb Component */}
-      <BreadcrumbComponent
-        pageTitle={organizationName}
-        breadcrumbTitle1="User"
-        breadcrumbRoute1="/admin/users"
-        breadcrumbTitle2={organizationName}
-        breadcrumbRoute2={`/admin/dashboard/${organizationName}`}
-        marginTop="70px"
-      />
-      {/* Add spacing below the breadcrumb */}
-      <Box sx={{ mt: 3 }}>
-        <Grid container spacing={3}>
-          {ecoCard.map((product) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-              <BlankCard>
-                <Typography
-                  component={Link}
-                  to={`/admin/dashboards/${organizationName}`}
-                >
-                  <img src={product.photo} alt={product.title} width="100%" />
-                </Typography>
-                <CardContent sx={{ p: 3, pt: 2 }}>
-                  <Typography variant="h6">{product.title}</Typography>
-                </CardContent>
-              </BlankCard>
+    const { organizationName } = useParams();  
+    console.log('organizationName:', organizationName); 
+    return (
+        <>
+        <AdminHeader/>
+           <BreadcrumbComponent
+              pageTitle={organizationName}
+              breadcrumbTitle1="Organisation"
+              breadcrumbRoute1="/admin/organisation"
+              breadcrumbTitle2={organizationName}
+              breadcrumbRoute2={`admin/organisation/${organizationName}`}
+               marginTop="70px"
+           
+           />
+            <Grid container spacing={3}>
+                {ecoCard.map((product) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
+                        <BlankCard>
+                            <Typography component={Link} to={`/admin/dashboards/${organizationName}`}>
+                                <img src={product.photo} alt={product.title} width="100%" />
+                            </Typography>
+                            <CardContent sx={{ p: 3, pt: 2 }}>
+                                <Typography variant="h6">{product.title}</Typography>
+                            </CardContent>
+                        </BlankCard>
+                    </Grid>
+                ))}
             </Grid>
-          ))}
-        </Grid>
-      </Box>
-    </>
-  );
+        </>
+    );
 };
 
 export default SpecificDash;

@@ -11,12 +11,11 @@ import {
 import TextField from '@mui/material/TextField';
 import { Link } from 'react-router-dom';
 
-import CustomTextField from '../../../components/forms/theme-elements/CustomTextField';
-import { IconLock } from '@tabler/icons-react';
 import InputAdornment from '@mui/material/InputAdornment';
 import { AccountCircle } from '@mui/icons-material';
 import LockIcon from '@mui/icons-material/Lock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import Captcha from './Captcha';
 const AuthLogin = ({ title, subtitle, subtext }) => (
     <>
         {title ? (
@@ -32,6 +31,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => (
               <TextField
               color='primary'
               id="outlined-input"
+              placeholder='Username'
               label="Username"
               type="text"
               size='medium'
@@ -49,6 +49,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => (
               <TextField
               color='primary'
               id="outlined-password-input"
+              placeholder='Password'
               label="Password"
               type="password"
               autoComplete="current-password"
@@ -62,13 +63,16 @@ const AuthLogin = ({ title, subtitle, subtext }) => (
                 ),
                 endAdornment: (
                   <InputAdornment position='end' >
-                    <VisibilityIcon />
+                    <VisibilityIcon onClick={console.log('add hide password fn')}/>
                   </InputAdornment>
                 ),
               }}
               />
             </Box>
-            <Stack justifyContent="center" direction="row" alignItems="center" my={2} marginTop={4}>
+            <Stack justifyContent="center" direction="column" alignItems="center" my={2} marginTop={4}>
+              <Box marginBottom={2}>
+                <Captcha/>
+              </Box>
               <Box>
                 <Button
                   color="primary"

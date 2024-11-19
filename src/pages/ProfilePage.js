@@ -138,6 +138,7 @@
 // export default ProfilePage;
 import React from "react";
 import { Box, Typography, Avatar, Grid, Paper } from "@mui/material";
+import BreadcrumbComponent from "../components/shared/BreadCrumbComponent";
 
 // Sample data with updated information
 const userInfo = {
@@ -146,12 +147,19 @@ const userInfo = {
   accountInitialDate: new Date("2023-01-01"),
   accountEndDate: new Date("2024-01-01"), // Added end date for account validity
   dashboardsCount: 5,
-  email: "Abdul@gmil.com",
+  email: "Abdul@gmail.com",
   imageUrl: "src/assets/images/profile/user-1.jpg", // Path to user image
 };
 
 const ProfilePage = () => {
   return (
+    <>
+    <BreadcrumbComponent  pageTitle="User Profile" 
+        breadcrumbTitle1="Dashboard"
+        breadcrumbRoute1="/dashboard"
+         breadcrumbTitle2="User Profile"
+        breadcrumbRoute2="/dashboard/ProfilePage"
+        />
     <Box sx={{ padding: 2 }}>
       <Paper elevation={3} sx={{ padding: 3, borderRadius: 2 }}>
         {/* Profile Image and Name */}
@@ -204,6 +212,7 @@ const ProfilePage = () => {
         </Grid>
       </Paper>
     </Box>
+    </>
   );
 };
 

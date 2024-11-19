@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { styled, Container, Box } from '@mui/material';
 import { Outlet } from 'react-router-dom';
-
+import AdminHeader from "../../views/admin/AdminHeader";
 import AdminSidebar from "./sidebar/AdminSidebar";
 
 const MainWrapper = styled('div')(() => ({
@@ -26,33 +26,39 @@ const AdminLayout = () => {
   // const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
 
   return (
-    <MainWrapper
-      className='mainwrapper'
-    >
+    <MainWrapper className="mainwrapper">
       {/* ------------------------------------------- */}
       {/* Sidebar */}
       {/* ------------------------------------------- */}
-      <AdminSidebar isSidebarOpen={isSidebarOpen}
+      <AdminSidebar
+        isSidebarOpen={isSidebarOpen}
         isMobileSidebarOpen={isMobileSidebarOpen}
-        onSidebarClose={() => setMobileSidebarOpen(false)} />
+        onSidebarClose={() => setMobileSidebarOpen(false)}
+      />
       {/* ------------------------------------------- */}
       {/* Main Wrapper */}
       {/* ------------------------------------------- */}
-      <PageWrapper
-        className="page-wrapper"
-      >
+      <PageWrapper className="page-wrapper">
+        {/* ------------------------------------------- */}
+        {/* AdminHeader */}
+        {/* ------------------------------------------- */}
+        <AdminHeader
+          toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
+          toggleMobileSidebar={() => setMobileSidebarOpen(true)}
+        />
         {/* ------------------------------------------- */}
         {/* PageContent */}
         {/* ------------------------------------------- */}
-        <Container sx={{
-          paddingTop: "20px",
-          maxWidth: '1200px',
-        }}
+        <Container
+          sx={{
+            paddingTop: "20px",
+            maxWidth: "1200px",
+          }}
         >
           {/* ------------------------------------------- */}
           {/* Page Route */}
           {/* ------------------------------------------- */}
-          <Box sx={{ minHeight: 'calc(100vh - 170px)' }}>
+          <Box sx={{ minHeight: "calc(100vh - 170px)" }}>
             <Outlet />
           </Box>
           {/* ------------------------------------------- */}

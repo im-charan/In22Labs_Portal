@@ -2,7 +2,8 @@ import { color } from '@mui/system';
 import {
   IconAperture, IconCopy, IconLayoutDashboard, IconLogin, IconMoodHappy, IconTypography, IconUserPlus,IconUser,
   IconUsersGroup,
-  IconLogout
+  IconLogout,
+  IconBuilding
 } from '@tabler/icons-react';
 
 import { uniqueId } from 'lodash';
@@ -23,6 +24,12 @@ const AdminMenuitems = [
     title: 'Dashboards',
     icon: IconLayoutDashboard,
     href: '/admin/dashboards',
+  },
+  {
+    id: uniqueId(),
+    title: 'Organisation',
+    icon: IconBuilding,
+    href: '/admin/organisation',
   },
 ];
 

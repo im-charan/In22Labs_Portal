@@ -1,4 +1,4 @@
-import { useMediaQuery, Box, Drawer } from '@mui/material';
+import { Stack, useMediaQuery, Box, Drawer } from '@mui/material';
 import SidebarItems from './SidebarItems';
 import { Sidebar, Logo } from 'react-mui-sidebar';
 import logo from '../../../assets/images/logos/dark1-logo.svg'
@@ -63,7 +63,24 @@ const MSidebar = (props) => {
               {/* ------------------------------------------- */}
               {/* Logo */}
               {/* ------------------------------------------- */}
-              <Logo img={logo} />
+              
+              <Box
+                sx={{
+                  width: '100%',  // Take up full width
+                    // Take full height
+                }}
+              >
+                <Stack
+                  sx={{
+                    alignItems: 'center',  
+                    display: 'flex',  
+                  }}
+                >
+                  <Logo img={logo} /> {/* The logo */}
+                </Stack>
+              </Box>
+                
+               
               <Box>
                 {/* ------------------------------------------- */}
                 {/* Sidebar Items */}

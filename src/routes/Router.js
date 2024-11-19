@@ -8,9 +8,11 @@ import AdminLayout from '../layouts/admin/AdminLayout';
 import CreateUser from '../views/admin/CreateUsers';    
 import Pbpage from '../views/dashboard/components/Pbpage';
 import SpecificDash from '../views/admin/dashboards/SpecificDash';
-// import ContactUsPage from '../views/authentication/auth/AuthContactUs';
-import ContactUsPage from '../views/authentication/auth/AuthContactus';
+
+import ContactUsPage from '../views/dashboard/AuthContactUs';
 import ProfilePage from '../pages/ProfilePage';
+import ListOrganisation from '../views/admin/ListOrganisation';
+import AddOrganisation from '../views/admin/addorganisation';
 ;
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -57,14 +59,15 @@ const Router = [
     path: "/admin",
     element: <AdminLayout />,
     children: [
-      // Redirects to /admin/users
+      
       { path: '', element: <Navigate to="users" /> },  
       { path: 'users', exact: true, element: <ListUsers /> },
       { path: 'dashboards', exact: true, element: <ListDashboards /> },
-      { path: 'dashboards/:organizationName', element:<SpecificDash/> },
-      { path: '/admin/createuser', element:<CreateUser/> },
+      { path: 'organisation/:organizationName', element:<SpecificDash/> },
+      { path: 'createuser', element:<CreateUser/> },
       // { path: 'dashboards/:product', element:<SpecificDash/> },
-     
+     {path: 'organisation', exact:true, element:<ListOrganisation/>},
+     {path:'addorganisation',exact:true,element:<AddOrganisation/>}
     ],
   }
 ];

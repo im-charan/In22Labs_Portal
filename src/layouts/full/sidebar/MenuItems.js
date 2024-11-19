@@ -24,32 +24,32 @@ const Menuitems = [
     icon: IconPhone,
     href: "/dashboard/ContactUsPage",
   },
-  {
-    navlabel: true,
-    subheader: 'Admin',
-  },
-  {
-    id: uniqueId(),
-    title: 'Users',
-    icon: IconUsersGroup,
-    href: '/admin/users',
-  },
-  {
-    id: uniqueId(),
-    title: 'Dashboards',
-    icon: IconLayoutDashboard,
-    href: '/admin/dashboards',
-  },
-  {
-    navlabel: true,
-    subheader: 'Auth',
-  },
-  {
-    id: uniqueId(),
-    title: 'Login',
-    icon: IconLogin,
-    href: '/auth/login',
-  },
+  // {
+  //   navlabel: true,
+  //   subheader: 'Admin',
+  // },
+  // {
+  //   id: uniqueId(),
+  //   title: 'Users',
+  //   icon: IconUsersGroup,
+  //   href: '/admin/users',
+  // },
+  // {
+  //   id: uniqueId(),
+  //   title: 'Dashboards',
+  //   icon: IconLayoutDashboard,
+  //   href: '/admin/dashboards',
+  // },
+  // {
+  //   navlabel: true,
+  //   subheader: 'Auth',
+  // },
+  // {
+  //   id: uniqueId(),
+  //   title: 'Login',
+  //   icon: IconLogin,
+  //   href: '/auth/login',
+  // },
   // {
   //   id: uniqueId(),
   //   title: 'Register',

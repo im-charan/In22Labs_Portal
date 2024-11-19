@@ -18,15 +18,15 @@ const OrganizationName = "ABC ORGANIZATION";
 
 const Header = (props) => {
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)", // Adding a subtle shadow
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)", // Adding a subtle shadow
+    // background: "#5d87ff",
     justifyContent: "center",
     backdropFilter: "blur(4px)",
     height: 50,
-    //position:"fixed",
-    
-    borderBottom: "2px solid rgba(74, 118, 211, 0.2)", // 50% opacity
+    //borderBottom: "2px solid #4a76d3", // Adding a border
+    borderBottom: "2px solid rgba(74, 118, 211, 0.)", // 50% opacity
 
-   // borderRadius: "0 0 0px 0px", // Optional for rounded bottom corners
+    borderRadius: "0 0 0px 0px", // Optional for rounded bottom corners
   }));
 
   const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
@@ -50,14 +50,25 @@ const Header = (props) => {
         >
           <IconMenu width="20" height="20" />
         </IconButton>
-        <Typography
-          variant="h3"
-          component="div"
-          sx={{ marginLeft: 8, fontWeight: "bold" }}
-        >
-          In22labs
-        </Typography>
 
+
+        <IconButton
+          size="large"
+          aria-label="show 11 new notifications"
+          color="inherit"
+          aria-controls="msgs-menu"
+          aria-haspopup="true"
+          sx={{
+            ...(typeof anchorEl2 === 'object' && {
+              color: 'primary.main',
+            }),
+          }}
+        >
+          {/* <Badge variant="dot" color="primary">
+            <IconBellRinging size="21" stroke="1.5" />
+          </Badge> */}
+
+        </IconButton>
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
           <Box

@@ -2,7 +2,7 @@ import { useMediaQuery, Box, Drawer } from '@mui/material';
 import SidebarItems from './AdminSidebarItems';
 import { Sidebar, Logo } from 'react-mui-sidebar';
 import logo from '../../../assets/images/logos/dark1-logo.svg'
-
+import { Stack } from '@mui/material';
 const AdminSidebar = (props) => {
 
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
@@ -63,9 +63,23 @@ const AdminSidebar = (props) => {
               {/* ------------------------------------------- */}
               {/* Logo */}
               {/* ------------------------------------------- */}
-              <Box>
-                <Logo img={logo} />
-              </Box>
+             
+              <Box
+                sx={{
+                  width: '100%',  // Take up full width
+                    // Take full height
+                }}
+              >
+                <Stack
+                  sx={{
+                    alignItems: 'center',  
+                    display: 'flex',  
+                  }}
+                >
+                  <Logo img={logo} /> {/* The logo */}
+                </Stack>
+              </Box> {/* The logo */}
+               
               <Box>
                 {/* ------------------------------------------- */}
                 {/* Sidebar Items */}

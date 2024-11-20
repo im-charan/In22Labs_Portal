@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Grid, Box, Card, Stack, Typography, ToggleButtonGroup, ToggleButton} from "@mui/material";
+import { Grid, Box, Card, Stack, Typography, ToggleButtonGroup, ToggleButton, Paper, CardHeader} from "@mui/material";
 import {MDBCol} from 'mdb-react-ui-kit';
 import { useRef } from "react";
 
@@ -10,8 +10,10 @@ import Logo from "../../layouts/full/shared/logo/Logo";
 import AuthLogin from "./auth/AuthLogin";
 import ReactLogo from "../../layouts/full/shared/logo/Logo";
 import logindesign from '../authentication/login-design.svg';
-import amicodesign from '../../assets/images/backgrounds/Update-amico.svg';
-
+// import amicodesign from '../../assets/images/backgrounds/Update-amico.svg';
+import amicodesign from '../../assets/images/backgrounds/Stats-amico.svg';
+import bg from './loginbg.svg'
+import Grid2 from "@mui/material/Unstable_Grid2";
 
 
 
@@ -31,13 +33,16 @@ const Login2 = () => {
   
 
   return (
-    <Box
+    <Paper>
+
+    {/* <Box
       sx={{
         position: "relative",
         background: 'linear-gradient(to right, #dfe9f3 30%, white 50% , #c8d1da 90% )',
         backgroundSize: "cover",
         backgroundPosition: "center",
         height: "100vh",
+        backgroundImage: {bg},
         "&:before": {
           content: '""',
           background: 'linear-gradient(to right, #dfe9f3 30%, white 100%)',
@@ -47,46 +52,54 @@ const Login2 = () => {
           height: "100%",
           width: "100%",
           opacity: "0.3",
-        },
-      }}
-    >
+          },
+          }}
+          > */}
+    <Box item sx={{backgroundImage: `url(${bg})`, position: 'relative' , height: '100vh', backgroundSize: 'cover'}}>
 
-      
-      <Grid container sx={{ height: "100vh" }}>
+
+      <Grid container sx={{ height: "100vh" }} flexDirection='row'>
+        {/* <Grid item display='flex' marginBottom={-15}>
+            < Typography variant="h2">WELCOME TO SINGLE WINDOW PORTAL</Typography>
+          </Grid> */}
         <Grid
           item
-          xs={0}  
+          xs={2}  
           sm={5}  
-          lg={6}  
-          display="flex"
+          lg={6}
+          display='flex'
           justifyContent="center"
           alignItems="center"
-        >
-          <img src={amicodesign} alt="Login Design" style={{ width: "70%", height: "auto" }} />
+          >
+          <img src={amicodesign} alt="Login Design" style={{ width: "70vh", height: "auto" }} />
           
 
         </Grid>
 
+
         <Grid
-          item
+          container
           xs={12}
           sm={7}
           lg={6}
-          display="flex"
           justifyContent="center"
           alignItems="center"
-        >
-          <Card
-            elevation={9}
-            sx={{ p: 4, zIndex: 1, width: "100%", maxWidth: "400px", borderRadius: "55px", }}
+          width='400px'
           >
+          {/* <Grid marginBottom={-15}>
+            < Typography variant="h2">WELCOME TO SINGLE WINDOW PORTAL</Typography>
+          </Grid> */}
+          <Card
+            elevation={10}
+            sx={{ p: 4, zIndex: 1, width: "100%", maxWidth: "400px", borderRadius: "55px", }}
+            >
             <Box
             component="img"
             src="/src/assets/images/logos/dark1-logo.svg"
             alt="Logo"
             sx={{
               width: 'auto',
-              height: 100,
+              height: '100%',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
@@ -106,16 +119,17 @@ const Login2 = () => {
                       textDecoration: 'none',
                       color: 'primary.main',
                     }}
-                  >
+                    >
                     Forget Password?
                   </Typography>
                 </Stack>
               }
-            />
+              />
           </Card>
         </Grid>
       </Grid>
     </Box>
+</Paper>
   );
 };
 

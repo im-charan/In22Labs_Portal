@@ -78,12 +78,15 @@ const AddOrganisation = () => {
 
           {/* Address */}
           <TextField
-            label="Address"
-            variant="outlined"
-            fullWidth
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
+  label="Address"
+  variant="outlined"
+  fullWidth
+  value={address}
+  onChange={(e) => setAddress(e.target.value)}
+  multiline
+  rows={4} // Adjust the number of rows as needed
+/>
+
 
           {/* Submit Button */}
           <Button variant="contained" color="primary" type="submit" fullWidth>

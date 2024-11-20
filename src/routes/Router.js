@@ -4,8 +4,7 @@ import Loadable from '../layouts/full/shared/loadable/Loadable';
 import { element } from 'prop-types';
 import ListUsers from '../views/admin/ListUsers';
 import ListDashboards from '../views/admin/ListDashboards';
-import AdminLayout from '../layouts/admin/AdminLayout';
-import CreateUser from '../views/admin/CreateUsers';    
+import AdminLayout from '../layouts/admin/AdminLayout'; 
 import Pbpage from '../views/dashboard/components/Pbpage';
 
 
@@ -15,6 +14,7 @@ import ListOrganisation from '../views/admin/ListOrganisation';
 import AddOrganisation from '../views/admin/addorganisation';
 import SpecificDash from '../views/admin/dashboards/specificdash';
 import AddDashboard from '../views/admin/dashboards/add-dashboard';
+import AddUser from '../views/admin/AddUser';
 ;
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -66,7 +66,7 @@ const Router = [
       { path: 'users', exact: true, element: <ListUsers /> },
       { path: 'dashboards', exact: true, element: <ListDashboards /> },
       { path: 'organisation/:organizationName', element:<SpecificDash/> },
-      { path: 'createuser', element:<CreateUser/> },
+      { path: 'createuser', element:<AddUser/> },
       // { path: 'dashboards/:product', element:<SpecificDash/> },
      {path: 'organisation', exact:true, element:<ListOrganisation/>},
      {path:'addorganisation',exact:true,element:<AddOrganisation/>},

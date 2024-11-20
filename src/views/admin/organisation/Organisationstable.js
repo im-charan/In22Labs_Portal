@@ -15,12 +15,27 @@ import {
 } from "@mui/material";
 
 const clients = [
-  { id: "1", organizationName: "ABC Organization", type: "Agriculture", address: "123 Maple Street, Springfield, IL", count: "5" },
-  { id: "2", organizationName: "BCD Organization", type: "Technology", address: "456 Oak Avenue, Metropolis, NY", count: "5"},
-  { id: "3", organizationName: "CDE Organization", type: "Agriculture", address: "789 Pine Road, Gotham City, NJ", count: "5"},
-  { id: "4", organizationName: "DEF Organization", type: "Education", address: "101 Elm Street, Star City, CA", count: "5" },
-  { id: "5", organizationName: "EFG Organization", type: "Finance", address: "202 Cedar Boulevard, Central City, TX", count: "5"},
-  { id: "6", organizationName: "FGH Organization", type: "Retail", address: "303 Birch Lane, Coast City, FL", count: "5" },
+  { id: "1", organizationName: "ABC Organization", type: "Agriculture", address: "123 Maple Street, Springfield, IL", count: 5 },
+  { id: "2", organizationName: "BCD Organization", type: "Technology", address: "456 Oak Avenue, Metropolis, NY", count: 3 },
+  { id: "3", organizationName: "CDE Organization", type: "Agriculture", address: "789 Pine Road, Gotham City, NJ", count: 7 },
+  { id: "4", organizationName: "DEF Organization", type: "Education", address: "101 Elm Street, Star City, CA", count: 2 },
+  { id: "5", organizationName: "EFG Organization", type: "Finance", address: "202 Cedar Boulevard, Central City, TX", count: 4 },
+  { id: "6", organizationName: "FGH Organization", type: "Retail", address: "303 Birch Lane, Coast City, FL", count: 1 },
+  { id: "7", organizationName: "GHI Organization", type: "Technology", address: "404 Cedar Road, Hilltop, TX", count: 9 },
+  { id: "8", organizationName: "HIJ Organization", type: "Finance", address: "505 Oak Street, Riverdale, CO", count: 6 },
+  { id: "9", organizationName: "JKL Organization", type: "Healthcare", address: "606 Pine Avenue, Lakeside, CA", count: 8 },
+  { id: "10", organizationName: "KLM Organization", type: "Education", address: "707 Maple Drive, Brightville, PA", count: 0 },
+  { id: "11", organizationName: "LMN Organization", type: "Retail", address: "808 Elm Street, Downtown, TX", count: 2 },
+  { id: "12", organizationName: "MNO Organization", type: "Agriculture", address: "909 Birch Boulevard, Greenfield, IL", count: 3 },
+  { id: "13", organizationName: "NOP Organization", type: "Finance", address: "1010 Oak Lane, Silverwood, MI", count: 5 },
+  { id: "14", organizationName: "OPQ Organization", type: "Technology", address: "1111 Cedar Drive, Pinehill, NY", count: 4 },
+  { id: "15", organizationName: "PQR Organization", type: "Education", address: "1212 Maple Street, Hillview, AZ", count: 6 },
+  { id: "16", organizationName: "QRS Organization", type: "Healthcare", address: "1313 Pine Road, Meadowbrook, FL", count: 7 },
+  { id: "17", organizationName: "RST Organization", type: "Retail", address: "1414 Oak Boulevard, Westbrook, CO", count: 3 },
+  { id: "18", organizationName: "STU Organization", type: "Technology", address: "1515 Cedar Avenue, Greenway, CA", count: 10 },
+  { id: "19", organizationName: "TUV Organization", type: "Finance", address: "1616 Birch Lane, Ridgewood, NJ", count: 2 },
+  { id: "20", organizationName: "UVW Organization", type: "Agriculture", address: "1717 Maple Road, Pine Valley, TX", count: 0 },
+  { id: "21", organizationName: "Sherin Organisation", type: "Retail", address: "24/11 Demonty Colony, Puerto Rica, CNN", count: 4 },
 ];
 
 const Organisationstable = () => {
@@ -122,7 +137,7 @@ const Organisationstable = () => {
           <TableHead>
             <TableRow>
               <TableCell>
-                <Typography variant="h6">S.No</Typography>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>S.No</Typography>
               </TableCell>
               <TableCell sortDirection={orderBy === "organizationName" ? order : false}>
                 <TableSortLabel
@@ -130,7 +145,7 @@ const Organisationstable = () => {
                   direction={orderBy === "organizationName" ? order : "asc"}
                   onClick={() => handleSortRequest("organizationName")}
                 >
-                  Organisation Name
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>Organisation Name</Typography>
                 </TableSortLabel>
               </TableCell>
               <TableCell sortDirection={orderBy === "type" ? order : false}>
@@ -139,12 +154,20 @@ const Organisationstable = () => {
                   direction={orderBy === "type" ? order : "asc"}
                   onClick={() => handleSortRequest("type")}
                 >
-                  Type
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>Type</Typography>
                 </TableSortLabel>
               </TableCell>
-              <TableCell>Address</TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>Address</Typography>
+              </TableCell>
               <TableCell align="center">
+                <TableSortLabel
+                  active={orderBy === "count"}
+                  direction={orderBy === "count" ? order : "asc"}
+                  onClick={() => handleSortRequest("count")}
+                  >
                 <Typography variant="h6" align="center">Dashboards</Typography>
+                </TableSortLabel>
               </TableCell>
             </TableRow>
           </TableHead>

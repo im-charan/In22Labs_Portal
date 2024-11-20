@@ -232,15 +232,7 @@ const UserTable = () => {
                 <Typography variant="h6" align="center">Email</Typography>
                 </TableSortLabel>
               </TableCell>
-              <TableCell align="center">
-                <TableSortLabel
-                  active={orderBy === "count"}
-                  direction={orderBy === "count" ? order : "asc"}
-                  onClick={() => handleSortRequest("count")}
-                  >
-                <Typography variant="h6" align="center">Dashboards</Typography>
-                </TableSortLabel>
-              </TableCell>
+      
             </TableRow>
           </TableHead>
           <TableBody>

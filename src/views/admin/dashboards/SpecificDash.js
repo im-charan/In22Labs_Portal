@@ -1,13 +1,13 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { CardContent, Typography, Grid, Box } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add"; // Import AddIcon
+import AddIcon from "@mui/icons-material/Add";
 import img from "../../../assets/images/products/analytics.png"
 
 import BlankCard from "../../../components/shared/BlankCard"; // Adjusted path
 import BreadcrumbComponent from "../../../components/shared/BreadCrumbComponent";
 import AdminHeader from "../AdminHeader";
-
+import noDashboardsImage from "src/assets/images/backgrounds/empd.jpg"; // Path to your image
 
 const ecoCard = [
   { id: 1, title: "Financial Dashboard", photo: img },
@@ -38,7 +38,7 @@ const SpecificDash = () => {
         breadcrumbRoute1="/admin/organisation"
         breadcrumbTitle2={organizationName}
         breadcrumbRoute2={`/admin/organisation/${organizationName}`}
-        marginTop="70px"
+        marginTop="60px"
       />
       {/* Add spacing below the breadcrumb */}
       <Box sx={{ mt: 3 }}>
@@ -48,11 +48,7 @@ const SpecificDash = () => {
             <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
               <BlankCard sx={cardStyle}>
                 <Box sx={{ width: "100%", overflow: "hidden" }}>
-                  <img
-                    src={product.photo}
-                    alt={product.title}
-                    width="100%"
-                  />
+                  <img src={product.photo} alt={product.title} width="100%" />
                 </Box>
                 <CardContent sx={{ p: 2 }}>
                   <Typography variant="h6">{product.title}</Typography>
@@ -127,16 +123,35 @@ const SpecificDash = () => {
 
 
         </Grid>
-        {/* No Dashboards Message */}
-        {ecoCard.length === 0 && (
-          <Typography
-            variant="h6"
-            align="center"
-            sx={{ color: "gray", mt: 4 }}
-          >
-            No dashboards available
-          </Typography>
-        )}
+{/* No Dashboards Message with Image */}
+{ecoCard.length === 0 && (
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      mt: -18, // Add margin-top for spacing
+    }}
+  >
+    {/* Add Image */}
+    <Box
+      component="img"
+      src={noDashboardsImage} // Image path
+      alt="No dashboards available"
+      sx={{
+        width: "500px", // Increased width
+        height: "auto", // Maintain aspect ratio
+        mb: 3, // Add margin-bottom for spacing between image and text
+        display: "block", // Ensure the image is treated as a block element
+      }}
+    />
+    {/* Add Text */}
+    <Typography variant="h6" align="center" sx={{ color: "gray" }}>
+      No dashboards available
+    </Typography>
+  </Box>
+)}
       </Box>
     </>
   );

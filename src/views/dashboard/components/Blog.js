@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Box, CardContent, Typography, Grid } from "@mui/material";
-import img1 from "src/assets/images/products/s4.png";
-import img2 from "src/assets/images/products/s5.png";
-import img3 from "src/assets/images/products/s7.png";
-import img4 from "src/assets/images/products/s11.png";
+// import img1 from "src/assets/images/products/s4.png";
+// import img2 from "src/assets/images/products/s5.png";
+// import img3 from "src/assets/images/products/s7.png";
+// import img4 from "src/assets/images/products/s11.png";
 import BlankCard from "../../../components/shared/BlankCard";
 import BreadcrumbComponent from "../../../components/shared/BreadCrumbComponent";
+import img from "../../../assets/images/products/analytics.png"
 
 const ecoCard = [
-  { id: 1, title: "Financial Dashboard", photo: img1 },
-  { id: 2, title: "Statistical Dashboard", photo: img2 },
-  { id: 3, title: "Inventorial Dashboard", photo: img3 },
-  { id: 4, title: "Readable Dashboard", photo: img4 },
+  { id: 1, title: "Financial Dashboard", photo: img },
+  { id: 2, title: "Statistical Dashboard", photo: img },
+  { id: 3, title: "Inventorial Dashboard", photo: img },
+  { id: 4, title: "Readable Dashboard", photo: img},
 ];
 
 const Blog = () => {

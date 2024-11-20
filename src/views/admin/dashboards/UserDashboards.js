@@ -5,7 +5,6 @@ import { Stack } from "@mui/system";
 import img from "../../../assets/images/products/dashboard.jpg"
 import { Link, useNavigate } from "react-router-dom";
 import DashboardCard from "../../../components/shared/DashboardCard";
-
 const ecoCard = [
   {
       id: 1,

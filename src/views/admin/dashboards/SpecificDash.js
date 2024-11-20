@@ -2,19 +2,18 @@ import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { CardContent, Typography, Grid, Box } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add"; // Import AddIcon
-import img1 from "src/assets/images/products/s4.png";
-import img2 from "src/assets/images/products/s5.png";
-import img3 from "src/assets/images/products/s7.png";
-import img4 from "src/assets/images/products/s11.png";
+import img from "../../../assets/images/products/analytics.png"
+
 import BlankCard from "../../../components/shared/BlankCard"; // Adjusted path
 import BreadcrumbComponent from "../../../components/shared/BreadCrumbComponent";
 import AdminHeader from "../AdminHeader";
 
+
 const ecoCard = [
-  { id: 1, title: "Financial Dashboard", photo: img1 },
-  { id: 2, title: "Statistical Dashboard", photo: img2 },
-  { id: 3, title: "Inventorial Dashboard", photo: img3 },
-  { id: 4, title: "Readable Dashboard", photo: img4 },
+  { id: 1, title: "Financial Dashboard", photo: img },
+  { id: 2, title: "Statistical Dashboard", photo: img},
+  { id: 3, title: "Inventorial Dashboard", photo: img },
+  { id: 4, title: "Readable Dashboard", photo: img },
 ]; // Example with dashboards
 
 const SpecificDash = () => {
@@ -63,43 +62,70 @@ const SpecificDash = () => {
           ))}
           {/* Add Dashboard Card Always */}
           <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Link to={`/admin/organisation/${organizationName}/add-dashboard`}>
-              <BlankCard
-                sx={{
-                  ...cardStyle,
-                  cursor: "pointer", // Make it clickable
-                  mt: ecoCard.length === 0 ? 0 : 3, // Add margin-top to separate it from other cards
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                    height: "190px",
-                  }}
-                >
-                  {/* Add Icon with hover effect */}
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      padding: "8px", // Space around the icon
-                      borderRadius: "50%", // Circular background around the icon
-                      transition: "background-color 0.3s ease", // Smooth transition
-                      "&:hover": {
-                        backgroundColor: "rgba(0, 0, 0, 0.1)", // Hover color effect
-                      },
-                    }}
-                  >
-                    <AddIcon fontSize="large" sx={{ color: "gray" }} />
-                  </Box>
-                </Box>
-              </BlankCard>
-            </Link>
-          </Grid>
+  <Link to={`/admin/organisation/${organizationName}/add-dashboard`}
+  style={{ textDecoration: "none" }}>
+    <BlankCard
+      sx={{
+        ...cardStyle,
+        cursor: "pointer", // Make it clickable
+        mt: ecoCard.length === 0 ? 0 : 3, // Add margin-top to separate it from other cards
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
+        transition: "transform 0.3s ease, box-shadow 0.3s ease", // Smooth hover effect
+        "&:hover": {
+          transform: "scale(1.05)", // Slight zoom on hover
+          boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)", // Enhanced shadow
+        },
+        backgroundColor: "primary.light", // Light primary background
+        borderRadius: 2, // Rounded corners
+        textAlign: "center", // Center align text
+        p: 2, // Padding for spacing
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column", // Stack icon and text vertically
+          width: "100%",
+          height: "190px",
+        }}
+      >
+        {/* Add Icon with hover effect */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "8px", // Space around the icon
+            borderRadius: "50%", // Circular background around the icon
+            backgroundColor: "primary.light", // Light primary background
+            transition: "background-color 0.3s ease, transform 0.3s ease", // Smooth transition
+            "&:hover": {
+              backgroundColor: "primary.main", // Primary color on hover
+              transform: "scale(1.1)", // Fun hover animation
+            },
+            mb: 1.5, // Add spacing below the icon
+          }}
+        >
+          <AddIcon fontSize="large" sx={{ color: "grey.500" }} />
+        </Box>
+        {/* Add Dashboard Text */}
+        <Typography
+          variant="body1"
+          sx={{
+            color: "grey.500", // Text color
+            fontWeight: "500", // Slightly bold text
+          }}
+        >
+          Add Dashboard
+        </Typography>
+      </Box>
+    </BlankCard>
+  </Link>
+</Grid>
+
+
         </Grid>
         {/* No Dashboards Message */}
         {ecoCard.length === 0 && (

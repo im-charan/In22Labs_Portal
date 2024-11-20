@@ -14,6 +14,7 @@ import ProfilePage from '../pages/ProfilePage';
 import ListOrganisation from '../views/admin/ListOrganisation';
 import AddOrganisation from '../views/admin/addorganisation';
 import SpecificDash from '../views/admin/dashboards/specificdash';
+import AddDashboard from '../views/admin/dashboards/add-dashboard';
 ;
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -68,7 +69,8 @@ const Router = [
       { path: 'createuser', element:<CreateUser/> },
       // { path: 'dashboards/:product', element:<SpecificDash/> },
      {path: 'organisation', exact:true, element:<ListOrganisation/>},
-     {path:'addorganisation',exact:true,element:<AddOrganisation/>}
+     {path:'addorganisation',exact:true,element:<AddOrganisation/>},
+     {path:'organisation/:organizationName/add-dashboard',exact:true,element:<AddDashboard/>}
     ],
   }
 ];

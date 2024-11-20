@@ -13,24 +13,20 @@ import {
   TextField,
   TableSortLabel,
 } from "@mui/material";
-
 const users = [
   {
       id: "1",
       name: "Charan",
       organizationName: "ABC Organisation",
       email: "abc@email.com",
-      validTill: "7/7/2025",
-      count: "7"
+      validTill: "7/7/2025",   
   },
-  {
-      id: "2",
+  {id: "2",
       name:"Adithi",
       organizationName: "BCD organization",
       start: "11/11/2020",
       email: "abc@email.com",
       validTill: "8/7/2025",
-      count: "5"
   },
   {
       id: "3",
@@ -38,8 +34,7 @@ const users = [
       organizationName: "CDE Organization",
       start: "12/11/2020",
       email: "abc@email.com",
-      validTill: "9/7/2025",
-      count: "1"
+      validTill: "9/7/2025", 
   },
   {
       id: "4",
@@ -48,7 +43,7 @@ const users = [
       start: "13/11/2020",
       email: "abc@email.com",
       validTill: "10/7/2025",
-      count: "4"
+      
   },
   {
     id: "5",
@@ -57,7 +52,7 @@ const users = [
     start: "14/11/2020",
     email: "abc@email.com",
     validTill: "11/10/2025",
-    count: "11"
+    
   },
   {
     id: "6",
@@ -65,7 +60,7 @@ const users = [
     organizationName: "ABC Organisation",
     email: "abc@email.com",
     validTill: "7/7/2025",
-    count: "7"
+   
   },
   {
     id: "7",
@@ -73,7 +68,7 @@ const users = [
     organizationName: "ABC Organisation",
     email: "abc@email.com",
     validTill: "7/7/2025",
-    count: "7"
+    
   },
   {
     id: "8",
@@ -82,7 +77,7 @@ const users = [
     start: "11/11/2020",
     email: "abc@email.com",
     validTill: "8/7/2025",
-    count: "5"
+    
   },
   {
     id: "9",
@@ -91,7 +86,7 @@ const users = [
     start: "11/11/2020",
     email: "abc@email.com",
     validTill: "8/7/2025",
-    count: "5"
+    
   },
 ];
 
@@ -231,9 +226,7 @@ const UserTable = () => {
               <TableCell align="center">
                 <Typography variant="h6" align="center">Email</Typography>
               </TableCell>
-              <TableCell align="center">
-                <Typography variant="h6" align="center">Dashboards</Typography>
-              </TableCell>
+             
             </TableRow>
           </TableHead>
           <TableBody>
@@ -249,8 +242,7 @@ const UserTable = () => {
                   {user.organizationName}
                 </TableCell>
                 <TableCell align="center">{user.validTill}</TableCell>
-                <TableCell align="center">{user.email}</TableCell>
-                <TableCell align="center">{user.count}</TableCell>
+                <TableCell align="center">{user.email}</TableCell> 
               </TableRow>
             ))}
           </TableBody>
@@ -270,5 +262,4 @@ const UserTable = () => {
     </DashboardCard>
   );
 }
-
 export default UserTable;

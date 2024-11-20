@@ -15,16 +15,17 @@ const AdminMenuitems = [
   },
   {
     id: uniqueId(),
-    title: 'Users',
-    icon: IconUsersGroup,
-    href: '/admin/users',
-  },
-  {
-    id: uniqueId(),
     title: 'Dashboards',
     icon: IconLayoutDashboard,
     href: '/admin/dashboards',
   },
+  {
+    id: uniqueId(),
+    title: 'Users',
+    icon: IconUsersGroup,
+    href: '/admin/users',
+  },
+  
   {
     id: uniqueId(),
     title: 'Organisation',

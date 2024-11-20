@@ -15,12 +15,12 @@ import {
 } from "@mui/material";
 
 const clients = [
-  { id: "1", organizationName: "ABC Organization", type: "Agriculture", address: "123 Maple Street, Springfield, IL" },
-  { id: "2", organizationName: "BCD Organization", type: "Technology", address: "456 Oak Avenue, Metropolis, NY" },
-  { id: "3", organizationName: "CDE Organization", type: "Agriculture", address: "789 Pine Road, Gotham City, NJ" },
-  { id: "4", organizationName: "DEF Organization", type: "Education", address: "101 Elm Street, Star City, CA" },
-  { id: "5", organizationName: "EFG Organization", type: "Finance", address: "202 Cedar Boulevard, Central City, TX" },
-  { id: "6", organizationName: "FGH Organization", type: "Retail", address: "303 Birch Lane, Coast City, FL" },
+  { id: "1", organizationName: "ABC Organization", type: "Agriculture", address: "123 Maple Street, Springfield, IL", count: "5" },
+  { id: "2", organizationName: "BCD Organization", type: "Technology", address: "456 Oak Avenue, Metropolis, NY", count: "5"},
+  { id: "3", organizationName: "CDE Organization", type: "Agriculture", address: "789 Pine Road, Gotham City, NJ", count: "5"},
+  { id: "4", organizationName: "DEF Organization", type: "Education", address: "101 Elm Street, Star City, CA", count: "5" },
+  { id: "5", organizationName: "EFG Organization", type: "Finance", address: "202 Cedar Boulevard, Central City, TX", count: "5"},
+  { id: "6", organizationName: "FGH Organization", type: "Retail", address: "303 Birch Lane, Coast City, FL", count: "5" },
 ];
 
 const Organisationstable = () => {
@@ -143,6 +143,9 @@ const Organisationstable = () => {
                 </TableSortLabel>
               </TableCell>
               <TableCell>Address</TableCell>
+              <TableCell align="center">
+                <Typography variant="h6" align="center">Dashboards</Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -157,6 +160,7 @@ const Organisationstable = () => {
                 </TableCell>
                 <TableCell>{client.type}</TableCell>
                 <TableCell>{client.address}</TableCell>
+                <TableCell align="center">{client.count}</TableCell>
               </TableRow>
             ))}
           </TableBody>

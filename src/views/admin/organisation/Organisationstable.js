@@ -21,6 +21,21 @@ const clients = [
   { id: "4", organizationName: "DEF Organization", type: "Education", address: "101 Elm Street, Star City, CA" },
   { id: "5", organizationName: "EFG Organization", type: "Finance", address: "202 Cedar Boulevard, Central City, TX" },
   { id: "6", organizationName: "FGH Organization", type: "Retail", address: "303 Birch Lane, Coast City, FL" },
+    { id: "7", organizationName: "GHI Organization", type: "Technology", address: "404 Cedar Road, Hilltop, TX" },
+    { id: "8", organizationName: "HIJ Organization", type: "Finance", address: "505 Oak Street, Riverdale, CO" },
+    { id: "9", organizationName: "JKL Organization", type: "Healthcare", address: "606 Pine Avenue, Lakeside, CA" },
+    { id: "10", organizationName: "KLM Organization", type: "Education", address: "707 Maple Drive, Brightville, PA" },
+    { id: "11", organizationName: "LMN Organization", type: "Retail", address: "808 Elm Street, Downtown, TX" },
+    { id: "12", organizationName: "MNO Organization", type: "Agriculture", address: "909 Birch Boulevard, Greenfield, IL" },
+    { id: "13", organizationName: "NOP Organization", type: "Finance", address: "1010 Oak Lane, Silverwood, MI" },
+    { id: "14", organizationName: "OPQ Organization", type: "Technology", address: "1111 Cedar Drive, Pinehill, NY" },
+    { id: "15", organizationName: "PQR Organization", type: "Education", address: "1212 Maple Street, Hillview, AZ" },
+    { id: "16", organizationName: "QRS Organization", type: "Healthcare", address: "1313 Pine Road, Meadowbrook, FL" },
+    { id: "17", organizationName: "RST Organization", type: "Retail", address: "1414 Oak Boulevard, Westbrook, CO" },
+    { id: "18", organizationName: "STU Organization", type: "Technology", address: "1515 Cedar Avenue, Greenway, CA" },
+    { id: "19", organizationName: "TUV Organization", type: "Finance", address: "1616 Birch Lane, Ridgewood, NJ" },
+    { id: "20", organizationName: "UVW Organization", type: "Agriculture", address: "1717 Maple Road, Pine Valley, TX" },
+    { id: "21", organizationName: "sherin organisation", type: "Retail", address: "24/11 demonty colony , peurto rica, CNN" },
 ];
 
 const Organisationstable = () => {
@@ -28,7 +43,7 @@ const Organisationstable = () => {
 
   // State for pagination
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10); // Default set to 10 rows per page
 
   // State for search and filtering
   const [searchTerm, setSearchTerm] = useState("");
@@ -122,7 +137,7 @@ const Organisationstable = () => {
           <TableHead>
             <TableRow>
               <TableCell>
-                <Typography variant="h6">S.No</Typography>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>S.No</Typography>
               </TableCell>
               <TableCell sortDirection={orderBy === "organizationName" ? order : false}>
                 <TableSortLabel
@@ -130,7 +145,7 @@ const Organisationstable = () => {
                   direction={orderBy === "organizationName" ? order : "asc"}
                   onClick={() => handleSortRequest("organizationName")}
                 >
-                  Organisation Name
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>Organisation Name</Typography>
                 </TableSortLabel>
               </TableCell>
               <TableCell sortDirection={orderBy === "type" ? order : false}>
@@ -139,10 +154,12 @@ const Organisationstable = () => {
                   direction={orderBy === "type" ? order : "asc"}
                   onClick={() => handleSortRequest("type")}
                 >
-                  Type
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>Type</Typography>
                 </TableSortLabel>
               </TableCell>
-              <TableCell>Address</TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>Address</Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

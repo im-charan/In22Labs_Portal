@@ -65,7 +65,7 @@ const AdminHeader = (props) => {
           component="div"
           sx={{ marginLeft: 33, fontWeight: "bold" }}
         >
-          In22labs
+          Single Window Portal
         </Typography>
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">

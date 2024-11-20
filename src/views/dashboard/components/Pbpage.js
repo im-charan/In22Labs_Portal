@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Box, CardContent, Typography } from "@mui/material";
@@ -34,17 +33,22 @@ const Pbpage = () => {
         breadcrumbTitle2={product.title}
         breadcrumbRoute2={`/dashboard/product/${product.id}`}
       />
-
-      {/* Add space between the BreadcrumbComponent and the content */}
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ mt: 2 }}>
         <BlankCard>
-          <Typography component="div">
-            <img src={product.photo} alt={product.title} width="100%" />
-          </Typography>
-          <CardContent sx={{ p: 3, pt: 2 }}>
-            <Typography variant="h6">{product.title}</Typography>
-            {/* Additional details can be added here */}
-          </CardContent>
+          <Box sx={{ p: 1 }}>
+            <Typography component="div">
+              <Box
+                sx={{
+                  p: 1,                   // Padding inside this Box for consistent spacing
+                  border: "1px solid transparent", 
+                  borderRadius: "12px", 
+                  overflow: "hidden", 
+                }}
+              >
+                <img src={product.photo} alt={product.title} width="100%" />
+              </Box>
+            </Typography>
+          </Box>
         </BlankCard>
       </Box>
     </>

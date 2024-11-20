@@ -6,12 +6,14 @@ import ListUsers from '../views/admin/ListUsers';
 import ListDashboards from '../views/admin/ListDashboards';
 import AdminLayout from '../layouts/admin/AdminLayout'; 
 import Pbpage from '../views/dashboard/components/Pbpage';
-import SpecificDash from '../views/admin/dashboards/SpecificDash';
+
 
 import ContactUsPage from '../views/dashboard/AuthContactUs';
 import ProfilePage from '../pages/ProfilePage';
 import ListOrganisation from '../views/admin/ListOrganisation';
 import AddOrganisation from '../views/admin/addorganisation';
+import SpecificDash from '../views/admin/dashboards/specificdash';
+import AddDashboard from '../views/admin/dashboards/add-dashboard';
 import AddUser from '../views/admin/AddUser';
 ;
 /* ***Layouts**** */
@@ -67,7 +69,8 @@ const Router = [
       { path: 'createuser', element:<AddUser/> },
       // { path: 'dashboards/:product', element:<SpecificDash/> },
      {path: 'organisation', exact:true, element:<ListOrganisation/>},
-     {path:'addorganisation',exact:true,element:<AddOrganisation/>}
+     {path:'addorganisation',exact:true,element:<AddOrganisation/>},
+     {path:'organisation/:organizationName/add-dashboard',exact:true,element:<AddDashboard/>}
     ],
   }
 ];

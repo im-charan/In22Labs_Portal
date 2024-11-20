@@ -160,6 +160,9 @@ const Organisationstable = () => {
               <TableCell>
                 <Typography variant="h6" sx={{ fontWeight: "bold" }}>Address</Typography>
               </TableCell>
+              <TableCell align="center">
+                <Typography variant="h6" align="center">Dashboards</Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -174,6 +177,7 @@ const Organisationstable = () => {
                 </TableCell>
                 <TableCell>{client.type}</TableCell>
                 <TableCell>{client.address}</TableCell>
+                <TableCell align="center">{client.count}</TableCell>
               </TableRow>
             ))}
           </TableBody>

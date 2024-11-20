@@ -86,7 +86,7 @@ const Login2 = () => {
           alignItems="center"
           width='400px'
           >
-          {/* <Grid marginBottom={-15}>
+          {/* <Grid justifyContent='center' alignItems='center'>
             < Typography variant="h2">WELCOME TO SINGLE WINDOW PORTAL</Typography>
           </Grid> */}
           <Card

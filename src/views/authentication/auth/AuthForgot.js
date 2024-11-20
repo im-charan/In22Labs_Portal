@@ -33,6 +33,7 @@ const AuthForgetPassword = ({ title, subtitle, subtext }) => (
                   <TextField
                   color='primary'
                   id="outlined-input"
+                  placeholder='Enter your Email'
                   label="Email"
                   type="text"
                   size='medium'
@@ -49,7 +50,7 @@ const AuthForgetPassword = ({ title, subtitle, subtext }) => (
             </Stack>
             <Stack alignItems={'center'}>
             <Button color="primary" variant="contained" size="small" component={Link} to="/auth/login">
-                Request For Password
+                Submit
             </Button>
             </Stack>
         </Box>

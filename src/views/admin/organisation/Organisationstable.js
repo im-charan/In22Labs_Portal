@@ -88,7 +88,7 @@ const Organisationstable = () => {
 
   return (
     <DashboardCard>
-      <Box sx={{ padding: 2 }}>
+      <Box sx={{ padding: 2, mr:1, }}>
         {/* Search and Filter Options */}
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
           <TextField

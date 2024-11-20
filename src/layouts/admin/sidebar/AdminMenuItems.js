@@ -21,7 +21,7 @@ const AdminMenuitems = [
   },
   {
     id: uniqueId(),
-    title: 'Dashboards',
+    title: 'All Clients Dashboards',
     icon: IconLayoutDashboard,
     href: '/admin/dashboards',
   },

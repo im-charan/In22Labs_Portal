@@ -43,7 +43,7 @@ const Organisationstable = () => {
 
   // State for pagination
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10); // Default set to 10 rows per page
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // State for search and filtering
   const [searchTerm, setSearchTerm] = useState("");

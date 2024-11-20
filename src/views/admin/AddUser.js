@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { Box, Typography, TextField, Button } from "@mui/material";
+import { Box, Typography, TextField, Button , MenuItem} from "@mui/material";
 import BreadcrumbComponent from '../../components/shared/BreadCrumbComponent';
 import AdminHeader from './AdminHeader'
-const CreateUser = () => {
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+
+
+const AddUser = () => {
   const [organisationName, setOrganisationName] = useState('');
   const [pocName, setPocName] = useState(''); // Added state for POC Name
   const [contactNumber, setContactNumber] = useState('');
@@ -55,9 +59,17 @@ const CreateUser = () => {
           label="Organisation Name"
           variant="outlined"
           fullWidth
+          select
           value={organisationName}
           onChange={(e) => setOrganisationName(e.target.value)}
-        />
+        >
+          <MenuItem value="ABC Organization">ABC Organization</MenuItem>
+          <MenuItem value="BCD Organization">BCD Organization</MenuItem>
+          <MenuItem value="CDE Organization">CDE Organization</MenuItem>
+          <MenuItem value="DEF Organization">DEF Organization</MenuItem>
+          <MenuItem value="EFG Organization">EFG Organization</MenuItem>
+          <MenuItem value="FGH Organization">FGH Organization</MenuItem>
+        </TextField>
 
         {/* POC Name */}
         <TextField
@@ -69,14 +81,18 @@ const CreateUser = () => {
         />
 
         {/* Contact Number */}
-        <TextField
+        {/* <TextField
           label="Contact Number"
           variant="outlined"
           fullWidth
           type="tel"
           value={contactNumber}
           onChange={(e) => setContactNumber(e.target.value)}
-        />
+        /> */}
+
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker/>
+        </LocalizationProvider>
 
         {/* Email ID */}
         <TextField
@@ -98,4 +114,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default AddUser;

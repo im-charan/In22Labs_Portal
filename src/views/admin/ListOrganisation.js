@@ -19,28 +19,37 @@ const ListOrganisation = () => {
   };
 
   return (
-    <PageContainer title="Users" description="List of users for the selected organization">
-        <AdminHeader/>
-<BreadcrumbComponent  
-        pageTitle="Organisations Table" 
+    <PageContainer
+      title="Users"
+      description="List of users for the selected organization"
+    >
+      <AdminHeader />
+      <BreadcrumbComponent
+        pageTitle="Organisations Table"
         breadcrumbTitle1="Organisation"
         breadcrumbRoute1="/admin/organisation"
         marginTop="70px"
       />
       {/* Main content layout */}
-      <Box marginLeft={12} marginTop={0}>
+      <Box marginLeft={1} marginTop={1} marginRight={-5}>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={12}>
-            {/* Add organisation button */}
-            <Box display="flex" justifyContent="flex-end" mb={2}>
-              <Button variant="contained" onClick={handleAddOrganisationClick}>Add Organisation</Button>
+            <Box position="relative" mb={2}>
+              {/* Add organisation button */}
+              <Box position="absolute" bottom={-10} left={90} mb={2}>
+                <Button
+                  variant="contained"
+                  onClick={handleAddOrganisationClick}
+                >
+                  Add Organisation +
+                </Button>
+              </Box>
             </Box>
             {/* organisation table */}
-           <Organisationstable/>
+            <Organisationstable />
           </Grid>
         </Grid>
       </Box>
-
     </PageContainer>
   );
 };

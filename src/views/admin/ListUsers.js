@@ -21,12 +21,11 @@ const ListUsers = () => {
 
   return (
     <PageContainer title="Users" description="List of users for the selected organization">
-      <AdminHeader/>
-      <BreadcrumbComponent  
+        <AdminHeader/>
+<BreadcrumbComponent  
         pageTitle="User Table" 
         breadcrumbTitle1="User"
         breadcrumbRoute1="/admin/users"
-      
         marginTop="70px"
       />
       <Box display="flex" justifyContent="flex-end" mb={2}>
@@ -37,13 +36,14 @@ const ListUsers = () => {
         <Grid container spacing={3}>
           <Grid item xs={12} lg={12}>
             {/* Create User Button outside and aligned to the top right */}
-            
+            <Box display="flex" justifyContent="flex-end" mb={2}>
+              <Button variant="contained" onClick={handleCreateUserClick}>Create User</Button>
+            </Box>
             {/* User Table */}
             <UserTable />
           </Grid>
         </Grid>
       </Box>
-
     </PageContainer>
   );
 };

@@ -105,7 +105,7 @@ const UserTable = () => {
 
   // State for pagination
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // State for search and filtering
   const [searchTerm, setSearchTerm] = useState("");
@@ -229,10 +229,22 @@ const UserTable = () => {
                 </TableSortLabel>
               </TableCell>
               <TableCell align="center">
+                <TableSortLabel
+                  active={orderBy === "email"}
+                  direction={orderBy === "email" ? order : "asc"}
+                  onClick={() => handleSortRequest("email")}
+                  >
                 <Typography variant="h6" align="center">Email</Typography>
+                </TableSortLabel>
               </TableCell>
               <TableCell align="center">
+                <TableSortLabel
+                  active={orderBy === "count"}
+                  direction={orderBy === "count" ? order : "asc"}
+                  onClick={() => handleSortRequest("count")}
+                  >
                 <Typography variant="h6" align="center">Dashboards</Typography>
+                </TableSortLabel>
               </TableCell>
             </TableRow>
           </TableHead>

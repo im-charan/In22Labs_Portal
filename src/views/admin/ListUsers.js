@@ -35,11 +35,6 @@ const ListUsers = () => {
       <Box marginLeft={'3px'} marginTop={0}>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={12}>
-            {/* Create User Button outside and aligned to the top right */}
-            <Box display="flex" justifyContent="flex-end" mb={2}>
-              <Button variant="contained" onClick={handleCreateUserClick}>Create User</Button>
-            </Box>
-            {/* User Table */}
             <UserTable />
           </Grid>
         </Grid>

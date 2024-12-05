@@ -544,7 +544,7 @@ const Header = (props) => {
         </Box>
 
         {/* Center Organization Name */}
-        {!isSmallScreen && (
+        {/* {!isSmallScreen && (
           <Typography
             variant="h4"
             sx={{
@@ -557,7 +557,7 @@ const Header = (props) => {
           >
             {OrganizationName}
           </Typography>
-        )}
+        )} */}
 
         {/* Right-side User Info and Profile */}
         <Stack

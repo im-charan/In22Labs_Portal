@@ -13,7 +13,6 @@ import logindesign from '../authentication/login-design.svg';
 // import amicodesign from '../../assets/images/backgrounds/Update-amico.svg';
 import amicodesign from '../../assets/images/backgrounds/Stats-amico.svg';
 import bg from './loginbg.svg'
-import Grid2 from "@mui/material/Unstable_Grid2";
 
 
 

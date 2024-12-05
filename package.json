@@ -14,7 +14,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.13.7",
     "@mui/lab": "^5.0.0-alpha.133",
-    "@mui/material": "^5.13.7",
+    "@mui/material": "^5.16.7",
     "@mui/system": "^5.14.11",
     "@mui/x-date-pickers": "^7.22.2",
     "@svgr/rollup": "^8.1.0",

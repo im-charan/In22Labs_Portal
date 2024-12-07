@@ -1,5 +1,5 @@
 const express = require('express');
-const userModel = require('../models/user');  // Import the user model
+const userModel = require('../models/User');  // Import the user model
 
 const router = express.Router();
 
@@ -11,6 +11,15 @@ router.post('/create', async (req, res) => {
     res.status(201).json(newUser);  // Return the newly created user
   } catch (error) {
     res.status(500).json({ error: 'Error creating user' });
+  }
+});
+// Route to get all users
+router.get('/all', async (req, res) => {
+  try {
+    const users = await userModel.getAllUsers();  // Call the getAllUsers function from the user model
+    res.status(200).json(users);  // Return the list of users
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching users' });
   }
 });
 

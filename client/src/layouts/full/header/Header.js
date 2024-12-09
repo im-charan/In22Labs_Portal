@@ -70,8 +70,8 @@ const Header = (props) => {
             <IconMenu width="20" height="20" />
           </IconButton>
 
-          <Typography
-           // variant={isSmallScreen ? "h6" :"h4"}
+          {/* <Typography
+           //variant={isSmallScreen ? "h6" :"h4"}
            variant="h5"
             sx={{
               marginLeft: 35, 
@@ -83,24 +83,22 @@ const Header = (props) => {
             }}
           >
             Single Window Portal
-          </Typography>
-        </Box>
-
-        {/* Center Organization Name */}
-        {!isSmallScreen && (
+          </Typography> */}
           <Typography
-            variant="h4"
+            variant="h5"
             sx={{
+              position: "absolute", // Position the text absolutely within the header
+              marginLeft: 45, // Center horizontally
+              transform: "translateX(-50%)", // Adjust for perfect centering
               fontWeight: "bold",
-              //color: "#4a76d3",
-              whiteSpace: "nowrap",
+              whiteSpace: "nowrap", // Prevent text wrapping
               overflow: "hidden",
               textOverflow: "ellipsis",
             }}
           >
-            {OrganizationName}
+            Single Window Portal
           </Typography>
-        )}
+        </Box>
 
         {/* Right-side User Info and Profile */}
         <Stack

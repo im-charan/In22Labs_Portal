@@ -1,13 +1,19 @@
 const pool = require('../config/database');  // Import the pool for DB connection
-
+const bcrypt = require('bcrypt');
 // Create a new user
 const createUser = async (user) => {
   try {
     // SQL query to insert a new user into the "users" table
+    const hashedPassword = await bcrypt.hash(user.user_password, 10);
+    // const result = await pool.query(
+    //   `INSERT INTO in22labs.users (user_name, user_password, user_password_ref, user_ip, user_os, user_status, user_create, user_update,org_id)
+    //    VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW(),$8) RETURNING *`,
+    //   [user.user_name, hashedPassword, user.password, user.ip, user.os, user.status,user.org_id]
+    // );
     const result = await pool.query(
-      `INSERT INTO users (user_name, password_enc, pass_reference, ip, os, device, status, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW()) RETURNING *`,
-      [user.user_name, user.password_enc, user.pass_reference, user.ip, user.os, user.device, user.status]
+      `INSERT INTO in22labs.users (user_name, user_password,user_password_ref,org_id)
+       VALUES ($1, $2, $3, $4) RETURNING *`,
+      [user.user_name, hashedPassword,user.user_password,user.org_id]
     );
     return result.rows[0];  // Return the newly created user
   } catch (error) {
@@ -20,7 +26,7 @@ const createUser = async (user) => {
 const getUserById = async (userId) => {
   try {
     // SQL query to get a user by ID
-    const result = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
+    const result = await pool.query('SELECT * FROM in22labs.users WHERE user_id = $1', [userId]);
     return result.rows[0];  // Return the user
   } catch (error) {
     console.error('Error fetching user:', error);

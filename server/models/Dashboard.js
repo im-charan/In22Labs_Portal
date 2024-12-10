@@ -1,25 +1,64 @@
 const pool = require("../config/database");
 
+// // Create a new dashboard
+// const createDashboard = async (dashboard) => {
+//   try {
+//     const query = `
+//       INSERT INTO in22labs.dashboards 
+//       (dashboard_name, dashboard_url, org_id, dashboard_create, dashboard_update) 
+//       VALUES ($1, $2, $3, NOW(), NOW()) 
+//       RETURNING *`;
+//     const values = [
+//       dashboard.dashboard_name,
+//       dashboard.dashboard_url,
+//       dashboard.org_id,
+//     ];
+//     const result = await pool.query(query, values);
+//     return result.rows[0];
+//   } catch (error) {
+//     console.error("Error creating dashboard:", error);
+//     throw error;
+//   }
+// };
 // Create a new dashboard
 const createDashboard = async (dashboard) => {
+  const client = await pool.connect();
   try {
-    const query = `
+    await client.query('BEGIN'); // Start a transaction
+
+    // Insert the new dashboard
+    const insertQuery = `
       INSERT INTO in22labs.dashboards 
       (dashboard_name, dashboard_url, org_id, dashboard_create, dashboard_update) 
       VALUES ($1, $2, $3, NOW(), NOW()) 
       RETURNING *`;
-    const values = [
+    const insertValues = [
       dashboard.dashboard_name,
       dashboard.dashboard_url,
       dashboard.org_id,
     ];
-    const result = await pool.query(query, values);
-    return result.rows[0];
+    const insertResult = await client.query(insertQuery, insertValues);
+
+    // Update the dash_count in the organization table
+    const updateQuery = `
+      UPDATE in22labs.organizations
+      SET dash_count = dash_count + 1
+      WHERE org_id = $1
+      RETURNING *`;
+    const updateValues = [dashboard.org_id];
+    await client.query(updateQuery, updateValues);
+
+    await client.query('COMMIT'); // Commit the transaction
+    return insertResult.rows[0];
   } catch (error) {
-    console.error("Error creating dashboard:", error);
+    await client.query('ROLLBACK'); // Rollback in case of error
+    console.error("Error creating dashboard and updating dash_count:", error);
     throw error;
+  } finally {
+    client.release(); // Release the client back to the pool
   }
 };
+
 
 // Get all dashboards for a specific organization
 const getDashboardsByOrganisation = async (orgId) => {

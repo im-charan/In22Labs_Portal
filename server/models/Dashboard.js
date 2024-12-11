@@ -1,57 +1,57 @@
 const pool = require("../config/database");
 
-// // Create a new dashboard
-// const createDashboard = async (dashboard) => {
-//   try {
-//     const query = `
-//       INSERT INTO in22labs.dashboards 
-//       (dashboard_name, dashboard_url, org_id, dashboard_create, dashboard_update) 
-//       VALUES ($1, $2, $3, NOW(), NOW()) 
-//       RETURNING *`;
-//     const values = [
-//       dashboard.dashboard_name,
-//       dashboard.dashboard_url,
-//       dashboard.org_id,
-//     ];
-//     const result = await pool.query(query, values);
-//     return result.rows[0];
-//   } catch (error) {
-//     console.error("Error creating dashboard:", error);
-//     throw error;
-//   }
-// };
+// Fetch the organization ID by its name
+const fetchOrgIdByName = async (orgName) => {
+  try {
+    const query = `
+      SELECT org_id 
+      FROM in22labs.organizations 
+      WHERE org_name = $1
+    `;
+    const result = await pool.query(query, [orgName]);
+    if (result.rows.length === 0) {
+      throw new Error(`Organization with name "${orgName}" not found.`);
+    }
+    return result.rows[0].org_id;
+  } catch (error) {
+    console.error("Error fetching organization ID by name:", error);
+    throw error;
+  }
+};
+
 // Create a new dashboard
 const createDashboard = async (dashboard) => {
   const client = await pool.connect();
   try {
-    await client.query('BEGIN'); // Start a transaction
+    await client.query("BEGIN"); // Start a transaction
+
+    // No need to fetch org_id if it's directly provided in the request body
+    const org_id = dashboard.org_id;
 
     // Insert the new dashboard
     const insertQuery = `
       INSERT INTO in22labs.dashboards 
       (dashboard_name, dashboard_url, org_id, dashboard_create, dashboard_update) 
       VALUES ($1, $2, $3, NOW(), NOW()) 
-      RETURNING *`;
-    const insertValues = [
-      dashboard.dashboard_name,
-      dashboard.dashboard_url,
-      dashboard.org_id,
-    ];
+      RETURNING *
+    `;
+    const insertValues = [dashboard.dashboard_name, dashboard.dashboard_url, org_id];
     const insertResult = await client.query(insertQuery, insertValues);
 
-    // Update the dash_count in the organization table
+    // Update the dash_count in the organizations table
     const updateQuery = `
       UPDATE in22labs.organizations
       SET dash_count = dash_count + 1
       WHERE org_id = $1
-      RETURNING *`;
-    const updateValues = [dashboard.org_id];
+      RETURNING *
+    `;
+    const updateValues = [org_id];
     await client.query(updateQuery, updateValues);
 
-    await client.query('COMMIT'); // Commit the transaction
+    await client.query("COMMIT"); // Commit the transaction
     return insertResult.rows[0];
   } catch (error) {
-    await client.query('ROLLBACK'); // Rollback in case of error
+    await client.query("ROLLBACK"); // Rollback in case of error
     console.error("Error creating dashboard and updating dash_count:", error);
     throw error;
   } finally {
@@ -60,10 +60,14 @@ const createDashboard = async (dashboard) => {
 };
 
 
-// Get all dashboards for a specific organization
+// Get dashboards by organization
 const getDashboardsByOrganisation = async (orgId) => {
   try {
-    const query = "SELECT * FROM in22labs.dashboards WHERE org_id = $1";
+    const query = `
+      SELECT * 
+      FROM in22labs.dashboards 
+      WHERE org_id = $1
+    `;
     const result = await pool.query(query, [orgId]);
     return result.rows;
   } catch (error) {
@@ -75,7 +79,10 @@ const getDashboardsByOrganisation = async (orgId) => {
 // Get all dashboards
 const getAllDashboards = async () => {
   try {
-    const query = "SELECT * FROM in22labs.dashboards";
+    const query = `
+      SELECT * 
+      FROM in22labs.dashboards
+    `;
     const result = await pool.query(query);
     return result.rows;
   } catch (error) {
@@ -95,7 +102,8 @@ const updateDashboard = async (dashboardId, dashboard) => {
           dashboard_status = $3, 
           org_id = $4 
       WHERE dashboard_id = $5 
-      RETURNING *`;
+      RETURNING *
+    `;
     const values = [
       dashboard.dashboard_name,
       dashboard.dashboard_url,
@@ -114,8 +122,11 @@ const updateDashboard = async (dashboardId, dashboard) => {
 // Delete a dashboard
 const deleteDashboard = async (dashboardId) => {
   try {
-    const query =
-      "DELETE FROM in22labs.dashboards WHERE dashboard_id = $1 RETURNING *";
+    const query = `
+      DELETE FROM in22labs.dashboards 
+      WHERE dashboard_id = $1 
+      RETURNING *
+    `;
     const result = await pool.query(query, [dashboardId]);
     return result.rows[0];
   } catch (error) {
@@ -126,6 +137,7 @@ const deleteDashboard = async (dashboardId) => {
 
 module.exports = {
   createDashboard,
+  fetchOrgIdByName, // Exported for reuse in other parts of the application
   getDashboardsByOrganisation,
   getAllDashboards,
   updateDashboard,

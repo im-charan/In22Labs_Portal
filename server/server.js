@@ -57,16 +57,3 @@ app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 
-// function checkAuthenticated(req, res, next) {
-//   if (req.isAuthenticated()) {
-//     return next();
-//   }
-//   res.redirect('/api/dasboard')
-// }
-
-// function checkNotAuthenticated(req, res, next) {
-//   if (req.isAuthenticated()) {
-//     next();
-//   }
-//   return res.redirect('/api/login')
-// }

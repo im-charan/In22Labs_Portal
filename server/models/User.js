@@ -1,12 +1,18 @@
 const pool = require('../config/database'); // Import the pool for DB connection
-
+const bcrypt = require('bcrypt');
 const createUser = async (user) => {
   try {
-    // Ensure valid_from and valid_till are set with NOW()
+    // SQL query to insert a new user into the "users" table
+    const hashedPassword = await bcrypt.hash(user.user_password, 10);
+    // const result = await pool.query(
+    //   `INSERT INTO in22labs.users (user_name, user_password, user_password_ref, user_ip, user_os, user_status, user_create, user_update,org_id)
+    //    VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW(),$8) RETURNING *`,
+    //   [user.user_name, hashedPassword, user.password, user.ip, user.os, user.status,user.org_id]
+    // );
     const result = await pool.query(
-      `INSERT INTO users (user_name, valid_from, valid_till, user_email, is_admin, user_password_ref, user_password, user_fullname, user_ip, user_os, user_type, user_status, org_id, user_create, user_update)
-       VALUES ($1, NOW(), NOW() + INTERVAL '30 days', $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), NOW()) RETURNING *`,
-      [user.user_name, user.user_email, user.is_admin, user.user_password_ref, user.user_password, user.user_fullname, user.user_ip, user.user_os, user.user_type, user.user_status, user.org_id]
+      `INSERT INTO in22labs.users (user_name, user_password,user_password_ref,org_id)
+       VALUES ($1, $2, $3, $4) RETURNING *`,
+      [user.user_name, hashedPassword,user.user_password,user.org_id]
     );
     return result.rows[0];  // Return the newly created user
   } catch (error) {
@@ -28,7 +34,7 @@ const getAllUsers = async () => {
 const getUserById = async (userId) => {
   try {
     const result = await pool.query(
-      `SELECT * FROM in22labs.users WHERE user_id = $1`, 
+      `SELECT * FROM in22labs.in22labs.users WHERE user_user_id = $1`, 
       [userId]
     );
     return result.rows[0]; // Return the user

@@ -28,6 +28,7 @@ const createOrganisation = async (organisation) => {
     throw new Error('Error creating organisation in the database');
   }
 };
+
 //delete org by id
 const deleteOrganisationById = async (organisationId) => {
   try {

@@ -1,11 +1,11 @@
-
-const express = require("express");
+const express = require('express');
 const {
   createDashboard,
   getDashboardsByOrganisation,
   getAllDashboards,
   deleteDashboard,
-} = require("../models/dashboard");
+  fetchOrgIdByName, // Ensure fetchOrgIdByName is imported correctly
+} = require('../models/dashboard'); // Correct import path for the dashboard model
 
 const router = express.Router();
 
@@ -14,17 +14,11 @@ router.post("/create", async (req, res) => {
   const { dashboard_name, dashboard_url, org_id } = req.body;
 
   if (!dashboard_name || !dashboard_url || !org_id) {
-    return res
-      .status(400)
-      .json({ success: false, message: "All fields are required" });
+    return res.status(400).json({ success: false, message: "All fields are required" });
   }
 
   try {
-    const newDashboard = await createDashboard({
-      dashboard_name,
-      dashboard_url,
-      org_id,
-    });
+    const newDashboard = await createDashboard({ dashboard_name, dashboard_url, org_id });
     res.status(201).json({
       success: true,
       message: "Dashboard created successfully",
@@ -32,9 +26,40 @@ router.post("/create", async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating dashboard:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Error creating dashboard", error });
+    res.status(500).json({
+      success: false,
+      message: "Error creating dashboard",
+      error: error.message, // Be explicit with error messages
+    });
+  }
+});
+
+// Route to get organization ID by organization name
+router.get("/getIdByName/:orgName", async (req, res) => {
+  const { orgName } = req.params;
+
+  if (!orgName || orgName.trim() === "") {
+    return res.status(400).json({
+      success: false,
+      message: "Organization name is required and cannot be empty.",
+    });
+  }
+
+  try {
+    console.log(`Received request for orgName: ${orgName}`);
+    const orgId = await fetchOrgIdByName(orgName);
+    res.status(200).json({
+      success: true,
+      message: "Organization ID retrieved successfully",
+      org_id: orgId,
+    });
+  } catch (error) {
+    console.error("Error fetching organization ID:", error.message);
+    res.status(500).json({
+      success: false,
+      message: `Error fetching organization details for "${orgName}"`,
+      error: error.message, // Detailed error message
+    });
   }
 });
 
@@ -42,10 +67,9 @@ router.post("/create", async (req, res) => {
 router.get("/organisation/:orgId", async (req, res) => {
   const { orgId } = req.params;
 
+  // Validate orgId
   if (!parseInt(orgId, 10)) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Invalid organization ID" });
+    return res.status(400).json({ success: false, message: "Invalid organization ID" });
   }
 
   try {
@@ -57,9 +81,11 @@ router.get("/organisation/:orgId", async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching dashboards:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Error fetching dashboards", error });
+    res.status(500).json({
+      success: false,
+      message: "Error fetching dashboards",
+      error: error.message, // Make sure to log the error message
+    });
   }
 });
 
@@ -74,9 +100,11 @@ router.get("/all", async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching all dashboards:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Error fetching dashboards", error });
+    res.status(500).json({
+      success: false,
+      message: "Error fetching dashboards",
+      error: error.message, // Log the specific error
+    });
   }
 });
 
@@ -86,9 +114,7 @@ router.delete("/delete/:dashboardId", async (req, res) => {
 
   // Validate dashboard ID
   if (!parseInt(dashboardId, 10)) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Invalid dashboard ID" });
+    return res.status(400).json({ success: false, message: "Invalid dashboard ID" });
   }
 
   try {
@@ -110,7 +136,7 @@ router.delete("/delete/:dashboardId", async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error deleting dashboard",
-      error,
+      error: error.message, // Return specific error message
     });
   }
 });

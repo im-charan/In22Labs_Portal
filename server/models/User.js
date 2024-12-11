@@ -2,24 +2,45 @@ const pool = require('../config/database'); // Import the pool for DB connection
 const bcrypt = require('bcrypt');
 const createUser = async (user) => {
   try {
+    // Hash the provided password reference
+    const hashedPassword = await bcrypt.hash(user.user_password_ref, 10);
+
     // SQL query to insert a new user into the "users" table
-    const hashedPassword = await bcrypt.hash(user.user_password, 10);
-    // const result = await pool.query(
-    //   `INSERT INTO in22labs.users (user_name, user_password, user_password_ref, user_ip, user_os, user_status, user_create, user_update,org_id)
-    //    VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW(),$8) RETURNING *`,
-    //   [user.user_name, hashedPassword, user.password, user.ip, user.os, user.status,user.org_id]
-    // );
     const result = await pool.query(
-      `INSERT INTO in22labs.users (user_name, user_password,user_password_ref,org_id)
-       VALUES ($1, $2, $3, $4) RETURNING *`,
-      [user.user_name, hashedPassword,user.user_password,user.org_id]
+      `INSERT INTO in22labs.users (
+         user_name, valid_from, valid_till, user_email, 
+         user_password_ref, user_password, user_fullname, 
+         user_ip, user_os, user_type, user_status, 
+         user_login_attempts, user_create, user_update
+       ) VALUES (
+         $1, $2, $3, $4, 
+         $5, $6, $7, 
+         $8, $9, $10, $11, 
+         $12, NOW(), NOW()
+       ) RETURNING *`,
+      [
+        user.user_name,              // User name
+        user.valid_from,             // Valid from (date)
+        user.valid_till,             // Valid till (date)
+        user.user_email,             // User email
+        user.user_password_ref,      // Password reference (plain text)
+        hashedPassword,              // Hashed password stored in user_password
+        user.user_fullname,          // User full name
+        user.user_ip,                // User IP address
+        user.user_os,                // User operating system
+        user.user_type,              // User type (integer)
+        1,                           // Default user status
+        user.user_login_attempts || 0 // Login attempts (default 0 if not provided)
+      ]
     );
-    return result.rows[0];  // Return the newly created user
+
+    return result.rows[0]; // Return the newly created user
   } catch (error) {
     console.error('Error creating user:', error);
-    throw error;  // Rethrow the error to be handled by the calling function
+    throw error; // Rethrow the error to be handled by the calling function
   }
 };
+
 const getAllUsers = async () => {
   try {
     // Query to select all users
@@ -34,7 +55,7 @@ const getAllUsers = async () => {
 const getUserById = async (userId) => {
   try {
     const result = await pool.query(
-      `SELECT * FROM in22labs.in22labs.users WHERE user_user_id = $1`, 
+      `SELECT * FROM in22labs.users WHERE user_id = $1`, 
       [userId]
     );
     return result.rows[0]; // Return the user

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardCard from "../../../components/shared/DashboardCard";
 import {
@@ -12,38 +12,51 @@ import {
   TablePagination,
   TextField,
   TableSortLabel,
+  CircularProgress
 } from "@mui/material";
 
-const organisations = [
-  { id: "1", name: "ABC Org", type: "Tech", location: "New York", projects: 5 },
-  { id: "2", name: "DEF Org", type: "Finance", location: "London", projects: 3 },
-  { id: "3", name: "GHI Org", type: "Retail", location: "Sydney", projects: 7 },
-  { id: "4", name: "JKL Org", type: "Education", location: "Toronto", projects: 2 },
-  { id: "5", name: "MNO Org", type: "Healthcare", location: "Mumbai", projects: 4 },
-  // Add more organisations as needed
-];
-
-const ListOrganisations = () => {
+const Organisationstable = () => {
   const navigate = useNavigate();
 
-  // State for pagination
+  // State variables for organisations, loading, and errors
+  const [organisations, setOrganisations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Pagination state
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // State for search and filtering
+  // Search and filter state
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("All");
 
-  // State for sorting
+  // Sorting state
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("");
 
-  // Handle search
+  // Fetch organisations when the component mounts
+  useEffect(() => {
+    const fetchOrganisations = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/organisation");  // Replace with your actual API endpoint
+        const data = await response.json();  // Assuming the API returns JSON
+        setOrganisations(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrganisations();
+  }, []);
+
+  // Handle search term change
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  // Handle filter change
+  // Handle filter by type
   const handleFilterChange = (event) => {
     setSelectedType(event.target.value);
   };
@@ -65,14 +78,14 @@ const ListOrganisations = () => {
     setPage(0);
   };
 
-  // Filter and sort data
+  // Filter and sort organisations
   const filteredData = organisations
     .filter((org) => {
       const matchesSearchTerm =
-        org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        org.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        org.location.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesSelectedType = selectedType === "All" || org.type === selectedType;
+        org.org_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        org.org_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        org.org_address.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSelectedType = selectedType === "All" || org.org_type === selectedType;
       return matchesSearchTerm && matchesSelectedType;
     })
     .sort((a, b) => {
@@ -84,8 +97,16 @@ const ListOrganisations = () => {
       return 0;
     });
 
-  // Paginate the filtered data
+  // Paginate filtered data
   const displayedRows = filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+  if (loading) {
+    return <CircularProgress />;
+  }
+
+  if (error) {
+    return <Typography variant="h6" color="error">{`Error: ${error}`}</Typography>;
+  }
 
   return (
     <DashboardCard>
@@ -110,7 +131,7 @@ const ListOrganisations = () => {
             sx={{ width: 200 }}
           >
             <option value="All">All</option>
-            {[...new Set(organisations.map((org) => org.type))].map((type) => (
+            {[...new Set(organisations.map((org) => org.org_type))].map((type) => (
               <option key={type} value={type}>
                 {type}
               </option>
@@ -118,27 +139,27 @@ const ListOrganisations = () => {
           </TextField>
         </Box>
 
-        {/* Table */}
+        {/* Table with organisations */}
         <Table sx={{ mt: 2 }} aria-label="Organisations Table">
           <TableHead>
             <TableRow>
               <TableCell>
                 <Typography variant="h6" sx={{ fontWeight: "bold" }}>S.No</Typography>
               </TableCell>
-              <TableCell sortDirection={orderBy === "name" ? order : false}>
+              <TableCell sortDirection={orderBy === "org_name" ? order : false}>
                 <TableSortLabel
-                  active={orderBy === "name"}
-                  direction={orderBy === "name" ? order : "asc"}
-                  onClick={() => handleSortRequest("name")}
+                  active={orderBy === "org_name"}
+                  direction={orderBy === "org_name" ? order : "asc"}
+                  onClick={() => handleSortRequest("org_name")}
                 >
                   <Typography variant="h6" sx={{ fontWeight: "bold" }}>Organisation Name</Typography>
                 </TableSortLabel>
               </TableCell>
-              <TableCell sortDirection={orderBy === "type" ? order : false}>
+              <TableCell sortDirection={orderBy === "org_type" ? order : false}>
                 <TableSortLabel
-                  active={orderBy === "type"}
-                  direction={orderBy === "type" ? order : "asc"}
-                  onClick={() => handleSortRequest("type")}
+                  active={orderBy === "org_type"}
+                  direction={orderBy === "org_type" ? order : "asc"}
+                  onClick={() => handleSortRequest("org_type")}
                 >
                   <Typography variant="h6" sx={{ fontWeight: "bold" }}>Type</Typography>
                 </TableSortLabel>
@@ -148,28 +169,28 @@ const ListOrganisations = () => {
               </TableCell>
               <TableCell align="center">
                 <TableSortLabel
-                  active={orderBy === "projects"}
-                  direction={orderBy === "projects" ? order : "asc"}
-                  onClick={() => handleSortRequest("projects")}
+                  active={orderBy === "org_id"}
+                  direction={orderBy === "org_id" ? order : "asc"}
+                  onClick={() => handleSortRequest("org_id")}
                 >
-                  <Typography variant="h6" align="center">Projects</Typography>
+                  <Typography variant="h6" align="center">Dashboard</Typography>
                 </TableSortLabel>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {displayedRows.map((org, index) => (
-              <TableRow key={org.id}>
+              <TableRow key={org.org_id}>
                 <TableCell>{index + 1 + page * rowsPerPage}</TableCell>
                 <TableCell
                   sx={{ cursor: "pointer", color: "primary.main" }}
-                  onClick={() => navigate(`/admin/organisation/${org.name}`)}
+                  onClick={() => navigate(`/admin/organisation/${org.org_name}`)}
                 >
-                  {org.name}
+                  {org.org_name}
                 </TableCell>
-                <TableCell>{org.type}</TableCell>
-                <TableCell>{org.location}</TableCell>
-                <TableCell align="center">{org.projects}</TableCell>
+                <TableCell>{org.org_type}</TableCell>
+                <TableCell>{org.org_address}</TableCell>
+                <TableCell align="center">{org.org_id}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -190,4 +211,4 @@ const ListOrganisations = () => {
   );
 };
 
-export default ListOrganisations;
+export default Organisationstable;

@@ -4,7 +4,7 @@ const {
   createDashboard,
   getDashboardsByOrganisation,
   getAllDashboards,
-  deleteDashboard, // Import the deleteDashboard function
+  deleteDashboard,
 } = require("../models/dashboard");
 
 const router = express.Router();

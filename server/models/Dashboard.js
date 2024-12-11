@@ -1,30 +1,11 @@
+
 const pool = require("../config/database");
 
-// // Create a new dashboard
-// const createDashboard = async (dashboard) => {
-//   try {
-//     const query = `
-//       INSERT INTO in22labs.dashboards 
-//       (dashboard_name, dashboard_url, org_id, dashboard_create, dashboard_update) 
-//       VALUES ($1, $2, $3, NOW(), NOW()) 
-//       RETURNING *`;
-//     const values = [
-//       dashboard.dashboard_name,
-//       dashboard.dashboard_url,
-//       dashboard.org_id,
-//     ];
-//     const result = await pool.query(query, values);
-//     return result.rows[0];
-//   } catch (error) {
-//     console.error("Error creating dashboard:", error);
-//     throw error;
-//   }
-// };
 // Create a new dashboard
 const createDashboard = async (dashboard) => {
   const client = await pool.connect();
   try {
-    await client.query('BEGIN'); // Start a transaction
+    await client.query("BEGIN"); // Start a transaction
 
     // Insert the new dashboard
     const insertQuery = `
@@ -48,10 +29,10 @@ const createDashboard = async (dashboard) => {
     const updateValues = [dashboard.org_id];
     await client.query(updateQuery, updateValues);
 
-    await client.query('COMMIT'); // Commit the transaction
+    await client.query("COMMIT"); // Commit the transaction
     return insertResult.rows[0];
   } catch (error) {
-    await client.query('ROLLBACK'); // Rollback in case of error
+    await client.query("ROLLBACK"); // Rollback in case of error
     console.error("Error creating dashboard and updating dash_count:", error);
     throw error;
   } finally {
@@ -59,11 +40,15 @@ const createDashboard = async (dashboard) => {
   }
 };
 
-
-// Get all dashboards for a specific organization
+// Get all dashboards for a specific organization with org_name
 const getDashboardsByOrganisation = async (orgId) => {
   try {
-    const query = "SELECT * FROM in22labs.dashboards WHERE org_id = $1";
+    // Updated query to join dashboards and organizations tables
+    const query = `
+      SELECT d.dashboard_id, d.dashboard_name, d.dashboard_url, o.org_name
+      FROM in22labs.dashboards d
+      JOIN in22labs.organizations o ON d.org_id = o.org_id
+      WHERE d.org_id = $1`;
     const result = await pool.query(query, [orgId]);
     return result.rows;
   } catch (error) {
@@ -72,41 +57,18 @@ const getDashboardsByOrganisation = async (orgId) => {
   }
 };
 
-// Get all dashboards
+// Get all dashboards with org_name
 const getAllDashboards = async () => {
   try {
-    const query = "SELECT * FROM in22labs.dashboards";
+    // Updated query to join dashboards and organizations tables
+    const query = `
+      SELECT d.dashboard_id, d.dashboard_name, d.dashboard_url, o.org_name
+      FROM in22labs.dashboards d
+      JOIN in22labs.organizations o ON d.org_id = o.org_id`;
     const result = await pool.query(query);
     return result.rows;
   } catch (error) {
     console.error("Error fetching all dashboards:", error);
-    throw error;
-  }
-};
-
-// Update a dashboard
-const updateDashboard = async (dashboardId, dashboard) => {
-  try {
-    const query = `
-      UPDATE in22labs.dashboards 
-      SET dashboard_name = $1, 
-          dashboard_url = $2, 
-          dashboard_update = NOW(), 
-          dashboard_status = $3, 
-          org_id = $4 
-      WHERE dashboard_id = $5 
-      RETURNING *`;
-    const values = [
-      dashboard.dashboard_name,
-      dashboard.dashboard_url,
-      dashboard.dashboard_status,
-      dashboard.org_id,
-      dashboardId,
-    ];
-    const result = await pool.query(query, values);
-    return result.rows[0];
-  } catch (error) {
-    console.error("Error updating dashboard:", error);
     throw error;
   }
 };
@@ -128,6 +90,5 @@ module.exports = {
   createDashboard,
   getDashboardsByOrganisation,
   getAllDashboards,
-  updateDashboard,
   deleteDashboard,
 };

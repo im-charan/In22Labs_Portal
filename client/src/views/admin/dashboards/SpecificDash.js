@@ -10,10 +10,10 @@ import AdminHeader from "../AdminHeader";
 import noDashboardsImage from "src/assets/images/backgrounds/empd.jpg"; // Path to your image
 
 const ecoCard = [
-  // { id: 1, title: "Financial Dashboard", photo: img },
-  // { id: 2, title: "Statistical Dashboard", photo: img},
-  // { id: 3, title: "Inventorial Dashboard", photo: img },
-  // { id: 4, title: "Readable Dashboard", photo: img },
+  { id: 1, title: "Financial Dashboard", photo: img },
+  { id: 2, title: "Statistical Dashboard", photo: img},
+  { id: 3, title: "Inventorial Dashboard", photo: img },
+  { id: 4, title: "Readable Dashboard", photo: img },
 ]; // Example with dashboards
 
 const SpecificDash = () => {

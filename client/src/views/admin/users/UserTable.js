@@ -1,5 +1,5 @@
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useState } from "react";
 import DashboardCard from "../../../components/shared/DashboardCard";
 import {
   Box,
@@ -13,121 +13,54 @@ import {
   TextField,
   TableSortLabel,
 } from "@mui/material";
-const users = [
-  {
-      id: "1",
-      name: "Charan",
-      organizationName: "ABC Organisation",
-      email: "abc@email.com",
-      validTill: "7/7/2025",   
-  },
-  {id: "2",
-      name:"Adithi",
-      organizationName: "BCD organization",
-      start: "11/11/2020",
-      email: "abc@email.com",
-      validTill: "8/7/2025",
-  },
-  {
-      id: "3",
-      name:"Sherin",
-      organizationName: "CDE Organization",
-      start: "12/11/2020",
-      email: "abc@email.com",
-      validTill: "9/7/2025", 
-  },
-  {
-      id: "4",
-      name: "Abdul",
-      organizationName: "DEF Organization",
-      start: "13/11/2020",
-      email: "abc@email.com",
-      validTill: "10/7/2025",
-      
-  },
-  {
-    id: "5",
-    name: "Kaviya",
-    organizationName: "EFG Organization",
-    start: "14/11/2020",
-    email: "abc@email.com",
-    validTill: "11/10/2025",
-    
-  },
-  {
-    id: "6",
-    name: "Margot",
-    organizationName: "ABC Organisation",
-    email: "abc@email.com",
-    validTill: "7/7/2025",
-   
-  },
-  {
-    id: "7",
-    name: "Robbie",
-    organizationName: "ABC Organisation",
-    email: "abc@email.com",
-    validTill: "7/7/2025",
-    
-  },
-  {
-    id: "8",
-    name:"Selena",
-    organizationName: "BCD organization",
-    start: "11/11/2020",
-    email: "abc@email.com",
-    validTill: "8/7/2025",
-    
-  },
-  {
-    id: "9",
-    name:"Gomez",
-    organizationName: "BCD organization",
-    start: "11/11/2020",
-    email: "abc@email.com",
-    validTill: "8/7/2025",
-    
-  },
-];
 
 const UserTable = () => {
   const navigate = useNavigate();
 
-  // Corrected navigation function
-  const navigatetodashboard = (name) => {
-    navigate(`/admin/dashboards/${name}`);
-  }
-
-  // State for pagination
+  // State hooks
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  // State for search and filtering
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedOrganization, setSelectedOrganization] = useState("All");
-
-  // State for sorting
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("");
 
-  // Handle search
+  // Fetch users from the API
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/user/all");
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      const data = await response.json();
+      setUsers(data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  // Handle filter change
   const handleFilterChange = (event) => {
     setSelectedOrganization(event.target.value);
   };
 
-  // Sorting handler
   const handleSortRequest = (property) => {
     const isAscending = orderBy === property && order === "asc";
     setOrder(isAscending ? "desc" : "asc");
     setOrderBy(property);
   };
 
-  // Handle pagination changes
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -137,13 +70,13 @@ const UserTable = () => {
     setPage(0);
   };
 
-  // Filter and sort data
   const filteredData = users
     .filter((user) => {
       const matchesSearchTerm =
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.organizationName.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesSelectedOrganization = selectedOrganization === "All" || user.organizationName === selectedOrganization;
+        user.user_fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.organizationName?.toLowerCase() || "").includes(searchTerm.toLowerCase());
+      const matchesSelectedOrganization =
+        selectedOrganization === "All" || user.organizationName === selectedOrganization;
       return matchesSearchTerm && matchesSelectedOrganization;
     })
     .sort((a, b) => {
@@ -155,16 +88,18 @@ const UserTable = () => {
       return 0;
     });
 
-  // Paginate the filtered data
   const displayedRows = filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+  const navigatetodashboard = (name) => {
+    navigate(`/admin/dashboards/${name}`);
+  };
 
   return (
     <DashboardCard>
       <Box sx={{ padding: 2 }}>
-        {/* Search and Filter Options */}
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
           <TextField
-            label="Search "
+            label="Search"
             variant="outlined"
             size="small"
             value={searchTerm}
@@ -189,57 +124,55 @@ const UserTable = () => {
           </TextField>
         </Box>
 
-        {/* Table */}
         <Table sx={{ mt: 2 }} aria-label="Users Table">
           <TableHead>
             <TableRow>
               <TableCell align="center">
                 <Typography variant="h6">S.No</Typography>
               </TableCell>
-              <TableCell sortDirection={orderBy === "name" ? order : false} align="center">
+              <TableCell align="center">
                 <TableSortLabel
-                  active={orderBy === "name"}
-                  direction={orderBy === "name" ? order : "asc"}
-                  onClick={() => handleSortRequest("name")}
+                  active={orderBy === "user_fullname"}
+                  direction={orderBy === "user_fullname" ? order : "asc"}
+                  onClick={() => handleSortRequest("user_fullname")}
                 >
                   <Typography variant="h6">Name</Typography>
                 </TableSortLabel>
               </TableCell>
-              <TableCell sortDirection={orderBy === "organizationName" ? order : false} align="center">
+              <TableCell align="center">
                 <TableSortLabel
                   active={orderBy === "organizationName"}
                   direction={orderBy === "organizationName" ? order : "asc"}
                   onClick={() => handleSortRequest("organizationName")}
                 >
-                <Typography variant="h6" align="center">Organization</Typography>
-                </TableSortLabel>
-              </TableCell>
-              <TableCell sortDirection={orderBy === "validTill" ? order : false} datatype="Date" align="center">
-                <TableSortLabel
-                  active={orderBy === "validTill"}
-                  direction={orderBy === "validTill" ? order : "asc"}
-                  onClick={() => handleSortRequest("validTill")}
-                  >
-                  <Typography variant="h6" align="center">Valid Till</Typography>
+                  <Typography variant="h6">Organization</Typography>
                 </TableSortLabel>
               </TableCell>
               <TableCell align="center">
                 <TableSortLabel
-                  active={orderBy === "email"}
-                  direction={orderBy === "email" ? order : "asc"}
-                  onClick={() => handleSortRequest("email")}
-                  >
-                <Typography variant="h6" align="center">Email</Typography>
+                  active={orderBy === "valid_till"}
+                  direction={orderBy === "valid_till" ? order : "asc"}
+                  onClick={() => handleSortRequest("valid_till")}
+                >
+                  <Typography variant="h6">Valid Till</Typography>
                 </TableSortLabel>
               </TableCell>
-      
+              <TableCell align="center">
+                <TableSortLabel
+                  active={orderBy === "user_email"}
+                  direction={orderBy === "user_email" ? order : "asc"}
+                  onClick={() => handleSortRequest("user_email")}
+                >
+                  <Typography variant="h6">Email</Typography>
+                </TableSortLabel>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {displayedRows.map((user, index) => (
-              <TableRow key={user.id}>
+              <TableRow key={user.user_id}>
                 <TableCell align="center">{index + 1 + page * rowsPerPage}</TableCell>
-                <TableCell align="center">{user.name}</TableCell>
+                <TableCell align="center">{user.user_fullname}</TableCell>
                 <TableCell
                   sx={{ cursor: "pointer", color: "primary.main" }}
                   onClick={() => navigate(`/admin/organisation/${user.organizationName}`)}
@@ -247,14 +180,13 @@ const UserTable = () => {
                 >
                   {user.organizationName}
                 </TableCell>
-                <TableCell align="center">{user.validTill}</TableCell>
-                <TableCell align="center">{user.email}</TableCell> 
+                <TableCell align="center">{user.valid_till}</TableCell>
+                <TableCell align="center">{user.user_email}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
 
-        {/* Pagination */}
         <TablePagination
           rowsPerPageOptions={[5, 10, 15]}
           component="div"
@@ -267,5 +199,6 @@ const UserTable = () => {
       </Box>
     </DashboardCard>
   );
-}
+};
+
 export default UserTable;

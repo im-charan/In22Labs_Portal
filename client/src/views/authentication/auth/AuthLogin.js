@@ -9,14 +9,59 @@ import {
     Checkbox
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import { Link } from 'react-router-dom';
+import { Await, Link, useNavigate } from 'react-router-dom';
 
 import InputAdornment from '@mui/material/InputAdornment';
-import { AccountCircle } from '@mui/icons-material';
+import { AccountCircle, Password } from '@mui/icons-material';
 import LockIcon from '@mui/icons-material/Lock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Captcha from './Captcha';
-const AuthLogin = ({ title, subtitle, subtext }) => (
+import { useState } from 'react';
+import axios, { Axios } from 'axios';
+
+
+
+
+const AuthLogin = ({ title, subtitle, subtext }) => {
+  
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    console.log(userName,password);
+    e.preventDefault();
+    axios.post('http://localhost:5000/api/auth', {user_name : userName, user_password: password})
+    .then(result => {console.log(result)
+      if(result.status === 200){
+        axios.get(`http://localhost:5000/api/user/name/${userName}`)
+        .then(result => { 
+          console.log(result.data.user_type);
+          const userType = result.data.user_type;
+          if(userType === 1){
+            navigate('/admin/dashboards')
+          }
+          else{
+            navigate('/dashboard')}
+        })
+      //   console.log(userType);
+      //   if(userType === 1){
+      //     navigate('/admin/dashboard')
+      //   }
+      //   else{
+      //     navigate('/dashboard')}
+      //   }
+      //  else{
+      //   console.log(result.message);
+       }
+  })
+    .catch(err => console.log(err))
+  }
+
+  
+  
+  return (
+
     <>
         {title ? (
             <Typography fontWeight="700" variant="h2" mb={1}>
@@ -43,6 +88,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => (
                   </InputAdornment>
                 ),
               }}
+              onChange={(e) => setUserName(e.target.value)}
               />
             </Box>
             <Box mt="25px">
@@ -63,10 +109,11 @@ const AuthLogin = ({ title, subtitle, subtext }) => (
                 ),
                 endAdornment: (
                   <InputAdornment position='end' >
-                    <VisibilityIcon onClick={console.log('add hide password fn')}/>
+                    <VisibilityIcon />
                   </InputAdornment>
                 ),
               }}
+              onChange={(e) => setPassword(e.target.value)}
               />
             </Box>
             <Stack justifyContent="center" direction="column" alignItems="center" my={2} marginTop={4}>
@@ -79,8 +126,9 @@ const AuthLogin = ({ title, subtitle, subtext }) => (
                   variant="contained"
                   size="small"
                   component={Link}
-                  to="/dashboard"
+                  // to="/dashboard"
                   type="submit"
+                  onClick={handleSubmit}
                 >
                 Login 
                 </Button>
@@ -90,6 +138,8 @@ const AuthLogin = ({ title, subtitle, subtext }) => (
         </Stack>
         
     </>
-);
+
+  );
+};
 
 export default AuthLogin;

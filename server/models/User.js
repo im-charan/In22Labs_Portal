@@ -34,6 +34,17 @@ const getUserById = async (userId) => {
   }
 };
 
+const getUserTypeByUserName = async (userName) => {
+  try {
+    // SQL query to get a user by ID
+    const result = await pool.query('SELECT user_type FROM in22labs.users WHERE user_name = $1', [userName]);
+    return result.rows[0];  // Return the user
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    throw error;  // Rethrow the error
+  }
+};
+
 // Update user details by ID
 const updateUser = async (userId, userDetails) => {
   try {
@@ -67,4 +78,5 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
+  getUserTypeByUserName
 };

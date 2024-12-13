@@ -5,7 +5,7 @@ const {
   getAllDashboards,
   deleteDashboard,
   fetchOrgIdByName, // Ensure fetchOrgIdByName is imported correctly
-} = require('../models/dashboard'); // Correct import path for the dashboard model
+} = require('../models/Dashboard'); // Correct import path for the dashboard model
 
 const router = express.Router();
 

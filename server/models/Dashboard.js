@@ -1,3 +1,4 @@
+
 const pool = require("../config/database");
 
 // Fetch the organization ID by its name
@@ -59,15 +60,15 @@ const createDashboard = async (dashboard) => {
   }
 };
 
-
-// Get dashboards by organization
+// Get dashboards by organization with org_name
 const getDashboardsByOrganisation = async (orgId) => {
   try {
+    // Updated query to join dashboards and organizations tables
     const query = `
-      SELECT * 
-      FROM in22labs.dashboards 
-      WHERE org_id = $1
-    `;
+      SELECT d.dashboard_id, d.dashboard_name, d.dashboard_url, o.org_name
+      FROM in22labs.dashboards d
+      JOIN in22labs.organizations o ON d.org_id = o.org_id
+      WHERE d.org_id = $1`;
     const result = await pool.query(query, [orgId]);
     return result.rows;
   } catch (error) {
@@ -76,13 +77,14 @@ const getDashboardsByOrganisation = async (orgId) => {
   }
 };
 
-// Get all dashboards
+// Get all dashboards with org_name
 const getAllDashboards = async () => {
   try {
+    // Updated query to join dashboards and organizations tables
     const query = `
-      SELECT * 
-      FROM in22labs.dashboards
-    `;
+      SELECT d.dashboard_id, d.dashboard_name, d.dashboard_url, o.org_name
+      FROM in22labs.dashboards d
+      JOIN in22labs.organizations o ON d.org_id = o.org_id`;
     const result = await pool.query(query);
     return result.rows;
   } catch (error) {
@@ -140,6 +142,5 @@ module.exports = {
   fetchOrgIdByName, // Exported for reuse in other parts of the application
   getDashboardsByOrganisation,
   getAllDashboards,
-  updateDashboard,
   deleteDashboard,
 };

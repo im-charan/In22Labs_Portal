@@ -19,7 +19,6 @@ const createUser = async (user) => {
          user_password_ref, user_password, user_fullname, 
          user_ip, user_os, user_type, user_status, 
          user_login_attempts, org_id, user_create, user_update
-         user_login_attempts, org_id, user_create, user_update
        ) VALUES (
          $1, $2, $3, $4, 
          $5, $6, $7, 
@@ -42,7 +41,7 @@ const createUser = async (user) => {
         user.org_id, // Organization ID
       ]
     );
-
+    
     return result.rows[0]; // Return the newly created user
   } catch (error) {
     console.error("Error creating user:", error);

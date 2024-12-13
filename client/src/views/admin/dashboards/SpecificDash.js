@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { CardContent, Typography, Grid, Box } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import img from "../../../assets/images/products/analytics.png"
+//import img from "../../../assets/images/products/analytics.png"
 
 import BlankCard from "../../../components/shared/BlankCard"; // Adjusted path
 import BreadcrumbComponent from "../../../components/shared/BreadCrumbComponent";

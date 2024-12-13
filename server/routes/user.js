@@ -14,6 +14,15 @@ router.post('/create', async (req, res) => {
     res.status(500).json({ error: 'Error creating user' });
   }
 });
+// Route to get all users
+router.get('/all', async (req, res) => {
+  try {
+    const users = await userModel.getAllUsers();  // Call the getAllUsers function from the user model
+    res.status(200).json(users);  // Return the list of users
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching users' });
+  }
+});
 
 // Route to get a user by ID
 router.get('/:id', async (req, res) => {

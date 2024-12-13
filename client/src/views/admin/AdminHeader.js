@@ -83,7 +83,7 @@ const AdminHeader = (props) => {
           >
             Hi, {AdminName}
           </Box>
-          <Profile />
+          <Profile/>
         </Stack>
       </ToolbarStyled>
     </AppBarStyled>

@@ -1,5 +1,5 @@
 const express = require('express');
-const organisationModel = require('../models/organisation');  // Import the organisation model
+const organisationModel = require('../models/organisation'); 
 
 const router = express.Router();
 
@@ -35,6 +35,19 @@ router.get('/', async (req, res) => {
     res.status(200).json(organisations);  // Return all organisations
   } catch (error) {
     res.status(500).json({ error: 'Error fetching organisations' });
+  }
+});
+// Route to delete an organisation by ID
+router.delete('/:id', async (req, res) => {
+  const organisationId = req.params.id; // Extract the ID from request params
+  try {
+    const deletedOrganisation = await organisationModel.deleteOrganisationById(organisationId);
+    if (!deletedOrganisation) {
+      return res.status(404).json({ message: 'Organisation not found' }); // If no rows were deleted
+    }
+    res.status(200).json({ message: 'Organisation deleted successfully', organisation: deletedOrganisation });
+  } catch (error) {
+    res.status(500).json({ error: 'Error deleting organisation' });
   }
 });
 

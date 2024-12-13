@@ -1,17 +1,49 @@
 import React, { useState } from 'react';
-import { Box, Typography, TextField, Button, MenuItem } from "@mui/material";
+import { Box, Typography, TextField, Button, MenuItem, Alert } from "@mui/material";
 import BreadcrumbComponent from '../../components/shared/BreadCrumbComponent';
 import AdminHeader from './AdminHeader';
 
 const AddOrganisation = () => {
   const [organizationName, setOrganizationName] = useState('');
-  const [type, setType] = useState(''); // Type of organisation
-  const [address, setAddress] = useState(''); // Address
+  const [type, setType] = useState('');
+  const [address, setAddress] = useState('');
+  const [statusMessage, setStatusMessage] = useState(null); // For success or error message
+  const [isSubmitting, setIsSubmitting] = useState(false); // Loading state
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle form submission logic
-    console.log({ organizationName, type, address });
+    setStatusMessage(null); // Reset status message
+    setIsSubmitting(true);
+
+    const newOrganisation = {
+      org_name: organizationName,
+      org_type: type,
+      org_address: address,
+      org_status: 1, // Default status
+    };
+
+    try {
+      const response = await fetch('http://localhost:5000/api/organisation/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newOrganisation),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create organisation');
+      }
+
+      const result = await response.json();
+      console.log('Organisation created:', result);
+      setStatusMessage({ type: 'success', text: 'Organisation successfully created!' });
+    } catch (error) {
+      console.error('Error creating organisation:', error.message);
+      setStatusMessage({ type: 'error', text: 'Error creating organisation. Please try again.' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -55,6 +87,7 @@ const AddOrganisation = () => {
             label="Organisation Name"
             variant="outlined"
             fullWidth
+            required
             value={organizationName}
             onChange={(e) => setOrganizationName(e.target.value)}
           />
@@ -65,6 +98,7 @@ const AddOrganisation = () => {
             variant="outlined"
             fullWidth
             select
+            required
             value={type}
             onChange={(e) => setType(e.target.value)}
           >
@@ -78,20 +112,33 @@ const AddOrganisation = () => {
 
           {/* Address */}
           <TextField
-  label="Address"
-  variant="outlined"
-  fullWidth
-  value={address}
-  onChange={(e) => setAddress(e.target.value)}
-  multiline
-  rows={4} // Adjust the number of rows as needed
-/>
-
+            label="Address"
+            variant="outlined"
+            fullWidth
+            required
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            multiline
+            rows={4}
+          />
 
           {/* Submit Button */}
-          <Button variant="contained" color="primary" type="submit" fullWidth>
-            Submit
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            fullWidth
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Submitting...' : 'Submit'}
           </Button>
+
+          {/* Status Message */}
+          {statusMessage && (
+            <Alert severity={statusMessage.type} sx={{ marginTop: 2 }}>
+              {statusMessage.text}
+            </Alert>
+          )}
         </Box>
       </Box>
     </>

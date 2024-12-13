@@ -1,16 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, Grid, Button } from "@mui/material";
 import PageContainer from 'src/components/container/PageContainer';
-import { Grid, Button } from "@mui/material";
-import { useParams } from "react-router-dom";
 import AdminHeader from "./AdminHeader";
 import BreadcrumbComponent from "../../components/shared/BreadCrumbComponent";
 import Organisationstable from "./organisation/Organisationstable";
 
 const ListOrganisation = () => {
-  const { organizationName } = useParams();
-
   const navigate = useNavigate();
 
   const handleAddOrganisationClick = () => {

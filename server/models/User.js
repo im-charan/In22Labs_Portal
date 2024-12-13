@@ -11,36 +11,38 @@ const createUser = async (user) => {
          user_name, valid_from, valid_till, user_email, 
          user_password_ref, user_password, user_fullname, 
          user_ip, user_os, user_type, user_status, 
-         user_login_attempts, user_create, user_update
+         user_login_attempts, org_id, user_create, user_update
        ) VALUES (
          $1, $2, $3, $4, 
          $5, $6, $7, 
          $8, $9, $10, $11, 
-         $12, NOW(), NOW()
+         $12, $13, NOW(), NOW()
        ) RETURNING *`,
       [
-        user.user_name,              // User name
-        user.valid_from,             // Valid from (date)
-        user.valid_till,             // Valid till (date)
-        user.user_email,             // User email
-        user.user_password_ref,      // Password reference (plain text)
-        hashedPassword,              // Hashed password stored in user_password
-        user.user_fullname,          // User full name
-        user.user_ip,                // User IP address
-        user.user_os,                // User operating system
-        user.user_type,              // User type (integer)
-        1,                           // Default user status
-        user.user_login_attempts || 0 // Login attempts (default 0 if not provided)
+        user.user_name, // User name
+        user.valid_from, // Valid from (date)
+        user.valid_till, // Valid till (date)
+        user.user_email, // User email
+        user.user_password_ref, // Password reference (plain text)
+        hashedPassword, // Hashed password stored in user_password
+        user.user_fullname, // User full name
+        user.user_ip, // User IP address
+        user.user_os, // User operating system
+        user.user_type, // User type (integer)
+        user.user_status || 1, // Default user status (1 = active)
+        user.user_login_attempts || 0, // Login attempts (default 0)
+        user.org_id, // Organization ID
       ]
     );
 
     return result.rows[0]; // Return the newly created user
   } catch (error) {
-    console.error('Error creating user:', error);
-    throw error; // Rethrow the error to be handled by the calling function
+    console.error("Error creating user:", error);
+    throw error; // Rethrow the error for handling
   }
 };
 
+//get all users
 const getAllUsers = async () => {
   try {
     // Query to select all users

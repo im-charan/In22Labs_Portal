@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, TextField, Button, MenuItem } from "@mui/material";
+import { Box, Typography, TextField, Button, MenuItem, Alert } from "@mui/material";
 import BreadcrumbComponent from '../../components/shared/BreadCrumbComponent';
 import AdminHeader from './AdminHeader';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const AddUser = () => {
+  // State for form inputs
   const [userFullName, setUserFullName] = useState('');
   const [validFrom, setValidFrom] = useState(null);
   const [validTill, setValidTill] = useState(null);
   const [userEmail, setUserEmail] = useState('');
   const [userPasswordRef, setUserPasswordRef] = useState('');
-  const [userStatus, setUserStatus] = useState(1); // Default to active
-  const [userType, setUserType] = useState(2); // Example default user type
+  const [userStatus, setUserStatus] = useState(1); // Default active status
+  const [userType, setUserType] = useState(2); // Default user type
   const [orgId, setOrgId] = useState('');
-  const [userIp, setUserIp] = useState('127.0.0.1'); // Example placeholder
-  const [userOs, setUserOs] = useState('Windows'); // Example placeholder
+  const [userIp, setUserIp] = useState('127.0.0.1'); // Default IP if not provided
+  const [userOs, setUserOs] = useState('Windows'); // Default OS if not provided
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [organisations, setOrganisations] = useState([]); // To store fetched organisations
+  const [organisations, setOrganisations] = useState([]); // Fetched organisations
+  const [statusMessage, setStatusMessage] = useState(null); // For success or error message
 
   // Fetch organisations when the component mounts
   useEffect(() => {
@@ -28,7 +30,7 @@ const AddUser = () => {
           throw new Error("Error fetching organisations");
         }
         const data = await response.json();
-        setOrganisations(data);  // Populate the organisations state
+        setOrganisations(data); // Populate organisations state
       } catch (error) {
         console.error("Error fetching organisations:", error.message);
       }
@@ -36,22 +38,33 @@ const AddUser = () => {
     fetchOrganisations();
   }, []);
 
+  // Form submission handler
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
+    setStatusMessage(null); // Reset status message
 
+    // Check if orgId is selected
+    if (!orgId) {
+      console.error("Error: Organization ID is required.");
+      setStatusMessage({ type: 'error', text: 'Organization is required.' });
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Construct user object with fallback for IP and OS
     const newUser = {
-      user_name: userEmail.split('@')[0], // Extract username from email
+      user_name: userEmail.split('@')[0],
       valid_from: validFrom?.format('YYYY-MM-DD'),
       valid_till: validTill?.format('YYYY-MM-DD'),
       user_email: userEmail,
       user_password_ref: userPasswordRef,
       user_status: userStatus,
       user_fullname: userFullName,
-      user_ip: userIp,
-      user_os: userOs,
+      user_ip: userIp, // Fallback to '127.0.0.1' if not set
+      user_os: userOs, // Fallback to 'Windows' if not set
       user_type: userType,
-      org_id: parseInt(orgId, 10),
+      org_id: orgId,  // Ensure orgId is passed correctly
       user_create: new Date().toISOString(),
       user_update: new Date().toISOString(),
     };
@@ -72,15 +85,21 @@ const AddUser = () => {
       const data = await response.json();
       console.log("User created successfully:", data);
 
-      // Reset form
+      // Set success status message
+      setStatusMessage({ type: 'success', text: 'User successfully created!' });
+
+      // Reset form inputs after successful creation
       setUserFullName('');
       setValidFrom(null);
       setValidTill(null);
       setUserEmail('');
       setUserPasswordRef('');
       setOrgId('');
+      setUserIp('127.0.0.1'); // Reset to default IP after submission
+      setUserOs('Windows'); // Reset to default OS after submission
     } catch (error) {
       console.error("Error creating user:", error.message);
+      setStatusMessage({ type: 'error', text: 'Error creating user. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -89,8 +108,8 @@ const AddUser = () => {
   return (
     <>
       <AdminHeader />
-      <BreadcrumbComponent  
-        pageTitle="Create User" 
+      <BreadcrumbComponent
+        pageTitle="Create User"
         breadcrumbTitle1="User"
         breadcrumbRoute1="/admin/users"
         breadcrumbTitle2="Create"
@@ -193,6 +212,13 @@ const AddUser = () => {
           >
             {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
+
+          {/* Status Message */}
+          {statusMessage && (
+            <Alert severity={statusMessage.type} sx={{ marginTop: 2 }}>
+              {statusMessage.text}
+            </Alert>
+          )}
         </Box>
       </Box>
     </>

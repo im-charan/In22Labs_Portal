@@ -46,8 +46,7 @@ const createUser = async (user) => {
   } catch (error) {
     console.error("Error creating user:", error);
     throw error; // Rethrow the error for handling
-    console.error("Error creating user:", error);
-    throw error; // Rethrow the error for handling
+
   }
 };
 

@@ -12,7 +12,10 @@ import {
   TablePagination,
   TextField,
   TableSortLabel,
-  CircularProgress
+  CircularProgress,
+  Button,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 
 const Organisationstable = () => {
@@ -31,6 +34,9 @@ const Organisationstable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("All");
 
+  // Success message state
+  const [successMessage, setSuccessMessage] = useState("");
+
   // Sorting state
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("");
@@ -39,9 +45,15 @@ const Organisationstable = () => {
   useEffect(() => {
     const fetchOrganisations = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/organisation");  // Replace with your actual API endpoint
-        const data = await response.json();  // Assuming the API returns JSON
-        setOrganisations(data);
+        const response = await fetch("http://localhost:5000/api/organisation"); // Replace with your actual API endpoint
+        const data = await response.json();
+
+        const enrichedData = data.map((org) => ({
+          ...org,
+          poc: org.poc_name || `${org.poc_id}`,
+        }));
+
+        setOrganisations(enrichedData);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -59,6 +71,24 @@ const Organisationstable = () => {
   // Handle filter by type
   const handleFilterChange = (event) => {
     setSelectedType(event.target.value);
+  };
+
+  // Handle form submission
+  const handleSubmit = async () => {
+    // Example submission logic; replace with your actual submission logic
+    try {
+      // Assuming successful submission
+      setSuccessMessage("User successfully created!");
+
+      // Clear form fields
+      setSearchTerm("");
+      setSelectedType("All");
+
+      // Hide the success message after 3 seconds
+      setTimeout(() => setSuccessMessage(""), 3000);
+    } catch (error) {
+      setError("Error submitting the form.");
+    }
   };
 
   // Sorting handler
@@ -85,7 +115,8 @@ const Organisationstable = () => {
         org.org_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         org.org_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
         org.org_address.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesSelectedType = selectedType === "All" || org.org_type === selectedType;
+      const matchesSelectedType =
+        selectedType === "All" || org.org_type === selectedType;
       return matchesSearchTerm && matchesSelectedType;
     })
     .sort((a, b) => {
@@ -98,14 +129,19 @@ const Organisationstable = () => {
     });
 
   // Paginate filtered data
-  const displayedRows = filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const displayedRows = filteredData.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   if (loading) {
     return <CircularProgress />;
   }
 
   if (error) {
-    return <Typography variant="h6" color="error">{`Error: ${error}`}</Typography>;
+    return (
+      <Typography variant="h6" color="error">{`Error: ${error}`}</Typography>
+    );
   }
 
   return (
@@ -131,20 +167,39 @@ const Organisationstable = () => {
             sx={{ width: 200 }}
           >
             <option value="All">All</option>
-            {[...new Set(organisations.map((org) => org.org_type))].map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
+            {[...new Set(organisations.map((org) => org.org_type))].map(
+              (type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              )
+            )}
           </TextField>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+            sx={{ marginLeft: 2 }}
+          >
+            Submit
+          </Button>
         </Box>
+
+        {/* Success Message */}
+        {successMessage && (
+          <Snackbar open={!!successMessage} autoHideDuration={3000}>
+            <Alert severity="success">{successMessage}</Alert>
+          </Snackbar>
+        )}
 
         {/* Table with organisations */}
         <Table sx={{ mt: 2 }} aria-label="Organisations Table">
           <TableHead>
             <TableRow>
               <TableCell>
-                <Typography variant="h6" sx={{ fontWeight: "bold" }}>S.No</Typography>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  S.No
+                </Typography>
               </TableCell>
               <TableCell sortDirection={orderBy === "org_name" ? order : false}>
                 <TableSortLabel
@@ -152,7 +207,9 @@ const Organisationstable = () => {
                   direction={orderBy === "org_name" ? order : "asc"}
                   onClick={() => handleSortRequest("org_name")}
                 >
-                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>Organisation Name</Typography>
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                    Organisation Name
+                  </Typography>
                 </TableSortLabel>
               </TableCell>
               <TableCell sortDirection={orderBy === "org_type" ? order : false}>
@@ -161,20 +218,25 @@ const Organisationstable = () => {
                   direction={orderBy === "org_type" ? order : "asc"}
                   onClick={() => handleSortRequest("org_type")}
                 >
-                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>Type</Typography>
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                    Type
+                  </Typography>
                 </TableSortLabel>
               </TableCell>
               <TableCell>
-                <Typography variant="h6" sx={{ fontWeight: "bold" }}>Location</Typography>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  Location
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  POC
+                </Typography>
               </TableCell>
               <TableCell align="center">
-                <TableSortLabel
-                  active={orderBy === "org_id"}
-                  direction={orderBy === "org_id" ? order : "asc"}
-                  onClick={() => handleSortRequest("org_id")}
-                >
-                  <Typography variant="h6" align="center">Dashboard</Typography>
-                </TableSortLabel>
+                <Typography variant="h6" align="center">
+                  Dashboard
+                </Typography>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -190,7 +252,8 @@ const Organisationstable = () => {
                 </TableCell>
                 <TableCell>{org.org_type}</TableCell>
                 <TableCell>{org.org_address}</TableCell>
-                <TableCell align="center">{org.dash_count}</TableCell>
+                <TableCell>{org.poc}</TableCell>
+                <TableCell align="center">{org.dash_count || "N/A"}</TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -1,4 +1,3 @@
-
 const pool = require("../config/database"); // Import the pool for DB connection
 const bcrypt = require("bcrypt");
 
@@ -41,16 +40,32 @@ const createUser = async (user) => {
         user.org_id, // Organization ID
       ]
     );
-    
-    return result.rows[0]; // Return the newly created user
+
+    const newUser = result.rows[0];
+
+    // Check if this is the first user for the organization
+    const userCountResult = await pool.query(
+      'SELECT COUNT(*) AS user_count FROM in22labs.users WHERE org_id = $1',
+      [user.org_id]
+    );
+    const userCount = parseInt(userCountResult.rows[0].user_count, 10);
+
+    if (userCount === 1) {
+      // Update the organization's poc_id with this user's user_id
+      await pool.query(
+        'UPDATE in22labs.organizations SET poc_id = $1 WHERE org_id = $2',
+        [newUser.user_id, user.org_id]
+      );
+    }
+
+    return newUser; // Return the newly created user
   } catch (error) {
-    console.error("Error creating user:", error);
-    throw error; // Rethrow the error for handling
     console.error("Error creating user:", error);
     throw error; // Rethrow the error for handling
   }
 };
 
+// Fetch all users
 const getAllUsers = async () => {
   try {
     const result = await pool.query(`

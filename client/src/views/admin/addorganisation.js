@@ -38,6 +38,11 @@ const AddOrganisation = () => {
       const result = await response.json();
       console.log('Organisation created:', result);
       setStatusMessage({ type: 'success', text: 'Organisation successfully created!' });
+
+      // Clear the form fields after successful submission
+      setOrganizationName('');
+      setType('');
+      setAddress('');
     } catch (error) {
       console.error('Error creating organisation:', error.message);
       setStatusMessage({ type: 'error', text: 'Error creating organisation. Please try again.' });

@@ -35,6 +35,7 @@ const Blog = () => {
         pageTitle="Welcome to In22labs Analytics Portal"
         breadcrumbTitle1="Dashboard"
         breadcrumbRoute1="/dashboard"
+        marginTop="60px" // Minimal margin to reduce space
       />
 
       {/* Add space between BreadcrumbComponent and Grid */}

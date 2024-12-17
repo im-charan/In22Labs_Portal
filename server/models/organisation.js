@@ -1,69 +1,107 @@
-const pool = require('../config/database');
+const pool = require("../config/database");
 
 // Create a new organisation
 const createOrganisation = async (organisation) => {
-  // Validate the organisation data before proceeding
-  if (!organisation.org_name || !organisation.org_type || !organisation.org_address ) {
-    throw new Error('Missing required fields: org_name, org_type, org_address, or org_status');
+  if (
+    !organisation.org_name ||
+    !organisation.org_type ||
+    !organisation.org_address 
+    
+  ) {
+    throw new Error(
+      "Missing required fields: org_name, org_type, org_address, or poc_id"
+    );
   }
 
   try {
-    // If poc_id is provided, add it to the insert query; otherwise, it will be NULL
+    // Insert the organization into the database
     const result = await pool.query(
-      `INSERT INTO in22labs.organizations (org_name, org_type, org_address, org_status, poc_id, org_create, org_update)
-       VALUES ($1, $2, $3, $4, $5, NOW(), NOW()) RETURNING *`,
+      `INSERT INTO in22labs.organizations (
+         org_name, org_type, org_address, org_status, poc_id, dash_count, org_create, org_update
+       ) VALUES (
+         $1, $2, $3, $4, $5, $6, NOW(), NOW()
+       ) RETURNING org_id`,
       [
-        organisation.org_name,  
-        organisation.org_type,  
-        organisation.org_address,  
-        organisation.org_status||1,  
-        organisation.poc_id || null  
+        organisation.org_name,
+        organisation.org_type,
+        organisation.org_address,
+        organisation.org_status || 1, // Default org_status to 1 if not provided
+        organisation.poc_id,          // Foreign key to users table
+        organisation.dash_count || 0, // Default dash_count to 0
       ]
     );
-    console.log('Inserting values:', organisation.org_name, organisation.org_type, organisation.org_address, organisation.org_status, organisation.poc_id);
 
-    return result.rows[0];  // Return the newly created organisation
+    const orgId = result.rows[0].org_id;
+
+    console.log(
+      "Inserted organisation:",
+      organisation.org_name,
+      organisation.org_type,
+      organisation.org_address,
+      organisation.org_status,
+      organisation.poc_id
+    );
+
+    // Return the created organisation
+    const updatedOrgResult = await pool.query(
+      `SELECT * FROM in22labs.organizations WHERE org_id = $1`,
+      [orgId]
+    );
+
+    return updatedOrgResult.rows[0];
   } catch (error) {
-    console.error('Error creating organisation:', error.message);
-    throw new Error('Error creating organisation in the database');
+    console.error("Error creating organisation:", error.message);
+    throw new Error("Error creating organisation in the database");
   }
 };
 
-//delete org by id
+// Delete an organisation by ID
 const deleteOrganisationById = async (organisationId) => {
   try {
     const result = await pool.query(
-      'DELETE FROM in22labs.organizations WHERE org_id = $1 RETURNING *',
-      [organisationId] // Parameterized query to prevent SQL injection
+      `DELETE FROM in22labs.organizations WHERE org_id = $1 RETURNING *`,
+      [organisationId]
     );
-
-    return result.rows[0]; // Return the deleted organisation, if any
+    return result.rows[0];
   } catch (error) {
-    console.error('Error deleting organisation:', error.message);
-    throw new Error('Error deleting organisation');
+    console.error("Error deleting organisation:", error.message);
+    throw new Error("Error deleting organisation");
   }
 };
-
 
 // Get an organisation by ID
 const getOrganisationById = async (organisationId) => {
   try {
-    const result = await pool.query('SELECT * FROM in22labs.organizations WHERE org_id = $1', [organisationId]);
-    return result.rows[0];  // Return the organisation
+    const result = await pool.query(
+      `SELECT o.*, 
+              u.user_id AS poc_id
+       FROM in22labs.organizations o
+       LEFT JOIN in22labs.users u ON u.user_id = o.poc_id
+       WHERE o.org_id = $1`,
+      [organisationId]
+    );
+
+    return result.rows[0];
   } catch (error) {
-    console.error('Error fetching organisation:', error);
-    throw new Error('Error fetching organisation by ID');
+    console.error("Error fetching organisation:", error.message);
+    throw new Error("Error fetching organisation by ID");
   }
 };
 
 // Get all organisations
 const getAllOrganisations = async () => {
   try {
-    const result = await pool.query('SELECT * FROM in22labs.organizations');
-    return result.rows;  // Return all organisations
+    const result = await pool.query(
+      `SELECT o.*, 
+              u.user_id AS poc_id
+       FROM in22labs.organizations o
+       LEFT JOIN in22labs.users u ON u.user_id = o.poc_id`
+    );
+
+    return result.rows;
   } catch (error) {
-    console.error('Error fetching organisations:', error);
-    throw new Error('Error fetching organisations');
+    console.error("Error fetching organisations:", error.message);
+    throw new Error("Error fetching organisations");
   }
 };
 
@@ -71,5 +109,5 @@ module.exports = {
   createOrganisation,
   getOrganisationById,
   getAllOrganisations,
-  deleteOrganisationById
+  deleteOrganisationById,
 };

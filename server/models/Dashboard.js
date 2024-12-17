@@ -1,4 +1,4 @@
-
+const axios = require('axios');  // Import Axios for HTTP requests
 const pool = require("../config/database");
 
 // Fetch the organization ID by its name
@@ -20,13 +20,61 @@ const fetchOrgIdByName = async (orgName) => {
   }
 };
 
+// Fetch a dashboard by its ID
+const getDashboardById = async (dashboardId) => {
+  try {
+    const query = `
+      SELECT d.dashboard_id, d.dashboard_name, d.dashboard_url, o.org_name
+      FROM in22labs.dashboards d
+      JOIN in22labs.organizations o ON d.org_id = o.org_id
+      WHERE d.dashboard_id = $1
+    `;
+    const result = await pool.query(query, [dashboardId]);
+    if (result.rows.length === 0) {
+      throw new Error(`Dashboard with ID "${dashboardId}" not found.`);
+    }
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error fetching dashboard by ID:", error);
+    throw error;
+  }
+};
+//proxy const 
+proxyDashboardContent = async (req, res) => {
+  const { dashboardId } = req.params;
+  const dashboardUrl = `https://www.youtube.com/embed/${dashboardId}`;
+
+  try {
+    // Fetch the HTML content of the dashboard
+    const response = await axios.get(dashboardUrl);
+
+    // Modify the HTML content to include a base tag that rewrites links to be relative to the proxy URL
+    const htmlContent = response.data.replace(
+      /<head>/,
+      `<head><base href="http://localhost:5000/api/dashboard/proxy/${dashboardId}/" />`
+    );
+
+    // Set Content-Type header to text/html
+    res.setHeader('Content-Type', 'text/html');
+
+    // Return the modified HTML content
+    res.send(htmlContent);
+  } catch (error) {
+    console.error(`Error fetching content for dashboard ID ${dashboardId}:`, error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching dashboard content",
+      error: error.message,
+    });
+  }
+};
+
 // Create a new dashboard
 const createDashboard = async (dashboard) => {
   const client = await pool.connect();
   try {
-    await client.query("BEGIN"); // Start a transaction
+    await client.query("BEGIN");
 
-    // No need to fetch org_id if it's directly provided in the request body
     const org_id = dashboard.org_id;
 
     // Insert the new dashboard
@@ -49,21 +97,20 @@ const createDashboard = async (dashboard) => {
     const updateValues = [org_id];
     await client.query(updateQuery, updateValues);
 
-    await client.query("COMMIT"); // Commit the transaction
+    await client.query("COMMIT");
     return insertResult.rows[0];
   } catch (error) {
-    await client.query("ROLLBACK"); // Rollback in case of error
+    await client.query("ROLLBACK");
     console.error("Error creating dashboard and updating dash_count:", error);
     throw error;
   } finally {
-    client.release(); // Release the client back to the pool
+    client.release();
   }
 };
 
 // Get dashboards by organization with org_name
 const getDashboardsByOrganisation = async (orgId) => {
   try {
-    // Updated query to join dashboards and organizations tables
     const query = `
       SELECT d.dashboard_id, d.dashboard_name, d.dashboard_url, o.org_name
       FROM in22labs.dashboards d
@@ -80,7 +127,6 @@ const getDashboardsByOrganisation = async (orgId) => {
 // Get all dashboards with org_name
 const getAllDashboards = async () => {
   try {
-    // Updated query to join dashboards and organizations tables
     const query = `
       SELECT d.dashboard_id, d.dashboard_name, d.dashboard_url, o.org_name
       FROM in22labs.dashboards d
@@ -137,10 +183,13 @@ const deleteDashboard = async (dashboardId) => {
   }
 };
 
+// Export the methods to use them in your router
 module.exports = {
   createDashboard,
-  fetchOrgIdByName, // Exported for reuse in other parts of the application
+  fetchOrgIdByName,
   getDashboardsByOrganisation,
   getAllDashboards,
   deleteDashboard,
+  getDashboardById,
+  proxyDashboardContent, // Export the proxy function
 };

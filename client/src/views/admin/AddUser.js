@@ -226,3 +226,5 @@ const AddUser = () => {
 };
 
 export default AddUser;
+//javascript validation
+//server side validatiom

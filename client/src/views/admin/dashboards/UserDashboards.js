@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CardContent, Grid, Typography } from "@mui/material";
 import BlankCard from "../../../components/shared/BlankCard";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import img from "../../../assets/images/products/dashboard.jpg"; // Import your local image here
 import DashboardCard from "../../../components/shared/DashboardCard";
 
@@ -36,8 +36,9 @@ const UserDashboards = () => {
     fetchDashboards();
   }, []);
 
-  const handleNavigation = (url) => {
-    navigate(url);
+  // Handles navigation with the constructed URL
+  const handleNavigation = (organizationName, dashboardId) => {
+    navigate(`${dashboardId}`);
   };
 
   if (loading) {
@@ -55,12 +56,14 @@ const UserDashboards = () => {
           <Grid item sm={12} md={4} lg={3} key={dashboard.dashboard_id}>
             <BlankCard>
               <Typography
-                component={Link}
-                onClick={() => handleNavigation(dashboard.dashboard_url)}
+                component="div"
+                onClick={() =>
+                  handleNavigation(dashboard.org_name, dashboard.dashboard_id)
+                }
+                style={{ cursor: "pointer" }} // Add pointer cursor for better UX
               >
-                {/* If dashboard has no URL, use a default image */}
                 <img
-                  src={ img} // Use local image if URL is missing
+                  src={img} // Use local image if URL is missing
                   alt={dashboard.dashboard_name}
                   width="100%"
                   loading="lazy" // Improves performance by lazy-loading images

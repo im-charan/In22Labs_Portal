@@ -2,10 +2,6 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { Box, CardContent, Typography } from "@mui/material";
 import BlankCard from "../../../components/shared/BlankCard";
-import img1 from "src/assets/images/products/s4.png";
-import img2 from "src/assets/images/products/s5.png";
-import img3 from "src/assets/images/products/s7.png";
-import img4 from "src/assets/images/products/s11.png";
 import BreadcrumbComponent from "../../../components/shared/BreadCrumbComponent";
 import img from "../../../assets/images/products/analytics.png"
 

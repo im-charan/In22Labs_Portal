@@ -4,7 +4,9 @@ const {
   getDashboardsByOrganisation,
   getAllDashboards,
   deleteDashboard,
-  fetchOrgIdByName, // Ensure fetchOrgIdByName is imported correctly
+  getDashboardById,
+  fetchOrgIdByName, 
+  proxyDashboardContent// Ensure fetchOrgIdByName is imported correctly
 } = require('../models/Dashboard'); // Correct import path for the dashboard model
 
 const router = express.Router();
@@ -16,6 +18,7 @@ router.post("/create", async (req, res) => {
   if (!dashboard_name || !dashboard_url || !org_id) {
     return res.status(400).json({ success: false, message: "All fields are required" });
   }
+
 
   try {
     const newDashboard = await createDashboard({ dashboard_name, dashboard_url, org_id });
@@ -31,6 +34,54 @@ router.post("/create", async (req, res) => {
       message: "Error creating dashboard",
       error: error.message, // Be explicit with error messages
     });
+  }
+});
+
+router.get("/proxy/:dashboardId", async (req, res) => {
+  const { dashboardId } = req.params; // This is correct: it extracts dashboardId from the URL parameter
+
+  try {
+    // Fetch the content of the dashboard securely using the proxy function
+    await proxyDashboardContent(req, res);  // Pass the full req and res to the proxy function
+    
+  } catch (error) {
+    console.error(`Error fetching content for dashboard ID ${dashboardId}:`, error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching dashboard content",
+      error: error.message,
+    });
+  }
+});
+
+// Route to get all dashboards
+router.get("/all", async (req, res) => {
+  try {
+    const dashboards = await getAllDashboards();
+    res.status(200).json({
+      success: true,
+      message: "All dashboards retrieved successfully",
+      data: dashboards,
+    });
+  } catch (error) {
+    console.error("Error fetching all dashboards:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching dashboards",
+      error: error.message, // Log the specific error
+    });
+  }
+});
+ 
+
+// route yo get dashboard by dashboard id 
+router.get("/:id", async (req, res) => {
+  try {
+    const dashboardId = req.params.id;
+    const dashboard = await getDashboardById(dashboardId);
+    res.status(200).json(dashboard);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
   }
 });
 
@@ -89,24 +140,6 @@ router.get("/organisation/:orgId", async (req, res) => {
   }
 });
 
-// Route to get all dashboards
-router.get("/all", async (req, res) => {
-  try {
-    const dashboards = await getAllDashboards();
-    res.status(200).json({
-      success: true,
-      message: "All dashboards retrieved successfully",
-      data: dashboards,
-    });
-  } catch (error) {
-    console.error("Error fetching all dashboards:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error fetching dashboards",
-      error: error.message, // Log the specific error
-    });
-  }
-});
 
 // Route to delete a specific dashboard by ID
 router.delete("/delete/:dashboardId", async (req, res) => {

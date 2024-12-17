@@ -8,13 +8,15 @@ import AdminLayout from '../layouts/admin/AdminLayout';
 import Pbpage from '../views/dashboard/components/Pbpage';
 
 
+
 import ContactUsPage from '../views/dashboard/AuthContactUs';
 import ProfilePage from '../pages/ProfilePage';
 import ListOrganisation from '../views/admin/ListOrganisation';
 import AddOrganisation from '../views/admin/addorganisation';
-import SpecificDash from '../views/admin/dashboards/specificdash';
+import SpecificDash from '../views/admin/dashboards/SpecificDash';
 import AddDashboard from '../views/admin/dashboards/add-dashboard';
 import AddUser from '../views/admin/AddUser';
+import Adminpbpage from '../views/admin/dashboards/Adminpbpage';
 ;
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -70,7 +72,9 @@ const Router = [
       // { path: 'dashboards/:product', element:<SpecificDash/> },
      {path: 'organisation', exact:true, element:<ListOrganisation/>},
      {path:'addorganisation',exact:true,element:<AddOrganisation/>},
-     {path:'organisation/:organizationName/add-dashboard',exact:true,element:<AddDashboard/>}
+     {path:'organisation/:organizationName/add-dashboard',exact:true,element:<AddDashboard/>},
+     {path:'organisation/:organizationName/:id', exact:true,element:<Adminpbpage/>},
+      {path:'dashboards/:id', exact:true, element:<Adminpbpage/>}
     ],
   }
 ];

@@ -1,34 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Box, Typography, TextField, Button, MenuItem } from "@mui/material";
-import BreadcrumbComponent from '../../components/shared/BreadCrumbComponent';
-import AdminHeader from './AdminHeader';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import BreadcrumbComponent from "../../components/shared/BreadCrumbComponent";
+import AdminHeader from "./AdminHeader";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 const AddUser = () => {
-  const [userFullName, setUserFullName] = useState('');
-  const [validFrom, setValidFrom] = useState(null);
+  const [userFullName, setUserFullName] = useState("");
+  const [validFrom, setValidFrom] = useState(dayjs());
   const [validTill, setValidTill] = useState(null);
-  const [userEmail, setUserEmail] = useState('');
-  const [userPasswordRef, setUserPasswordRef] = useState('');
+  const [userEmail, setUserEmail] = useState("");
+  const [userPasswordRef, setUserPasswordRef] = useState("");
   const [userStatus, setUserStatus] = useState(1); // Default to active
   const [userType, setUserType] = useState(2); // Example default user type
-  const [orgId, setOrgId] = useState('');
-  const [userIp, setUserIp] = useState('127.0.0.1'); // Example placeholder
-  const [userOs, setUserOs] = useState('Windows'); // Example placeholder
+  const [orgId, setOrgId] = useState("");
+  const [userIp, setUserIp] = useState("127.0.0.1");
+  const [userOs, setUserOs] = useState("Windows");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [organisations, setOrganisations] = useState([]); // To store fetched organisations
+  const [organisations, setOrganisations] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // Fetch organisations when the component mounts
   useEffect(() => {
     const fetchOrganisations = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/organisation");
-        if (!response.ok) {
-          throw new Error("Error fetching organisations");
-        }
+        if (!response.ok) throw new Error("Error fetching organisations");
         const data = await response.json();
-        setOrganisations(data);  // Populate the organisations state
+        setOrganisations(data);
       } catch (error) {
         console.error("Error fetching organisations:", error.message);
       }
@@ -36,14 +35,50 @@ const AddUser = () => {
     fetchOrganisations();
   }, []);
 
+  const validateForm = () => {
+    if (!/^[a-zA-Z\s]+$/.test(userFullName)) {
+      setErrorMessage("Full name should contain only alphabets and spaces.");
+      return false;
+    }
+
+    if (validFrom && validFrom.isBefore(dayjs(), "day")) {
+      setErrorMessage("Valid From date must be today or a future date.");
+      return false;
+    }
+
+    if (validFrom && validTill && validTill.isBefore(validFrom, "day")) {
+      setErrorMessage("Valid Till date must be after Valid From date.");
+      return false;
+    }
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(userEmail)) {
+      setErrorMessage("Invalid email format.");
+      return false;
+    }
+
+    if (userPasswordRef.length < 6) {
+      setErrorMessage("Password must be at least 6 characters long.");
+      return false;
+    }
+
+    setErrorMessage("");
+    return true;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
 
+    if (!validateForm()) {
+      setIsSubmitting(false);
+      return;
+    }
+
     const newUser = {
-      user_name: userEmail.split('@')[0], // Extract username from email
-      valid_from: validFrom?.format('YYYY-MM-DD'),
-      valid_till: validTill?.format('YYYY-MM-DD'),
+      user_name: userEmail.split("@")[0],
+      valid_from: validFrom?.format("YYYY-MM-DD"),
+      valid_till: validTill?.format("YYYY-MM-DD"),
       user_email: userEmail,
       user_password_ref: userPasswordRef,
       user_status: userStatus,
@@ -65,20 +100,18 @@ const AddUser = () => {
         body: JSON.stringify(newUser),
       });
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
+      if (!response.ok) throw new Error(`Error: ${response.statusText}`);
 
       const data = await response.json();
       console.log("User created successfully:", data);
-
-      // Reset form
-      setUserFullName('');
-      setValidFrom(null);
+      
+      
+      setUserFullName("");
+      setValidFrom(dayjs());
       setValidTill(null);
-      setUserEmail('');
-      setUserPasswordRef('');
-      setOrgId('');
+      setUserEmail("");
+      setUserPasswordRef("");
+      setOrgId("");
     } catch (error) {
       console.error("Error creating user:", error.message);
     } finally {
@@ -89,8 +122,8 @@ const AddUser = () => {
   return (
     <>
       <AdminHeader />
-      <BreadcrumbComponent  
-        pageTitle="Create User" 
+      <BreadcrumbComponent
+        pageTitle="Create User"
         breadcrumbTitle1="User"
         breadcrumbRoute1="/admin/users"
         breadcrumbTitle2="Create"
@@ -122,6 +155,12 @@ const AddUser = () => {
             Create User
           </Typography>
 
+          {errorMessage && (
+            <Typography color="error" variant="body2">
+              {errorMessage}
+            </Typography>
+          )}
+
           <TextField
             label="Full Name"
             variant="outlined"
@@ -136,7 +175,9 @@ const AddUser = () => {
               label="Valid From"
               value={validFrom}
               onChange={(newValue) => setValidFrom(newValue)}
-              renderInput={(params) => <TextField {...params} fullWidth required />}
+              renderInput={(params) => (
+                <TextField {...params} fullWidth required />
+              )}
             />
           </LocalizationProvider>
 
@@ -145,7 +186,9 @@ const AddUser = () => {
               label="Valid Till"
               value={validTill}
               onChange={(newValue) => setValidTill(newValue)}
-              renderInput={(params) => <TextField {...params} fullWidth required />}
+              renderInput={(params) => (
+                <TextField {...params} fullWidth required />
+              )}
             />
           </LocalizationProvider>
 

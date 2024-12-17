@@ -9,9 +9,11 @@ import PageContainer from 'src/components/container/PageContainer';
 // import ProductPerformance from './components/ProductPerformance';
 import Blog from './components/Blog';
 // import MonthlyEarnings from './components/MonthlyEarnings';
-
+import { useAuth } from '../authentication/auth/AuthProvider';
 
 const Dashboard = () => {
+  const {isAuthenticated} = useAuth();
+  console.log(isAuthenticated);
   return (<>
     <PageContainer title="Dashboard" description="this is Dashboard">
 

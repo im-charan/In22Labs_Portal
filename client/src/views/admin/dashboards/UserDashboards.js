@@ -60,7 +60,7 @@ const UserDashboards = () => {
               >
                 {/* If dashboard has no URL, use a default image */}
                 <img
-                  src={dashboard.dashboard_url || img} // Use local image if URL is missing
+                  src={ img} // Use local image if URL is missing
                   alt={dashboard.dashboard_name}
                   width="100%"
                   loading="lazy" // Improves performance by lazy-loading images

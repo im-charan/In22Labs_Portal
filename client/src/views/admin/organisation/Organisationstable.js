@@ -190,7 +190,7 @@ const Organisationstable = () => {
                 </TableCell>
                 <TableCell>{org.org_type}</TableCell>
                 <TableCell>{org.org_address}</TableCell>
-                <TableCell align="center">{org.org_id}</TableCell>
+                <TableCell align="center">{org.dash_count}</TableCell>
               </TableRow>
             ))}
           </TableBody>

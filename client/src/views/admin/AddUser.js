@@ -1,36 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography, TextField, Button, MenuItem, Alert } from "@mui/material";
-import BreadcrumbComponent from '../../components/shared/BreadCrumbComponent';
-import AdminHeader from './AdminHeader';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import React, { useState, useEffect } from "react";
+import { Box, Typography, TextField, Button, MenuItem } from "@mui/material";
+import BreadcrumbComponent from "../../components/shared/BreadCrumbComponent";
+import AdminHeader from "./AdminHeader";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 const AddUser = () => {
-  // State for form inputs
-  const [userFullName, setUserFullName] = useState('');
-  const [validFrom, setValidFrom] = useState(null);
+  const [userFullName, setUserFullName] = useState("");
+  const [validFrom, setValidFrom] = useState(dayjs());
   const [validTill, setValidTill] = useState(null);
-  const [userEmail, setUserEmail] = useState('');
-  const [userPasswordRef, setUserPasswordRef] = useState('');
-  const [userStatus, setUserStatus] = useState(1); // Default active status
-  const [userType, setUserType] = useState(2); // Default user type
-  const [orgId, setOrgId] = useState('');
-  const [userIp, setUserIp] = useState('127.0.0.1'); // Default IP if not provided
-  const [userOs, setUserOs] = useState('Windows'); // Default OS if not provided
+  const [userEmail, setUserEmail] = useState("");
+  const [userPasswordRef, setUserPasswordRef] = useState("");
+  const [userStatus, setUserStatus] = useState(1); // Default to active
+  const [userType, setUserType] = useState(2); // Example default user type
+  const [orgId, setOrgId] = useState("");
+  const [userIp, setUserIp] = useState("127.0.0.1");
+  const [userOs, setUserOs] = useState("Windows");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [organisations, setOrganisations] = useState([]); // Fetched organisations
-  const [statusMessage, setStatusMessage] = useState(null); // For success or error message
+  const [organisations, setOrganisations] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // Fetch organisations when the component mounts
   useEffect(() => {
     const fetchOrganisations = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/organisation");
-        if (!response.ok) {
-          throw new Error("Error fetching organisations");
-        }
+        if (!response.ok) throw new Error("Error fetching organisations");
         const data = await response.json();
-        setOrganisations(data); // Populate organisations state
+        setOrganisations(data);
       } catch (error) {
         console.error("Error fetching organisations:", error.message);
       }
@@ -38,33 +35,58 @@ const AddUser = () => {
     fetchOrganisations();
   }, []);
 
-  // Form submission handler
+  const validateForm = () => {
+    if (!/^[a-zA-Z\s]+$/.test(userFullName)) {
+      setErrorMessage("Full name should contain only alphabets and spaces.");
+      return false;
+    }
+
+    if (validFrom && validFrom.isBefore(dayjs(), "day")) {
+      setErrorMessage("Valid From date must be today or a future date.");
+      return false;
+    }
+
+    if (validFrom && validTill && validTill.isBefore(validFrom, "day")) {
+      setErrorMessage("Valid Till date must be after Valid From date.");
+      return false;
+    }
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(userEmail)) {
+      setErrorMessage("Invalid email format.");
+      return false;
+    }
+
+    if (userPasswordRef.length < 6) {
+      setErrorMessage("Password must be at least 6 characters long.");
+      return false;
+    }
+
+    setErrorMessage("");
+    return true;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
-    setStatusMessage(null); // Reset status message
 
-    // Check if orgId is selected
-    if (!orgId) {
-      console.error("Error: Organization ID is required.");
-      setStatusMessage({ type: 'error', text: 'Organization is required.' });
+    if (!validateForm()) {
       setIsSubmitting(false);
       return;
     }
 
-    // Construct user object with fallback for IP and OS
     const newUser = {
-      user_name: userEmail.split('@')[0],
-      valid_from: validFrom?.format('YYYY-MM-DD'),
-      valid_till: validTill?.format('YYYY-MM-DD'),
+      user_name: userEmail.split("@")[0],
+      valid_from: validFrom?.format("YYYY-MM-DD"),
+      valid_till: validTill?.format("YYYY-MM-DD"),
       user_email: userEmail,
       user_password_ref: userPasswordRef,
       user_status: userStatus,
       user_fullname: userFullName,
-      user_ip: userIp, // Fallback to '127.0.0.1' if not set
-      user_os: userOs, // Fallback to 'Windows' if not set
+      user_ip: userIp,
+      user_os: userOs,
       user_type: userType,
-      org_id: orgId,  // Ensure orgId is passed correctly
+      org_id: parseInt(orgId, 10),
       user_create: new Date().toISOString(),
       user_update: new Date().toISOString(),
     };
@@ -78,28 +100,19 @@ const AddUser = () => {
         body: JSON.stringify(newUser),
       });
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
+      if (!response.ok) throw new Error(`Error: ${response.statusText}`);
 
       const data = await response.json();
       console.log("User created successfully:", data);
 
-      // Set success status message
-      setStatusMessage({ type: 'success', text: 'User successfully created!' });
-
-      // Reset form inputs after successful creation
-      setUserFullName('');
-      setValidFrom(null);
+      setUserFullName("");
+      setValidFrom(dayjs());
       setValidTill(null);
-      setUserEmail('');
-      setUserPasswordRef('');
-      setOrgId('');
-      setUserIp('127.0.0.1'); // Reset to default IP after submission
-      setUserOs('Windows'); // Reset to default OS after submission
+      setUserEmail("");
+      setUserPasswordRef("");
+      setOrgId("");
     } catch (error) {
       console.error("Error creating user:", error.message);
-      setStatusMessage({ type: 'error', text: 'Error creating user. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -141,6 +154,12 @@ const AddUser = () => {
             Create User
           </Typography>
 
+          {errorMessage && (
+            <Typography color="error" variant="body2">
+              {errorMessage}
+            </Typography>
+          )}
+
           <TextField
             label="Full Name"
             variant="outlined"
@@ -155,7 +174,9 @@ const AddUser = () => {
               label="Valid From"
               value={validFrom}
               onChange={(newValue) => setValidFrom(newValue)}
-              renderInput={(params) => <TextField {...params} fullWidth required />}
+              renderInput={(params) => (
+                <TextField {...params} fullWidth required />
+              )}
             />
           </LocalizationProvider>
 
@@ -164,7 +185,9 @@ const AddUser = () => {
               label="Valid Till"
               value={validTill}
               onChange={(newValue) => setValidTill(newValue)}
-              renderInput={(params) => <TextField {...params} fullWidth required />}
+              renderInput={(params) => (
+                <TextField {...params} fullWidth required />
+              )}
             />
           </LocalizationProvider>
 
@@ -212,13 +235,6 @@ const AddUser = () => {
           >
             {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
-
-          {/* Status Message */}
-          {statusMessage && (
-            <Alert severity={statusMessage.type} sx={{ marginTop: 2 }}>
-              {statusMessage.text}
-            </Alert>
-          )}
         </Box>
       </Box>
     </>

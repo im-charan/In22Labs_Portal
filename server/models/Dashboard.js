@@ -72,6 +72,15 @@ proxyDashboardContent = async (req, res) => {
 // Create a new dashboard
 const createDashboard = async (dashboard) => {
   const client = await pool.connect();
+   const urlRegex = /^(https:\/\/app\.powerbi\.com\/.+)$/;
+
+   if (dashboard.dashboard_name.length > 100) {
+     throw new Error("Dashboard name must be less than 100 characters.");
+   }
+
+   if (!urlRegex.test(dashboard.dashboard_url)) {
+     throw new Error("Invalid Power BI URL format.");
+   }
   try {
     await client.query("BEGIN");
 
@@ -94,7 +103,7 @@ const createDashboard = async (dashboard) => {
       WHERE org_id = $1
       RETURNING *
     `;
-    const updateValues = [org_id];
+    const updateValues = [dashboard.org_id];
     await client.query(updateQuery, updateValues);
 
     await client.query("COMMIT");

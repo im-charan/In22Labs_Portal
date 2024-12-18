@@ -1,6 +1,5 @@
 // Import required packages
 const express = require('express');  // Express framework
-const cors = require('cors');        // CORS middleware for handling cross-origin requests
 require('dotenv').config();          // To load environment variables from .env file
 const session = require('express-session');
 const flash = require('express-flash');
@@ -9,6 +8,16 @@ const passport = require('passport'); // Passport middleware for authentication
 const dashboardRoutes = require('./routes/dashboard');
 const organisationRoutes = require('./routes/organisation');
 const userRoutes = require('./routes/user');
+const axios = require('axios');
+
+
+
+const SITE_SECRET = process.env.SITE_SECRET
+
+const cors = require('cors');        // CORS middleware for handling cross-origin requests
+const corsOptions = {
+  origin: 'http://localhost:5173/',   // URL of the React app
+};
 
 
 const initializePassport = require('./config/passportConfig');
@@ -46,9 +55,18 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/auth', passport.authenticate('local', {
-  successRedirect: '/api/dashboard',
+  successRedirect: '/api/user/1',
   failureRedirect: '/api/login'
 }))
+
+
+app.post('/verify', async (request, response) => {
+  const { captchaValue } = request.body
+  const { data } = await axios.post(
+    `https://www.google.com/recaptcha/api/siteverify?secret=${SITE_SECRET}&response=${captchaValue}`,
+  )
+  response.send(data)
+})
 
 
 // Initialize the server on a specific port (configured in .env)

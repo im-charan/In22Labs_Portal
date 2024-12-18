@@ -13,11 +13,21 @@ import logindesign from '../authentication/login-design.svg';
 // import amicodesign from '../../assets/images/backgrounds/Update-amico.svg';
 import amicodesign from '../../assets/images/backgrounds/Stats-amico.svg';
 import bg from './loginbg.svg'
+import { useEffect } from "react";
+import axios from 'axios';
 
 
 
 const Login2 = () => {
 
+  const fetchApi = async() =>{
+    const response = await axios.get('http://Localhost:5000/api/user/1');
+    console.log(response.data);
+  }
+
+  useEffect(() => {
+    fetchApi();
+  })
 
   
   // Define alignment with a default value (e.g., 'left')
@@ -62,13 +72,13 @@ const Login2 = () => {
             < Typography variant="h2">WELCOME TO SINGLE WINDOW PORTAL</Typography>
           </Grid> */}
         <Grid
-          item
           xs={2}  
           sm={5}  
           lg={6}
           display='flex'
           justifyContent="center"
           alignItems="center"
+          item 
           >
           <img src={amicodesign} alt="Login Design" style={{ width: "70vh", height: "auto" }} />
           

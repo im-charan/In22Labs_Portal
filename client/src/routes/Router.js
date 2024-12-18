@@ -17,6 +17,7 @@ import SpecificDash from '../views/admin/dashboards/SpecificDash';
 import AddDashboard from '../views/admin/dashboards/add-dashboard';
 import AddUser from '../views/admin/AddUser';
 import Adminpbpage from '../views/admin/dashboards/Adminpbpage';
+import ProtectedRoutes from './ProtectedRoutes';
 ;
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -49,14 +50,14 @@ const Router = [
     path: "/",
     element: <FullLayout />,
     children: [
-      { path: "/", element: <Navigate to="/dashboard" /> },
-      { path: "/dashboard", exact: true, element: <Dashboard /> },
+      { path: "/", element: <ProtectedRoutes element ={<Navigate to='/dashboard'/>} /> },
+      { path: "/dashboard", exact: true, element: (<ProtectedRoutes element ={<Dashboard/>} />) },
       { path: "/sample-page", exact: true, element: <SamplePage /> },
       { path: "/icons", exact: true, element: <Icons /> },
       // { path: '*', element: <Navigate to="/auth/404" /> },
-      { path: "/dashboard/product/:id", element: <Pbpage /> },
-      { path: "/dashboard/ProfilePage" , element: <ProfilePage/>},
-      { path: "/dashboard/ContactUsPage" , element: <ContactUsPage/>},
+      { path: "/dashboard/product/:id", element: (<ProtectedRoutes element ={<Pbpage/>} />) },
+      { path: "/dashboard/ProfilePage" , element: (<ProtectedRoutes element ={<ProfilePage/>} />)},
+      { path: "/dashboard/ContactUsPage" , element: (<ProtectedRoutes element ={<ContactUsPage/>} />)},
     ],
   },
   {
@@ -64,15 +65,15 @@ const Router = [
     element: <AdminLayout />,
     children: [
       
-      { path: '', element: <Navigate to="users" /> },  
-      { path: 'users', exact: true, element: <ListUsers /> },
-      { path: 'dashboards', exact: true, element: <ListDashboards /> },
-      { path: 'organisation/:organizationName', element:<SpecificDash/> },
-      { path: 'createuser', element:<AddUser/> },
+      { path: '', element: (<ProtectedRoutes element ={<Navigate to='/users'/>} />) },  
+      { path: 'users', exact: true, element: (<ProtectedRoutes element ={<ListUsers/>} />) },
+      { path: 'dashboards', exact: true, element: (<ProtectedRoutes element ={<ListDashboards/>} />) },
+      { path: 'organisation/:organizationName', element: (<ProtectedRoutes element ={<SpecificDash/>} />) },
+      { path: 'createuser', element:(<ProtectedRoutes element ={<AddUser/>} />) },
       // { path: 'dashboards/:product', element:<SpecificDash/> },
-     {path: 'organisation', exact:true, element:<ListOrganisation/>},
-     {path:'addorganisation',exact:true,element:<AddOrganisation/>},
-     {path:'organisation/:organizationName/add-dashboard',exact:true,element:<AddDashboard/>},
+     {path: 'organisation', exact:true, element:(<ProtectedRoutes element ={<ListOrganisation/>} />)},
+     {path:'addorganisation',exact:true,element: (<ProtectedRoutes element ={<AddOrganisation/>} />)},
+     {path:'organisation/:organizationName/add-dashboard',exact:true,element: (<ProtectedRoutes element ={<AddDashboard/>} />)},
      {path:'organisation/:organizationName/:id', exact:true,element:<Adminpbpage/>},
       {path:'dashboards/:id', exact:true, element:<Adminpbpage/>}
     ],

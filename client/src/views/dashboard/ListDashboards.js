@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { CardContent, Grid, Typography } from "@mui/material";
-import BlankCard from "../../../components/shared/BlankCard";
-import { Link, useNavigate } from "react-router-dom";
-import img from "../../../assets/images/products/dashboard.jpg"; // Import your local image here
-import DashboardCard from "../../../components/shared/DashboardCard";
+import { CardContent, Grid, List, Typography } from "@mui/material";
+import BlankCard from "../../components/shared/BlankCard";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import img from "../../assets/images/products/dashboard.jpg"; // Import your local image here
+import DashboardCard from "../../components/shared/DashboardCard";
 
-const UserDashboards = () => {
+const ListDashboards = () => {
   const navigate = useNavigate();
+  const {orgId} = useParams();
   const [dashboards, setDashboards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,7 +16,11 @@ const UserDashboards = () => {
   useEffect(() => {
     const fetchDashboards = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/dashboard/all"); // Adjust the API endpoint
+        setLoading(true);
+        setError(null);
+
+        const response = await fetch(`http://localhost:5000/api/dashboard/organisation/${orgId}`); // Adjust the API endpoint
+        console.log(orgId);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -37,7 +42,7 @@ const UserDashboards = () => {
   }, []);
 
   const handleNavigation = (url) => {
-    navigate(url);
+    window.location.href = url;
   };
 
   if (loading) {
@@ -49,7 +54,7 @@ const UserDashboards = () => {
   }
 
   return (
-    <DashboardCard>
+    <DashboardCard >
             <Grid container spacing={3}>
               {dashboards.map((dashboard) => (
           <Grid item sm={12} md={4} lg={3} key={dashboard.dashboard_id}>
@@ -60,7 +65,7 @@ const UserDashboards = () => {
               >
                 {/* If dashboard has no URL, use a default image */}
                       <img
-                  src={ img} // Use local image if URL is missing
+                  src={img} // Use local image if URL is missing
                         alt={dashboard.dashboard_name}
                         width="100%"
                   loading="lazy" // Improves performance by lazy-loading images
@@ -80,4 +85,4 @@ const UserDashboards = () => {
   );
 };
 
-export default UserDashboards;
+export default ListDashboards;

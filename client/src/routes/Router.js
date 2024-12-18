@@ -49,7 +49,7 @@ const Router = [
     element: <FullLayout />,
     children: [
       { path: "/", element: <ProtectedRoutes element ={<Navigate to='/dashboard'/>} /> },
-      { path: "/dashboard", exact: true, element: (<ProtectedRoutes element ={<Dashboard/>} />) },
+      { path: "/dashboard/:orgId", exact: true, element: (<ProtectedRoutes element ={<Dashboard/>} />) },
       { path: "/sample-page", exact: true, element: <SamplePage /> },
       { path: "/icons", exact: true, element: <Icons /> },
       // { path: '*', element: <Navigate to="/auth/404" /> },
@@ -63,9 +63,9 @@ const Router = [
     element: <AdminLayout />,
     children: [
       
-      { path: '', element: (<ProtectedRoutes element ={<Navigate to='/users'/>} />) },  
+      { path: '', element: (<ProtectedRoutes element ={<Navigate to='/admin/users'/>} />) },  
       { path: 'users', exact: true, element: (<ProtectedRoutes element ={<ListUsers/>} />) },
-      { path: 'dashboards', exact: true, element: (<ProtectedRoutes element ={<ListDashboards/>} />) },
+      { path: 'dashboard', exact: true, element: (<ProtectedRoutes element ={<ListDashboards/>} />) },
       { path: 'organisation/:organizationName', element: (<ProtectedRoutes element ={<SpecificDash/>} />) },
       { path: 'createuser', element:(<ProtectedRoutes element ={<AddUser/>} />) },
       // { path: 'dashboards/:product', element:<SpecificDash/> },

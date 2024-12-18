@@ -28,6 +28,6 @@ testConnection();
 module.exports = {
   pool,
   User: require('./User'),         // User model
-  Dashboard: require('./dashboard'), // Dashboard model
+  Dashboard: require('./Dashboard'), // Dashboard model
   Organisation: require('./organisation') // Organisation model
 };

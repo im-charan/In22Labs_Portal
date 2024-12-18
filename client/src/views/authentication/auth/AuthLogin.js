@@ -57,11 +57,13 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
         .then(result => { 
           console.log(result.data.user_type);
           const userType = result.data.user_type;
+          const orgId = result.data.org_id;
           if(userType === 1){
-            navigate('/admin/dashboards')
+            navigate('/admin/dashboard')
           }
           else{
-            navigate('/dashboard')}
+            navigate('/dashboard/'+orgId);
+          }
         })
        }
        if(result.status !== 200){

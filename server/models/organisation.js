@@ -29,6 +29,17 @@ const createOrganisation = async (organisation) => {
   }
 };
 
+const getOrganisationIdbyUserName = async (userName) =>{
+  try{
+    const result = await pool.query(`SELECT org_id FROM in22labs.users WHERE user_name = $1`, [userName]);
+    return result.rows[0].org_id;
+  }
+  catch(error){
+    console.error('Error fetching organisationId:', error);
+    throw new Error('Error fetching organisationID by user_name');
+  }
+};
+
 //delete org by id
 const deleteOrganisationById = async (organisationId) => {
   try {
@@ -71,5 +82,6 @@ module.exports = {
   createOrganisation,
   getOrganisationById,
   getAllOrganisations,
-  deleteOrganisationById
+  deleteOrganisationById,
+  getOrganisationIdbyUserName
 };

@@ -2,9 +2,10 @@ import React from 'react';
 import { Grid, Box, Typography } from '@mui/material';
 import PageContainer from 'src/components/container/PageContainer';
 
-import Blog from './components/Blog';
+
 // import MonthlyEarnings from './components/MonthlyEarnings';
 import { useAuth } from '../authentication/auth/AuthProvider';
+import ListDashboards from './ListDashboards';
 
 const Dashboard = () => {
   const {isAuthenticated} = useAuth();
@@ -17,7 +18,7 @@ const Dashboard = () => {
         <Grid container spacing={3}>
           
           <Grid item xs={12}>
-            <Blog />
+            <ListDashboards/>
           </Grid>
         </Grid>
       </Box>

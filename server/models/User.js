@@ -1,6 +1,7 @@
 
 const pool = require("../config/database"); // Import the pool for DB connection
 const bcrypt = require("bcrypt");
+const dayjs = require("dayjs");
 
 /**
  * Create a new user in the database.
@@ -9,6 +10,37 @@ const bcrypt = require("bcrypt");
  */
 const createUser = async (user) => {
   try {
+    // Validate full name (alphabets and spaces only)
+    if (!/^[a-zA-Z\s]+$/.test(user.user_fullname)) {
+      throw new Error("Full name should contain only alphabets and spaces.");
+    }
+
+    // Validate valid dates
+    const currentDate = dayjs();
+    const validFromDate = dayjs(user.valid_from);
+    const validTillDate = dayjs(user.valid_till);
+
+    if (
+      !validFromDate.isSame(currentDate, "day") &&
+      !validFromDate.isAfter(currentDate)
+    ) {
+      throw new Error("Valid From date must be the current date or later.");
+    }
+
+    if (!validTillDate.isAfter(validFromDate)) {
+      throw new Error("Valid Till date must be after Valid From date.");
+    }
+
+    if (!validTillDate.isAfter(currentDate)) {
+      throw new Error("Valid Till date must be after the current date.");
+    }
+
+    // Validate email format
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(user.user_email)) {
+      throw new Error("Invalid email format.");
+    }
+
     // Hash the provided password reference
     const hashedPassword = await bcrypt.hash(user.user_password_ref, 10);
 
@@ -110,6 +142,38 @@ const getUserTypeByUserName = async (userName) => {
  */
 const updateUser = async (userId, userDetails) => {
   try {
+    // Validate full name
+    if (userDetails.user_fullname && !/^[a-zA-Z\s]+$/.test(userDetails.user_fullname)) {
+      throw new Error(
+        "Full name should contain only alphabets and spaces."
+      );
+    }
+
+    // Validate email format
+    if (userDetails.user_email) {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!emailRegex.test(userDetails.user_email)) {
+        throw new Error("Invalid email format.");
+      }
+    }
+
+    // Validate dates
+    const currentDate = dayjs();
+    const validFromDate = dayjs(userDetails.valid_from);
+    const validTillDate = dayjs(userDetails.valid_till);
+
+    if (userDetails.valid_from && (!validFromDate.isSame(currentDate, "day") && !validFromDate.isAfter(currentDate))) {
+      throw new Error("Valid From date must be the current date or later.");
+    }
+
+    if (userDetails.valid_till && !validTillDate.isAfter(validFromDate)) {
+      throw new Error("Valid Till date must be after Valid From date.");
+    }
+
+    if (userDetails.valid_till && !validTillDate.isAfter(currentDate)) {
+      throw new Error("Valid Till date must be after the current date.");
+    }
+
     const hashedPassword = userDetails.user_password_ref
       ? await bcrypt.hash(userDetails.user_password_ref, 10)
       : null;
@@ -146,7 +210,6 @@ const updateUser = async (userId, userDetails) => {
     throw error;
   }
 };
-
 /**
  * Delete a user by ID from the database.
  * @param {number} userId - User ID.

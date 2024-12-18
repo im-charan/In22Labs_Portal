@@ -51,7 +51,7 @@ const Router = [
     element: <FullLayout />,
     children: [
       { path: "/", element: <ProtectedRoutes element ={<Navigate to='/dashboard'/>} /> },
-      { path: "/dashboard", exact: true, element: (<ProtectedRoutes element ={<Dashboard/>} />) },
+      { path: "/dashboard/:orgId", exact: true, element: (<ProtectedRoutes element ={<Dashboard/>} />) },
       { path: "/sample-page", exact: true, element: <SamplePage /> },
       { path: "/icons", exact: true, element: <Icons /> },
       // { path: '*', element: <Navigate to="/auth/404" /> },

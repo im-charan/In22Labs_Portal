@@ -38,6 +38,19 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.get('/name/:name', async (req, res) => {
+  const userName = req.params.name;
+  try {
+    const user = await userModel.getUserTypeByUserName(userName);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.status(200).json(user);  // Return the found user
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching user' });
+  }
+});
+
 // Route to update a user by ID
 router.put('/:id', async (req, res) => {
   const userId = req.params.id;

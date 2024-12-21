@@ -100,7 +100,16 @@ const AddUser = () => {
         body: JSON.stringify(newUser),
       });
 
-      if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (errorData.message && errorData.message.includes("Email already exists")) {
+          setErrorMessage("Email already exists. Please use a different email address.");
+        } else {
+          setErrorMessage("An error occurred while creating the user.");
+        }
+        setIsSubmitting(false);
+        return;
+      }
 
       const data = await response.json();
       console.log("User created successfully:", data);
@@ -113,6 +122,7 @@ const AddUser = () => {
       setOrgId("");
     } catch (error) {
       console.error("Error creating user:", error.message);
+      setErrorMessage("An unexpected error occurred.");
     } finally {
       setIsSubmitting(false);
     }
@@ -242,5 +252,3 @@ const AddUser = () => {
 };
 
 export default AddUser;
-//javascript validation
-//server side validatiom

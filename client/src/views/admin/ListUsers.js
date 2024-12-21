@@ -24,8 +24,7 @@ const ListUsers = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center" mt={5} mb={2}>
         <BreadcrumbComponent  
           pageTitle="User Table" 
-          breadcrumbTitle1="User"
-          breadcrumbRoute1="/admin/users"
+       
           marginTop="0" // Adjust marginTop for alignment
         />
         <Button variant="contained" onClick={handleCreateUserClick}>

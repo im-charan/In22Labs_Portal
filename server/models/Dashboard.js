@@ -20,25 +20,8 @@ const fetchOrgIdByName = async (orgName) => {
   }
 };
 
-// Fetch a dashboard by its ID
-const getDashboardById = async (dashboardId) => {
-  try {
-    const query = `
-      SELECT d.dashboard_id, d.dashboard_name, d.dashboard_url, o.org_name
-      FROM in22labs.dashboards d
-      JOIN in22labs.organizations o ON d.org_id = o.org_id
-      WHERE d.dashboard_id = $1
-    `;
-    const result = await pool.query(query, [dashboardId]);
-    if (result.rows.length === 0) {
-      throw new Error(`Dashboard with ID "${dashboardId}" not found.`);
-    }
-    return result.rows[0];
-  } catch (error) {
-    console.error("Error fetching dashboard by ID:", error);
-    throw error;
-  }
-};
+
+
 //proxy const 
 proxyDashboardContent = async (req, res) => {
   const { dashboardId } = req.params;
@@ -117,23 +100,30 @@ const createDashboard = async (dashboard) => {
   }
 };
 
-// Get dashboards by organization with org_name
-const getDashboardsByOrganisation = async (orgId) => {
+
+const getDashboardById = async (dashboardId) => {
   try {
     const query = `
-      SELECT d.dashboard_id, d.dashboard_name, d.dashboard_url, o.org_name
-      FROM in22labs.dashboards d
-      JOIN in22labs.organizations o ON d.org_id = o.org_id
-      WHERE d.org_id = $1`;
-    const result = await pool.query(query, [orgId]);
-    return result.rows;
+      SELECT dashboard_id, dashboard_name, dashboard_url
+      FROM in22labs.dashboards
+      WHERE dashboard_id = $1
+    `;
+    const result = await pool.query(query, [dashboardId]);
+
+    // If no dashboard is found, throw an error
+    if (result.rows.length === 0) {
+      throw new Error(`No dashboard found for dashboard ID ${dashboardId}`);
+    }
+
+    // Return the dashboard data
+    return result.rows[0];
   } catch (error) {
-    console.error("Error fetching dashboards by organization:", error);
+    console.error("Error fetching dashboard by ID:", error);
     throw error;
   }
 };
 
-// Get all dashboards with org_name
+// Get all dashboards 
 const getAllDashboards = async () => {
   try {
     const query = `
@@ -191,6 +181,22 @@ const deleteDashboard = async (dashboardId) => {
     throw error;
   }
 };
+const getDashboardsByOrganisation = async (orgId) => {
+  try {
+    const query = `
+      SELECT d.dashboard_id, d.dashboard_name, d.dashboard_url, o.org_name
+      FROM in22labs.dashboards d
+      JOIN in22labs.organizations o ON d.org_id = o.org_id
+      WHERE d.org_id = $1`;
+    const result = await pool.query(query, [orgId]);
+
+    return result.rows; // Always return an array, even if empty
+  } catch (error) {
+    console.error(`Error fetching dashboards for orgId: ${orgId}`, error);
+    throw error;
+  }
+};
+
 
 // Export the methods to use them in your router
 module.exports = {
@@ -199,6 +205,7 @@ module.exports = {
   getDashboardsByOrganisation,
   getAllDashboards,
   deleteDashboard,
-  getDashboardById,
-  proxyDashboardContent, // Export the proxy function
+  getDashboardById
+ 
+  // Export the proxy function
 };

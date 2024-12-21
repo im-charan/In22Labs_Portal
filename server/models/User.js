@@ -41,6 +41,14 @@ const createUser = async (user) => {
       throw new Error("Invalid email format.");
     }
 
+    // Check if email already exists in the database
+    const existingEmailQuery = `SELECT 1 FROM in22labs.users WHERE user_email = $1`;
+    const existingEmailResult = await pool.query(existingEmailQuery, [user.user_email]);
+
+    if (existingEmailResult.rowCount > 0) {
+      throw new Error("Email already exists. Please use a different email address.");
+    }
+
     // Hash the provided password reference
     const hashedPassword = await bcrypt.hash(user.user_password_ref, 10);
 
@@ -77,8 +85,7 @@ const createUser = async (user) => {
     return result.rows[0]; // Return the newly created user
   } catch (error) {
     console.error("Error creating user:", error);
-    throw error; // Rethrow the error for handling
-
+    throw { message: error.message }; // Make sure the message is returned in a standard format
   }
 };
 
@@ -88,6 +95,7 @@ const getAllUsers = async () => {
       SELECT 
         u.*, 
         o.org_name AS organization_name 
+        
       FROM in22labs.users u
       LEFT JOIN in22labs.organizations o 
       ON u.org_id = o.org_id
@@ -109,7 +117,8 @@ const getUserById = async (userId) => {
     const result = await pool.query(
       `SELECT 
         u.*, 
-        o.org_name AS organization_name 
+        o.org_name AS organization_name,
+        o.dash_count AS dashboard_count 
       FROM in22labs.users u
       LEFT JOIN in22labs.organizations o 
       ON u.org_id = o.org_id
@@ -126,7 +135,7 @@ const getUserById = async (userId) => {
 const getUserTypeByUserName = async (userName) => {
   try {
     // SQL query to get a user by ID
-    const result = await pool.query('SELECT user_type,org_id FROM in22labs.users WHERE user_name = $1', [userName]);
+    const result = await pool.query('SELECT user_name, user_type,org_id, user_id FROM in22labs.users WHERE user_name = $1', [userName]);
     return result.rows[0];  // Return the user
   } catch (error) {
     console.error('Error fetching user:', error);

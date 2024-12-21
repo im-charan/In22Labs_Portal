@@ -38,9 +38,9 @@ const UserDashboards = () => {
 
   // Handles navigation with the constructed URL
   const handleNavigation = (organizationName, dashboardId) => {
-    navigate(`${dashboardId}`);
+    navigate(`/admin/dashboard/${dashboardId}`);
   };
-
+  
   if (loading) {
     return <Typography>Loading dashboards...</Typography>;
   }

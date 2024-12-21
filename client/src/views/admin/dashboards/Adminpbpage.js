@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
+// import BreadcrumbComponent from "../../../components/shared/BreadCrumbComponent";
 
 const Adminpbpage = () => {
   const { id } = useParams(); // Get 'id' from the URL
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
@@ -17,13 +17,16 @@ const Adminpbpage = () => {
             "Content-Type": "application/json",
           },
         });
-
+  
         if (!response.ok) {
           throw new Error(`Failed to fetch dashboard. Status: ${response.status}`);
         }
-
+  
         const data = await response.json();
-        setDashboard(data); // Set the fetched dashboard data
+  
+        // The actual dashboard data is nested under 'data'
+        setDashboard(data.data); // Set the fetched dashboard data
+  
       } catch (error) {
         console.error("Error fetching dashboard:", error);
         setDashboard(null); // Reset dashboard to null on error
@@ -31,9 +34,10 @@ const Adminpbpage = () => {
         setLoading(false); // Stop loading state
       }
     };
-
+  
     fetchDashboard();
-  }, [id]);
+  }, [id]); // Depend on the 'id' parameter
+  
 
   if (loading) {
     return (
@@ -52,10 +56,10 @@ const Adminpbpage = () => {
   }
 
   return (
+    <>
+   
     <Box sx={{ mt: 4, textAlign: "center" }}>
-      <Typography variant="h4" gutterBottom>
-        {dashboard.dashboard_name}
-      </Typography>
+     
       <Box
         sx={{
           mt: 2,
@@ -78,6 +82,7 @@ const Adminpbpage = () => {
         />
       </Box>
     </Box>
+    </>
   );
 };
 

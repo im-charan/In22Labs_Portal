@@ -190,31 +190,32 @@ const SpecificDash = () => {
               </Grid>
             </Grid>
             {dashboards.length === 0 && (
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  mt: 5,
-                }}
-              >
-                <Box
-                  component="img"
-                  src={noDashboardsImage}
-                  alt="No dashboards available"
-                  sx={{
-                    maxWidth: "100%",
-                    maxHeight: "150px",
-                    objectFit: "contain",
-                    mb: 3,
-                  }}
-                />
-                <Typography variant="h6" align="center" color="textSecondary">
-                  No dashboards available
-                </Typography>
-              </Box>
-            )}
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      mt: 5,
+    }}
+  >
+    <Box
+      component="img"
+      src={noDashboardsImage}
+      alt="No dashboards available"
+      sx={{
+        maxWidth: "100%",
+        maxHeight: "150px",
+        objectFit: "contain",
+        mb: 3,
+      }}
+    />
+    <Typography variant="h6" align="center" color="textSecondary">
+      No dashboards available
+    </Typography>
+  </Box>
+)}
+
           </>
         )}
       </Box>

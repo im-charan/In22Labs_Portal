@@ -15,16 +15,22 @@ import PropTypes from "prop-types";
 // components
 import Profile from "./Profile";
 import { IconMenu } from "@tabler/icons-react";
-
-const userName = "Abdul";
-const OrganizationName = "Tech Innovations";
+import { useUser } from "src/views/authentication/auth/UserContext";
 
 // Assume a default sidebar width
-const SIDEBAR_WIDTH = 240;
+const SIDEBAR_WIDTH = 340;
 
 const Header = (props) => {
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  // Use MUI's useMediaQuery hook to detect screen sizes
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // For small screens (<600px)
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between("sm", "md")); // For medium screens (600px - 960px)
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up("md")); // For large screens (>960px)
+
+  // Access user context and safely get userName
+  const { user } = useUser();
+  const userName = user?.user_name || "Guest"; // Default to 'Guest' if userName is undefined
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)", // Adding a subtle shadow
@@ -33,8 +39,16 @@ const Header = (props) => {
     height: 50,
     borderBottom: "2px solid rgba(74, 118, 211, 0.2)", // 50% opacity
     transition: "margin-left 0.3s ease", // Smooth transition for sidebar toggle
-    marginLeft: props.isSidebarOpen ? `${SIDEBAR_WIDTH}px` : "0px", // Adjust based on sidebar state
-    width: props.isSidebarOpen ? `calc(100% - ${SIDEBAR_WIDTH}px)` : "100%", // Dynamically reduce width
+    marginLeft: isSmallScreen
+      ? "0px" // No margin on small screens
+      : props.isSidebarOpen
+      ? `${SIDEBAR_WIDTH}px` // If sidebar is open, apply margin on medium/large screens
+      : "0px", // No margin when sidebar is closed on medium/large screens
+    width: isSmallScreen
+      ? "100%" // Full width for small screens
+      : props.isSidebarOpen
+      ? `calc(100% - ${SIDEBAR_WIDTH}px)` // Adjust width based on sidebar state on medium/large screens
+      : "100%", // Full width when sidebar is closed on medium/large screens
   }));
 
   const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
@@ -63,7 +77,7 @@ const Header = (props) => {
             sx={{
               display: {
                 lg: "none",
-                xs: "inline",
+                xs: "inline", // Show on small screens
               },
             }}
           >
@@ -71,12 +85,16 @@ const Header = (props) => {
           </IconButton>
 
           <Typography
-           // variant={isSmallScreen ? "h6" :"h4"}
-           variant="h5"
+            variant="h5"
             sx={{
-              marginLeft: 35, 
+              marginLeft: isSmallScreen
+                ? "1rem" // Less margin for small screens
+                : isMediumScreen
+                ? "2rem" // More margin for medium screens
+                : isLargeScreen
+                ? "16rem" // Even more margin for large screens
+                : "15rem", // Default margin for large screens
               fontWeight: "bold",
-              
               whiteSpace: "nowrap", // Prevent text wrapping
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -85,22 +103,6 @@ const Header = (props) => {
             Single Window Portal
           </Typography>
         </Box>
-
-        {/* Center Organization Name */}
-        {!isSmallScreen && (
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: "bold",
-              //color: "#4a76d3",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {OrganizationName}
-          </Typography>
-        )}
 
         {/* Right-side User Info and Profile */}
         <Stack

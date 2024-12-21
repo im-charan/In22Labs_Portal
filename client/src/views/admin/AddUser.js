@@ -99,6 +99,14 @@ const AddUser = () => {
         },
         body: JSON.stringify(newUser),
       });
+        if (response.status === 409) {
+          // Handle email conflict
+          setErrorMessage(
+            "Email ID already exists. Please use a different email."
+          );
+          setIsSubmitting(false);
+          return;
+        }
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -187,6 +195,7 @@ const AddUser = () => {
               renderInput={(params) => (
                 <TextField {...params} fullWidth required />
               )}
+              minDate={dayjs()} // Disables previous dates before today
             />
           </LocalizationProvider>
 
@@ -198,6 +207,7 @@ const AddUser = () => {
               renderInput={(params) => (
                 <TextField {...params} fullWidth required />
               )}
+              minDate={validFrom || dayjs()} // Disables dates before "Valid From"
             />
           </LocalizationProvider>
 

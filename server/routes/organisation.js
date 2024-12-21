@@ -1,65 +1,54 @@
-const express = require('express');
-const organisationModel = require('../models/organisation');
+const express = require("express");
 const multer = require("multer");
+const path = require("path");
+const organisationModel = require("../models/organisation");
 
 const router = express.Router();
 
-// Multer setup for file uploads
-const storage = multer.memoryStorage();
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB limit
-  fileFilter: (req, file, cb) => {
-    const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
-    if (allowedTypes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error("Invalid file type. Only JPG, JPEG, and PNG are allowed."), false);
-    }
+// Configure Multer storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./uploads/"); // Store files in the "uploads" directory
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}_${file.originalname}`);
   },
 });
 
-// Handle Multer errors for file uploads
-router.post('/create', upload.single("logoFile"), async (req, res) => {
-  if (req.fileValidationError) {
-    return res.status(400).json({ error: req.fileValidationError });
-  }
+// Initialize Multer with storage configuration
+const upload = multer({ storage });
+
+// Route to create an organisation with logo upload
+router.post("/create", upload.single("org_logo"), async (req, res) => {
+  const organisationData = req.body;
+  const logoName = req.file ? req.file.filename : null;
 
   try {
-    const { org_name, org_type, org_address } = req.body;
-    const logoFile = req.file;
-
-    const base64Logo = logoFile
-      ? `data:image/${logoFile.mimetype.split("/")[1]};base64,${logoFile.buffer.toString("base64")}`
-      : null;
-
-    const newOrganisation = {
-      org_name: org_name.trim(),
-      org_type,
-      org_address: org_address.trim(),
-      org_logo: base64Logo,
-    };
-
-    const result = await organisationModel.createOrganisation(newOrganisation);
-    res.status(201).json(result);
+    const newOrganisation = await organisationModel.createOrganisation(
+      organisationData,
+      logoName
+    );
+    res.status(201).json(newOrganisation); // Return the newly created organisation
   } catch (error) {
-    console.error("Error creating organisation:", error.message);
-    res.status(500).json({ error: "Error creating organisation", message: error.message });
+    console.error(error);
+    res.status(500).json({ error: "Error creating organisation" });
   }
 });
 
 
 // Route to get an organisation by ID
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   const organisationId = req.params.id;
   try {
-    const organisation = await organisationModel.getOrganisationById(organisationId);
+    const organisation = await organisationModel.getOrganisationById(
+      organisationId
+    );
     if (!organisation) {
-      return res.status(404).json({ error: 'Organisation not found' });
+      return res.status(404).json({ error: "Organisation not found" });
     }
-    res.status(200).json(organisation);
+    res.status(200).json(organisation); // Return the found organisation
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching organisation' });
+    res.status(500).json({ error: "Error fetching organisation" });
   }
 });
 
@@ -78,26 +67,33 @@ router.get('/organisationId/:userName', async (req, res) => {
 });
 
 // Route to get all organisations
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const organisations = await organisationModel.getAllOrganisations();
-    res.status(200).json(organisations);
+    res.status(200).json(organisations); // Return all organisations
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching organisations' });
+    res.status(500).json({ error: "Error fetching organisations" });
   }
 });
 
 // Route to delete an organisation by ID
-router.delete('/:id', async (req, res) => {
-  const organisationId = req.params.id;
+router.delete("/:id", async (req, res) => {
+  const organisationId = req.params.id; // Extract the ID from request params
   try {
-    const deletedOrganisation = await organisationModel.deleteOrganisationById(organisationId);
+    const deletedOrganisation = await organisationModel.deleteOrganisationById(
+      organisationId
+    );
     if (!deletedOrganisation) {
-      return res.status(404).json({ message: 'Organisation not found' });
+      return res.status(404).json({ message: "Organisation not found" }); // If no rows were deleted
     }
-    res.status(200).json({ message: 'Organisation deleted successfully', organisation: deletedOrganisation });
+    res
+      .status(200)
+      .json({
+        message: "Organisation deleted successfully",
+        organisation: deletedOrganisation,
+      });
   } catch (error) {
-    res.status(500).json({ error: 'Error deleting organisation' });
+    res.status(500).json({ error: "Error deleting organisation" });
   }
 });
 

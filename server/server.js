@@ -3,7 +3,7 @@ require('dotenv').config();          // To load environment variables from .env 
 const session = require('express-session');
 const flash = require('express-flash');
 const passport = require('passport'); // Passport middleware for authentication
-const multer = require('multer');     // For file uploads
+    // For file uploads
 const cors = require('cors');         // CORS middleware for handling cross-origin requests
 
 // Import routes
@@ -28,8 +28,7 @@ app.use(express.urlencoded({ extended: true }));     // Handle URL-encoded form 
 app.use(express.json());                             // Parse JSON request bodies
 
 
-// Configure Multer
-const upload = multer({ storage: multer.memoryStorage() }).single("logoFile");
+
 
 // Use session and flash middleware
 app.use(session({
@@ -42,19 +41,12 @@ app.use(flash());
 // Initialize Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/uploads', express.static('uploads'));
-// Apply Multer middleware for the /create endpoint
-app.use('/api/organisation', (req, res, next) => {
-  if (req.path === '/create') {
-    upload(req, res, next); // Handle file upload for /create
-  } else {
-    next();
-  }
-}, organisationRoutes);
+
 
 // Setup other routes
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/organisation', organisationRoutes);
 app.use('/api/client', clientRoutes);
 
 // Set up a basic route for testing the server

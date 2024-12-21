@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Box,
@@ -14,10 +15,9 @@ const AddOrganisation = () => {
   const [organizationName, setOrganizationName] = useState("");
   const [type, setType] = useState("");
   const [address, setAddress] = useState("");
+  const [logo, setLogo] = useState(null); // State for storing logo
   const [statusMessage, setStatusMessage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [logoFile, setLogoFile] = useState(null); // For storing the uploaded image
-  const [imagePreview, setImagePreview] = useState(null);
 
   // Client-Side Validation
   const validateInputs = () => {
@@ -27,7 +27,7 @@ const AddOrganisation = () => {
     if (!type) return "Type of Organisation is required.";
     if (!address.trim() || address.trim().length < 10)
       return "Address must be at least 10 characters long.";
-    if (!logoFile) return "Logo is required."; // Ensure logo is uploaded
+    if (!logo) return "Organisation Logo is required.";
     return null;
   };
 
@@ -65,7 +65,6 @@ const AddOrganisation = () => {
     event.preventDefault();
     setStatusMessage(null);
 
-    // Validate inputs before submission
     const validationError = validateInputs();
     if (validationError) {
       setStatusMessage({ type: "error", text: validationError });
@@ -74,37 +73,41 @@ const AddOrganisation = () => {
 
     setIsSubmitting(true);
 
-    // Prepare FormData to send data and file
     const formData = new FormData();
     formData.append("org_name", organizationName.trim());
     formData.append("org_type", type);
     formData.append("org_address", address.trim());
-    formData.append("logoFile", logoFile); // Ensure you're appending the file correctly
-    
+    formData.append("org_logo", logo); // Append logo file
+
     try {
-      const response = await fetch("http://localhost:5000/api/organisation/create", {
-        method: "POST",
-        body: formData, 
-        credentials: "include"// Send form data containing the image file
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/organisation/create",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to create organisation.");
       }
 
-      const result = await response.json();
       setStatusMessage({
         type: "success",
         text: "Organisation successfully created!",
       });
 
-      // Reset form fields after successful submission
+      // Reset form fields
       setOrganizationName("");
       setType("");
       setAddress("");
-      setLogoFile(null);
-      setImagePreview(null);
+      setLogo(null);
+
+      // Optionally clear the status message after 3 seconds
+      setTimeout(() => {
+        setStatusMessage(null);
+      }, 3000); // Message disappears after 3 seconds
     } catch (error) {
       console.error("Error creating organisation:", error.message);
       setStatusMessage({ type: "error", text: error.message });
@@ -157,12 +160,7 @@ const AddOrganisation = () => {
             value={organizationName}
             onChange={(e) => setOrganizationName(e.target.value)}
             disabled={isSubmitting}
-            helperText={
-              organizationName.length > 50
-                ? "Maximum 50 characters allowed!"
-                : "Maximum 50 characters allowed."
-            }
-            error={organizationName.length > 50}
+            helperText="Maximum 50 characters allowed."
             inputProps={{ maxLength: 51 }}
           />
 
@@ -199,33 +197,18 @@ const AddOrganisation = () => {
             error={address.trim().length < 10 && address.trim().length > 0}
           />
 
-          {/* Image Upload Field */}
-          <Box display="flex" flexDirection="column" gap={1}>
-            <input
-              type="file"
-              accept="image/jpeg, image/png"
-              onChange={handleImageChange}
-              disabled={isSubmitting}
-            />
-            {logoFile && (
-              <Typography variant="body2">{logoFile.name}</Typography>
-            )}
-            {imagePreview && (
-              <Box
-                component="img"
-                src={imagePreview}
-                alt="logo preview"
-                sx={{
-                  maxWidth: "100%",
-                  maxHeight: "200px",
-                  marginTop: 1,
-                  borderRadius: 1,
-                  border: 1,
-                  borderColor: "grey.300",
-                }}
-              />
-            )}
-          </Box>
+          
+          <TextField
+            type="file"
+            fullWidth
+            required
+            onChange={(e) => setLogo(e.target.files[0])}
+            disabled={isSubmitting}
+            helperText="Upload an organisation logo (JPEG/PNG only)."
+            inputProps={{ accept: "image/png, image/jpeg" }}
+          />
+
+         
 
           <Button
             variant="contained"

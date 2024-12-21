@@ -9,7 +9,7 @@ const AddDashboard = () => {
   const navigate = useNavigate();
 
   const [dashboardName, setDashboardName] = useState("");
-  const [powerBIUrl, setPowerBIUrl] = useState("");
+  const [powerBIUrl, setDashboardUrl] = useState("");
   const [orgId, setOrgId] = useState(null);
   const [statusMessage, setStatusMessage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,11 +52,14 @@ const validateForm = () => {
     return false;
   }
 
-  const urlRegex = /^(https:\/\/app\.powerbi\.com\/.+)$/;
+  // General URL regex pattern
+  const urlRegex = /^(https?:\/\/[^\s/$.?#].[^\s]*)$/i;
+
+  // Check if the provided URL is valid
   if (!urlRegex.test(powerBIUrl)) {
     setStatusMessage({
       type: "error",
-      text: "Invalid Power BI URL. Ensure it starts with 'https://app.powerbi.com/'.",
+      text: "Invalid URL. Ensure it starts with 'http://' or 'https://'.",
     });
     return false;
   }
@@ -157,12 +160,12 @@ const validateForm = () => {
 
           {/* PowerBI URL */}
           <TextField
-            label="PowerBI URL"
+            label="Dashboard URL"
             variant="outlined"
             fullWidth
             required
             value={powerBIUrl}
-            onChange={(e) => setPowerBIUrl(e.target.value)}
+            onChange={(e) => setDashboardUrl(e.target.value)}
           />
 
           {/* Submit Button */}

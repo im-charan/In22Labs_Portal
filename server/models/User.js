@@ -40,6 +40,18 @@ const createUser = async (user) => {
     if (!emailRegex.test(user.user_email)) {
       throw new Error("Invalid email format.");
     }
+    // Check if email already exists in the database
+    const emailCheck = await pool.query(
+      "SELECT user_email FROM in22labs.users WHERE user_email = $1",
+      [user.user_email]
+    );
+    // if (emailCheck.rows.length > 0) {
+    //   throw new Error("Email ID already exists. Please use a different email.");
+    // }
+    if (emailCheck.rows.length > 0) {
+      throw { status: 409, message: "Email ID already exists" };
+    }
+
 
     // Hash the provided password reference
     const hashedPassword = await bcrypt.hash(user.user_password_ref, 10);
@@ -73,14 +85,19 @@ const createUser = async (user) => {
         user.org_id, // Organization ID
       ]
     );
-    
+
     return result.rows[0]; // Return the newly created user
   } catch (error) {
     console.error("Error creating user:", error);
+    if (error.message === "Email ID already exists") {
+      throw { status: 409, message: "Email ID already exists" };
+    }
     throw error; // Rethrow the error for handling
 
   }
+  
 };
+
 
 const getAllUsers = async () => {
   try {

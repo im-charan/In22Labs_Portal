@@ -23,15 +23,16 @@ const fetchOrgIdByName = async (orgName) => {
 // Create a new dashboard
 const createDashboard = async (dashboard) => {
   const client = await pool.connect();
-   const urlRegex = /^(https:\/\/app\.powerbi\.com\/.+)$/;
+  // const urlRegex = /^(https:\/\/app\.powerbi\.com\/.+)$/;
+  const urlRegex = /^(https?:\/\/[^\s/$.?#].[^\s]*)$/i;
+  if (dashboard.dashboard_name.length > 100) {
+    throw new Error("Dashboard name must be less than 100 characters.");
+  }
 
-   if (dashboard.dashboard_name.length > 100) {
-     throw new Error("Dashboard name must be less than 100 characters.");
-   }
-
-   if (!urlRegex.test(dashboard.dashboard_url)) {
-     throw new Error("Invalid Power BI URL format.");
-   }
+  // General URL format validation
+  if (!urlRegex.test(dashboard.dashboard_url)) {
+    throw new Error("Invalid URL format.");
+  }
   try {
     await client.query("BEGIN"); // Start a transaction
 
@@ -45,7 +46,11 @@ const createDashboard = async (dashboard) => {
       VALUES ($1, $2, $3, NOW(), NOW()) 
       RETURNING *
     `;
-    const insertValues = [dashboard.dashboard_name, dashboard.dashboard_url, org_id];
+    const insertValues = [
+      dashboard.dashboard_name,
+      dashboard.dashboard_url,
+      org_id,
+    ];
     const insertResult = await client.query(insertQuery, insertValues);
 
     // Update the dash_count in the organizations table

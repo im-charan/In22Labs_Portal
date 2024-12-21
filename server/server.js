@@ -43,6 +43,8 @@ app.use(express.json());
 
 app.use(passport.initialize());
 app.use(passport.session());
+//app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 // Setup routes for different API endpoints
 app.use('/api/dashboard', dashboardRoutes);       // Handles dashboard-related API requests

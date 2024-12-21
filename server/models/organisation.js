@@ -19,20 +19,20 @@ const validateOrganisationData = (organisation) => {
   }
 };
 
-// Create a new organisation
-const createOrganisation = async (organisation) => {
+const createOrganisation = async (organisation,org_logo) => {
   validateOrganisationData(organisation); // Validate data before proceeding
 
   try {
     const result = await pool.query(
-      `INSERT INTO in22labs.organizations (org_name, org_type, org_address, org_status, poc_id, org_create, org_update)
-       VALUES ($1, $2, $3, $4, $5, NOW(), NOW()) RETURNING *`,
+      `INSERT INTO in22labs.organizations (org_name, org_type, org_address, org_status, poc_id, org_create, org_update, org_logo)
+       VALUES ($1, $2, $3, $4, $5, NOW(), NOW(), $6) RETURNING *`,
       [
         organisation.org_name.trim(),
         organisation.org_type.trim(),
         organisation.org_address.trim(),
         organisation.org_status || 1,
         organisation.poc_id || null,
+        org_logo, // Pass the logoPath here
       ]
     );
     return result.rows[0];

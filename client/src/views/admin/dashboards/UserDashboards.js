@@ -51,8 +51,8 @@ const UserDashboards = () => {
 
   return (
     <DashboardCard>
-      <Grid container spacing={3}>
-        {dashboards.map((dashboard) => (
+            <Grid container spacing={3}>
+              {dashboards.map((dashboard) => (
           <Grid item sm={12} md={4} lg={3} key={dashboard.dashboard_id}>
             <BlankCard>
               <Typography
@@ -67,18 +67,18 @@ const UserDashboards = () => {
                   alt={dashboard.dashboard_name}
                   width="100%"
                   loading="lazy" // Improves performance by lazy-loading images
-                />
+                      />
               </Typography>
               <CardContent sx={{ p: 3, pt: 2 }}>
                 <Typography variant="h5">{dashboard.dashboard_name}</Typography>
                 <Typography variant="subtitle1">
                   {dashboard.org_name}
-                </Typography>
-              </CardContent>
-            </BlankCard>
-          </Grid>
-        ))}
-      </Grid>
+                      </Typography>
+                    </CardContent>
+                  </BlankCard>
+                </Grid>
+              ))}
+            </Grid>
     </DashboardCard>
   );
 };

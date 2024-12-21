@@ -65,9 +65,9 @@ const Router = [
     element: <AdminLayout />,
     children: [
       
-      { path: '', element: (<ProtectedRoutes element ={<Navigate to='/users'/>} />) },  
+      { path: '', element: (<ProtectedRoutes element ={<Navigate to='/admin/users'/>} />) },  
       { path: 'users', exact: true, element: (<ProtectedRoutes element ={<ListUsers/>} />) },
-      { path: 'dashboards', exact: true, element: (<ProtectedRoutes element ={<ListDashboards/>} />) },
+      { path: 'dashboard', exact: true, element: (<ProtectedRoutes element ={<ListDashboards/>} />) },
       { path: 'organisation/:organizationName', element: (<ProtectedRoutes element ={<SpecificDash/>} />) },
       { path: 'createuser', element:(<ProtectedRoutes element ={<AddUser/>} />) },
       // { path: 'dashboards/:product', element:<SpecificDash/> },

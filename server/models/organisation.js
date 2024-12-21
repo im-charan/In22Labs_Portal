@@ -42,7 +42,17 @@ const createOrganisation = async (organisation) => {
   }
 };
 
-// Delete organisation by ID
+const getOrganisationIdbyUserName = async (userName) =>{
+  try{
+    const result = await pool.query(`SELECT org_id FROM in22labs.users WHERE user_name = $1`, [userName]);
+    return result.rows[0].org_id;
+  }
+  catch(error){
+    console.error('Error fetching organisationId:', error);
+    throw new Error('Error fetching organisationID by user_name');
+  }
+};
+
 const deleteOrganisationById = async (organisationId) => {
   if (!organisationId) throw new Error("Organisation ID is required.");
   try {
@@ -90,4 +100,6 @@ module.exports = {
   deleteOrganisationById,
   getOrganisationById,
   getAllOrganisations,
+  deleteOrganisationById,
+  getOrganisationIdbyUserName
 };

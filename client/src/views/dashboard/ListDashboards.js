@@ -19,10 +19,10 @@ const ListDashboards = () => {
         setLoading(true);
         setError(null);
 
-        const response = await fetch(http://localhost:5000/api/dashboard/organisation/${orgId}); // Adjust the API endpoint
+        const response = await fetch(`http://localhost:5000/api/dashboard/organisation/${orgId}`); // Adjust the API endpoint
         console.log(orgId);
         if (!response.ok) {
-          throw new Error(HTTP error! status: ${response.status});
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
         const result = await response.json();
         if (result?.data) {

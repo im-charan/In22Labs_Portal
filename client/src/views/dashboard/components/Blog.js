@@ -19,6 +19,9 @@ const ecoCard = [
 const Blog = () => {
   const [breadcrumbsTitle, setBreadcrumbsTitle] = useState("Overview");
 
+  const [dashboards, setDashboards] = useState([]);
+  
+
   // Function to handle setting the breadcrumb title
   const handleClick = (title) => {
     setBreadcrumbsTitle(title);

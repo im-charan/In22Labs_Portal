@@ -51,6 +51,20 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.get('/organisationId/:userName', async (req, res) => {
+  const userName = req.params.userName;
+  try {
+    const organisationId = await organisationModel.getOrganisationIdbyUserName(userName);
+    if (!organisationId) {
+      return res.status(404).json({ error: 'Organisation not found' });
+    }
+    res.status(200).json(organisationId);  // Return the found organisation
+  }
+  catch (error){
+    res.status(500).json({ error: 'Error fetching organisationId' });
+  }
+})
+
 // Route to get all organisations
 router.get("/", async (req, res) => {
   try {

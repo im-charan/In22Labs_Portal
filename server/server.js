@@ -26,6 +26,7 @@ app.use(cors({ origin: 'http://localhost:5173',
  }));  // Allow requests from frontend
 app.use(express.urlencoded({ extended: true }));     // Handle URL-encoded form data
 app.use(express.json());                             // Parse JSON request bodies
+app.use('/uploads', express.static('uploads'));
 
 
 

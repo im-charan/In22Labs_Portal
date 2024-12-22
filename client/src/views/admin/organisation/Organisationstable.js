@@ -13,8 +13,6 @@ import {
   TextField,
   TableSortLabel,
   CircularProgress,
-  Button,
-  Alert,
   Snackbar,
 } from "@mui/material";
 
@@ -33,13 +31,6 @@ const Organisationstable = () => {
   // Search and filter state
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("All");
-
-  // Success message state
-  const [successMessage, setSuccessMessage] = useState("");
-
-  // Sorting state
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("");
 
   // Fetch organisations when the component mounts
   useEffect(() => {
@@ -73,31 +64,6 @@ const Organisationstable = () => {
     setSelectedType(event.target.value);
   };
 
-  // Handle form submission
-  const handleSubmit = async () => {
-    // Example submission logic; replace with your actual submission logic
-    try {
-      // Assuming successful submission
-      setSuccessMessage("User successfully created!");
-
-      // Clear form fields
-      setSearchTerm("");
-      setSelectedType("All");
-
-      // Hide the success message after 3 seconds
-      setTimeout(() => setSuccessMessage(""), 3000);
-    } catch (error) {
-      setError("Error submitting the form.");
-    }
-  };
-
-  // Sorting handler
-  const handleSortRequest = (property) => {
-    const isAscending = orderBy === property && order === "asc";
-    setOrder(isAscending ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
   // Handle pagination changes
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -108,7 +74,7 @@ const Organisationstable = () => {
     setPage(0);
   };
 
-  // Filter and sort organisations
+  // Filter organisations based on search term and type
   const filteredData = organisations
     .filter((org) => {
       const matchesSearchTerm =
@@ -118,14 +84,6 @@ const Organisationstable = () => {
       const matchesSelectedType =
         selectedType === "All" || org.org_type === selectedType;
       return matchesSearchTerm && matchesSelectedType;
-    })
-    .sort((a, b) => {
-      if (orderBy) {
-        const valueA = a[orderBy];
-        const valueB = b[orderBy];
-        return (valueA < valueB ? -1 : 1) * (order === "asc" ? 1 : -1);
-      }
-      return 0;
     });
 
   // Paginate filtered data
@@ -175,22 +133,7 @@ const Organisationstable = () => {
               )
             )}
           </TextField>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-            sx={{ marginLeft: 2 }}
-          >
-            Submit
-          </Button>
         </Box>
-
-        {/* Success Message */}
-        {successMessage && (
-          <Snackbar open={!!successMessage} autoHideDuration={3000}>
-            <Alert severity="success">{successMessage}</Alert>
-          </Snackbar>
-        )}
 
         {/* Table with organisations */}
         <Table sx={{ mt: 2 }} aria-label="Organisations Table">
@@ -201,27 +144,15 @@ const Organisationstable = () => {
                   S.No
                 </Typography>
               </TableCell>
-              <TableCell sortDirection={orderBy === "org_name" ? order : false}>
-                <TableSortLabel
-                  active={orderBy === "org_name"}
-                  direction={orderBy === "org_name" ? order : "asc"}
-                  onClick={() => handleSortRequest("org_name")}
-                >
-                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                    Organisation Name
-                  </Typography>
-                </TableSortLabel>
+              <TableCell>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  Organisation Name
+                </Typography>
               </TableCell>
-              <TableCell sortDirection={orderBy === "org_type" ? order : false}>
-                <TableSortLabel
-                  active={orderBy === "org_type"}
-                  direction={orderBy === "org_type" ? order : "asc"}
-                  onClick={() => handleSortRequest("org_type")}
-                >
-                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                    Type
-                  </Typography>
-                </TableSortLabel>
+              <TableCell>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  Type
+                </Typography>
               </TableCell>
               <TableCell>
                 <Typography variant="h6" sx={{ fontWeight: "bold" }}>

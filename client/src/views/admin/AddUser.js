@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, TextField, Button, MenuItem } from "@mui/material";
+import { Box, Typography, TextField, Button, MenuItem, Alert } from "@mui/material";
 import BreadcrumbComponent from "../../components/shared/BreadCrumbComponent";
 import AdminHeader from "./AdminHeader";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -19,7 +19,7 @@ const AddUser = () => {
   const [userOs, setUserOs] = useState("Windows");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [organisations, setOrganisations] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [statusMessage, setStatusMessage] = useState(null); // Success or error messages
 
   useEffect(() => {
     const fetchOrganisations = async () => {
@@ -37,32 +37,32 @@ const AddUser = () => {
 
   const validateForm = () => {
     if (!/^[a-zA-Z\s]+$/.test(userFullName)) {
-      setErrorMessage("Full name should contain only alphabets and spaces.");
+      setStatusMessage({ type: "error", text: "Full name should contain only alphabets and spaces." });
       return false;
     }
 
     if (validFrom && validFrom.isBefore(dayjs(), "day")) {
-      setErrorMessage("Valid From date must be today or a future date.");
+      setStatusMessage({ type: "error", text: "Valid From date must be today or a future date." });
       return false;
     }
 
     if (validFrom && validTill && validTill.isBefore(validFrom, "day")) {
-      setErrorMessage("Valid Till date must be after Valid From date.");
+      setStatusMessage({ type: "error", text: "Valid Till date must be after Valid From date." });
       return false;
     }
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(userEmail)) {
-      setErrorMessage("Invalid email format.");
+      setStatusMessage({ type: "error", text: "Invalid email format." });
       return false;
     }
 
     if (userPasswordRef.length < 6) {
-      setErrorMessage("Password must be at least 6 characters long.");
+      setStatusMessage({ type: "error", text: "Password must be at least 6 characters long." });
       return false;
     }
 
-    setErrorMessage("");
+    setStatusMessage(null);
     return true;
   };
 
@@ -100,11 +100,20 @@ const AddUser = () => {
         body: JSON.stringify(newUser),
       });
 
-      if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to create user");
+      }
 
-      const data = await response.json();
-      console.log("User created successfully:", data);
+      const result = await response.json();
+      console.log("User created successfully:", result);
 
+      setStatusMessage({
+        type: "success",
+        text: "User successfully created!",
+      });
+
+      // Reset form fields after successful submission
       setUserFullName("");
       setValidFrom(dayjs());
       setValidTill(null);
@@ -113,6 +122,7 @@ const AddUser = () => {
       setOrgId("");
     } catch (error) {
       console.error("Error creating user:", error.message);
+      setStatusMessage({ type: "error", text: error.message });
     } finally {
       setIsSubmitting(false);
     }
@@ -153,12 +163,6 @@ const AddUser = () => {
           <Typography variant="h4" textAlign="center" marginBottom={2}>
             Create User
           </Typography>
-
-          {errorMessage && (
-            <Typography color="error" variant="body2">
-              {errorMessage}
-            </Typography>
-          )}
 
           <TextField
             label="Full Name"
@@ -235,6 +239,12 @@ const AddUser = () => {
           >
             {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
+
+          {statusMessage && (
+            <Box display="flex" justifyContent="flex-start" marginTop={2}>
+              <Alert severity={statusMessage.type}>{statusMessage.text}</Alert>
+            </Box>
+          )}
         </Box>
       </Box>
     </>

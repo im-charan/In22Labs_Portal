@@ -92,21 +92,26 @@ const createUser = async (user) => {
 
     return newUser; // Return the newly created user
   } catch (error) {
-
+    console.error("Error creating user:", error);
+    throw error;
   }
 };
 
-// Fetch all users
+/**
+ * Fetch all users in LIFO order.
+ * @returns {Array} List of users.
+ */
 const getAllUsers = async () => {
   try {
-    const result = await pool.query(`
-      SELECT 
+    const result = await pool.query(
+      `SELECT 
         u.*, 
         o.org_name AS organization_name 
       FROM in22labs.users u
       LEFT JOIN in22labs.organizations o 
       ON u.org_id = o.org_id
-    `);
+      ORDER BY u.user_create DESC` // LIFO order
+    );
     return result.rows; // Return all users with organization names
   } catch (error) {
     console.error("Error fetching all users:", error);
@@ -137,7 +142,6 @@ const getUserById = async (userId) => {
     throw error;
   }
 };
-
 const getUserTypeByUserName = async (userName) => {
   try {
     // SQL query to get a user by ID
@@ -149,82 +153,6 @@ const getUserTypeByUserName = async (userName) => {
   }
 };
 
-/**
- * Update user details in the database.
- * @param {number} userId - User ID.
- * @param {Object} userDetails - User details to update.
- * @returns {Object} Updated user data.
- */
-const updateUser = async (userId, userDetails) => {
-  try {
-    // Validate full name
-    if (userDetails.user_fullname && !/^[a-zA-Z\s]+$/.test(userDetails.user_fullname)) {
-      throw new Error(
-        "Full name should contain only alphabets and spaces."
-      );
-    }
-
-    // Validate email format
-    if (userDetails.user_email) {
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!emailRegex.test(userDetails.user_email)) {
-        throw new Error("Invalid email format.");
-      }
-    }
-
-    // Validate dates
-    const currentDate = dayjs();
-    const validFromDate = dayjs(userDetails.valid_from);
-    const validTillDate = dayjs(userDetails.valid_till);
-
-    if (userDetails.valid_from && (!validFromDate.isSame(currentDate, "day") && !validFromDate.isAfter(currentDate))) {
-      throw new Error("Valid From date must be the current date or later.");
-    }
-
-    if (userDetails.valid_till && !validTillDate.isAfter(validFromDate)) {
-      throw new Error("Valid Till date must be after Valid From date.");
-    }
-
-    if (userDetails.valid_till && !validTillDate.isAfter(currentDate)) {
-      throw new Error("Valid Till date must be after the current date.");
-    }
-
-    const hashedPassword = userDetails.user_password_ref
-      ? await bcrypt.hash(userDetails.user_password_ref, 10)
-      : null;
-
-    const result = await pool.query(
-      `UPDATE in22labs.users 
-       SET user_name = $1, valid_from = $2, valid_till = $3, 
-           user_email = $4, user_password_ref = $5, user_password = $6, 
-           user_fullname = $7, user_ip = $8, user_os = $9, 
-           user_type = $10, user_status = $11, org_id = $12, 
-           user_update = NOW()
-       WHERE user_id = $13 
-       RETURNING *`,
-      [
-        userDetails.user_name, // User name
-        userDetails.valid_from, // Valid From
-        userDetails.valid_till, // Valid Till
-        userDetails.user_email, // User email
-        userDetails.user_password_ref, // Password reference
-        hashedPassword || userDetails.user_password, // Hashed password or existing
-        userDetails.user_fullname, // Full Name
-        userDetails.user_ip, // IP address
-        userDetails.user_os, // OS
-        userDetails.user_type, // User Type
-        userDetails.user_status, // User Status
-        userDetails.org_id, // Organization ID
-        userId, // User ID
-      ]
-    );
-
-    return result.rows[0]; // Return updated user
-  } catch (error) {
-    console.error("Error updating user:", error);
-    throw error;
-  }
-};
 /**
  * Delete a user by ID from the database.
  * @param {number} userId - User ID.
@@ -247,7 +175,6 @@ module.exports = {
   createUser,
   getAllUsers,
   getUserById,
-  updateUser,
   deleteUser,
-  getUserTypeByUserName
+  getUserTypeByUserName,
 };

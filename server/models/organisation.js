@@ -25,7 +25,6 @@ const createOrganisation = async (organisation) => {
     !organisation.org_name ||
     !organisation.org_type ||
     !organisation.org_address 
-    
   ) {
     throw new Error(
       "Missing required fields: org_name, org_type, org_address, or poc_id"
@@ -89,6 +88,7 @@ const deleteOrganisationById = async (organisationId) => {
     throw new Error("Database error while deleting organisation.");
   }
 };
+
 // Get organisation by ID
 const getOrganisationById = async (organisationId) => {
   if (!organisationId) throw new Error("Organisation ID is required.");
@@ -109,20 +109,32 @@ const getOrganisationById = async (organisationId) => {
   }
 };
 
-// Get all organisations
+// Get all organisations in LIFO order (newest first)
 const getAllOrganisations = async () => {
   try {
     const result = await pool.query(
       `SELECT o.*, 
               u.user_id AS poc_id
        FROM in22labs.organizations o
-       LEFT JOIN in22labs.users u ON u.user_id = o.poc_id`
+       LEFT JOIN in22labs.users u ON u.user_id = o.poc_id
+       ORDER BY o.org_create DESC` // Order by org_create in descending order for LIFO
     );
 
     return result.rows;
   } catch (error) {
     console.error("Error fetching organisations:", error.message);
     throw new Error("Database error while fetching organisations.");
+  }
+};
+
+const getOrganisationIdbyUserName = async (userName) => {
+  try{
+    const result = await pool.query(`SELECT org_id FROM in22labs.users WHERE user_name = $1`, [userName]);
+    return result.rows[0].org_id;
+  }
+  catch(error){
+    console.error('Error fetching organisationId:', error);
+    throw new Error('Error fetching organisationID by user_name');
   }
 };
 

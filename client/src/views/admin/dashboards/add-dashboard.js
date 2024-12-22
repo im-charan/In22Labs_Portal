@@ -42,14 +42,35 @@ const AddDashboard = () => {
       setStatusMessage({ type: "error", text: "Organization name is missing from the URL." });
     }
   }, [organizationName]);
+  
+const validateForm = () => {
+  if (dashboardName.length === 0 || dashboardName.length > 100) {
+    setStatusMessage({
+      type: "error",
+      text: "Dashboard name must be between 1 and 100 characters.",
+    });
+    return false;
+  }
 
+  const urlRegex = /^(https:\/\/app\.powerbi\.com\/.+)$/;
+  if (!urlRegex.test(powerBIUrl)) {
+    setStatusMessage({
+      type: "error",
+      text: "Invalid Power BI URL. Ensure it starts with 'https://app.powerbi.com/'.",
+    });
+    return false;
+  }
+
+  setStatusMessage(null);
+  return true;
+};
   const handleSubmit = async (event) => {
     event.preventDefault();
     setStatusMessage(null); // Clear previous messages
     setIsSubmitting(true);
 
-    if (!orgId) {
-      setStatusMessage({ type: "error", text: "Organization ID not found. Please try again later." });
+    if (!validateForm() || !orgId) {
+      //setStatusMessage({ type: "error", text: "Organization ID not found. Please try again later." });
       setIsSubmitting(false);
       return;
     }

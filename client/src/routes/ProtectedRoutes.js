@@ -10,7 +10,7 @@ const ProtectedRoutes = ({element: Component})=>{
     return <Navigate to="/auth/login"/>;
   }
 
-  return <Component/>;
+  return Component;
 
 }
 

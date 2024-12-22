@@ -1,51 +1,82 @@
-import React, { useState } from 'react';
-import { Box, Typography, TextField, Button, MenuItem, Alert } from "@mui/material";
-import BreadcrumbComponent from '../../components/shared/BreadCrumbComponent';
-import AdminHeader from './AdminHeader';
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  MenuItem,
+  Alert,
+} from "@mui/material";
+import BreadcrumbComponent from "../../components/shared/BreadCrumbComponent";
+import AdminHeader from "./AdminHeader";
 
 const AddOrganisation = () => {
-  const [organizationName, setOrganizationName] = useState('');
-  const [type, setType] = useState('');
-  const [address, setAddress] = useState('');
-  const [statusMessage, setStatusMessage] = useState(null); // For success or error message
+  const [organizationName, setOrganizationName] = useState("");
+  const [type, setType] = useState("");
+  const [address, setAddress] = useState("");
+  const [statusMessage, setStatusMessage] = useState(null); // For success or error messages
   const [isSubmitting, setIsSubmitting] = useState(false); // Loading state
+
+  // Client-Side Validation
+  const validateInputs = () => {
+    if (!organizationName.trim()) return "Organisation Name is required.";
+    if (organizationName.trim().length > 50)
+      return "Organisation Name cannot exceed 50 characters.";
+    if (!type) return "Type of Organisation is required.";
+    if (!address.trim() || address.trim().length < 10)
+      return "Address must be at least 10 characters long.";
+    return null;
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setStatusMessage(null); // Reset status message
+    setStatusMessage(null);
+
+    // Validate inputs before submission
+    const validationError = validateInputs();
+    if (validationError) {
+      setStatusMessage({ type: "error", text: validationError });
+      return;
+    }
+
     setIsSubmitting(true);
 
     const newOrganisation = {
-      org_name: organizationName,
+      org_name: organizationName.trim(),
       org_type: type,
-      org_address: address,
-      org_status: 1, // Default status
+      org_address: address.trim(),
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/organisation/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newOrganisation),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/organisation/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newOrganisation),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to create organisation');
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to create organisation");
       }
 
       const result = await response.json();
-      console.log('Organisation created:', result);
-      setStatusMessage({ type: 'success', text: 'Organisation successfully created!' });
+      setStatusMessage({
+        type: "success",
+        text: "Organisation successfully created!",
+      });
 
-      // Clear the form fields after successful submission
-      setOrganizationName('');
-      setType('');
-      setAddress('');
+      // Reset form fields after successful submission
+      setOrganizationName("");
+      setType("");
+      setAddress("");
     } catch (error) {
-      console.error('Error creating organisation:', error.message);
-      setStatusMessage({ type: 'error', text: 'Error creating organisation. Please try again.' });
+      console.error("Error creating organisation:", error.message);
+      setStatusMessage({ type: "error", text: error.message });
     } finally {
       setIsSubmitting(false);
     }
@@ -87,7 +118,6 @@ const AddOrganisation = () => {
             Add Organisation
           </Typography>
 
-          {/* Organisation Name */}
           <TextField
             label="Organisation Name"
             variant="outlined"
@@ -95,9 +125,16 @@ const AddOrganisation = () => {
             required
             value={organizationName}
             onChange={(e) => setOrganizationName(e.target.value)}
+            disabled={isSubmitting}
+            helperText={
+              organizationName.length > 50
+                ? "Maximum 50 characters allowed!"
+                : "Maximum 50 characters allowed."
+            }
+            error={organizationName.length > 50}
+            inputProps={{ maxLength: 51 }}
           />
 
-          {/* Type of Organisation */}
           <TextField
             label="Type of Organisation"
             variant="outlined"
@@ -106,6 +143,7 @@ const AddOrganisation = () => {
             required
             value={type}
             onChange={(e) => setType(e.target.value)}
+            disabled={isSubmitting}
           >
             <MenuItem value="Agriculture">Agriculture</MenuItem>
             <MenuItem value="Technology">Technology</MenuItem>
@@ -115,7 +153,6 @@ const AddOrganisation = () => {
             <MenuItem value="Retail">Retail</MenuItem>
           </TextField>
 
-          {/* Address */}
           <TextField
             label="Address"
             variant="outlined"
@@ -125,9 +162,11 @@ const AddOrganisation = () => {
             onChange={(e) => setAddress(e.target.value)}
             multiline
             rows={4}
+            disabled={isSubmitting}
+            helperText="At least 10 characters required."
+            error={address.trim().length < 10 && address.trim().length > 0}
           />
 
-          {/* Submit Button */}
           <Button
             variant="contained"
             color="primary"
@@ -135,10 +174,9 @@ const AddOrganisation = () => {
             fullWidth
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Submitting...' : 'Submit'}
+            {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
 
-          {/* Status Message */}
           {statusMessage && (
             <Alert severity={statusMessage.type} sx={{ marginTop: 2 }}>
               {statusMessage.text}

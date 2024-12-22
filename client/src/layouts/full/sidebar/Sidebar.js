@@ -1,12 +1,41 @@
-
-import { Stack, useMediaQuery, Box, Drawer, Typography } from "@mui/material";
+import React, { useState, useEffect } from "react"; // Import useState and useEffect
+import { Stack, useMediaQuery, Box, Drawer, Typography, CircularProgress } from "@mui/material"; // Import CircularProgress
 import SidebarItems from "./SidebarItems";
 import { Sidebar, Logo } from "react-mui-sidebar";
-import logo from "../../../assets/images/logos/dark1-logo.svg";
+import logo from "../../../assets/images/logos/dark1-logo.svg";  // Default logo for the sidebar footer
+import { useUser } from "src/views/authentication/auth/UserContext"; // Assuming you have this context
 
 const MSidebar = (props) => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   const sidebarWidth = "200px";
+
+  const { user } = useUser(); // Access user data from context
+  const userId = user?.user_id;
+  const [organizationName, setOrganizationName] = useState("");
+  const [organizationLogo, setOrganizationLogo] = useState("");
+
+  // Fetch user data and organization name based on userId
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/client/user/${userId}`);
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          setOrganizationName(data.data.organization_name); // Name
+          setOrganizationLogo(data.data.organization_logo); // Logo
+        } else {
+          console.error("Failed to fetch user data");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    if (userId) {
+      fetchUserData(); // Fetch user data when userId is available
+    }
+  }, [userId]);
 
   // Custom CSS for short scrollbar
   const scrollbarStyles = {
@@ -19,17 +48,18 @@ const MSidebar = (props) => {
     },
   };
 
-  const OrganizationName = "Techno Organization"; // Replace with actual organization name or prop
+  // Logo styling for both views
+  const logoStyles = {
+    width: "50px",
+    height: "50px",
+    objectFit: "contain",
+    marginBottom: "8px",
+  };
 
+  // Sidebar for desktop
   if (lgUp) {
     return (
-      <Box
-        sx={{
-          width: sidebarWidth,
-          flexShrink: 0,
-        }}
-      >
-        {/* Sidebar for desktop */}
+      <Box sx={{ width: sidebarWidth, flexShrink: 0 }}>
         <Drawer
           anchor="left"
           open={props.isSidebarOpen}
@@ -41,13 +71,7 @@ const MSidebar = (props) => {
             },
           }}
         >
-          {/* Sidebar Box */}
-          <Box
-            sx={{
-              height: "100%",
-              position: "relative", // Enable absolute positioning inside
-            }}
-          >
+          <Box sx={{ height: "100%", position: "relative" }}>
             <Sidebar
               width={"270px"}
               collapsewidth="80px"
@@ -56,15 +80,18 @@ const MSidebar = (props) => {
               themeSecondaryColor="#49beff"
               showProfile={false}
             >
-              {/* Organization Name at the Top */}
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: "80px", // Adjust height as needed
-                }}
-              >
+              {/* Logo and Organization Name at the Top */}
+              <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100px" }}>
+                {/* Logo */}
+                {organizationLogo ? (
+                  <img
+                    src={`http://localhost:5000/uploads/${organizationLogo}`}
+                    alt={`${organizationName} logo`}
+                    style={logoStyles}
+                  />
+                ) : (
+                  <CircularProgress size={50} />
+                )}
                 <Typography
                   variant="h4"
                   sx={{
@@ -75,7 +102,7 @@ const MSidebar = (props) => {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {OrganizationName}
+                  {organizationName || "Loading..."} {/* Display the organization name */}
                 </Typography>
               </Box>
 
@@ -85,17 +112,7 @@ const MSidebar = (props) => {
               </Box>
 
               {/* Logo at the Bottom */}
-              <Box
-                sx={{
-                  position: "absolute", // Fix to bottom
-                  bottom: 0, // Attach to the bottom edge
-                  left: "50%", // Move to horizontal center
-                  transform: "translateX(-50%)", // Adjust for centering
-                  paddingBottom: "16px", // Add padding for spacing
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
+              <Box sx={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", paddingBottom: "16px", display: "flex", justifyContent: "center" }}>
                 <Logo img={logo} />
               </Box>
             </Sidebar>
@@ -105,6 +122,7 @@ const MSidebar = (props) => {
     );
   }
 
+  // Sidebar for mobile
   return (
     <Drawer
       anchor="left"
@@ -129,14 +147,17 @@ const MSidebar = (props) => {
         showProfile={false}
       >
         {/* Organization Name at the Top */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "80px", // Adjust height as needed
-          }}
-        >
+        <Box sx={{ display: "flex", flexDirection: "column",justifyContent: "center", alignItems: "center", height: "90px" }}>
+          {/* Mobile Logo */}
+          {organizationLogo ? (
+            <img
+              src={`http://localhost:5000/uploads/${organizationLogo}`}
+              alt={`${organizationName} logo`}
+              style={logoStyles}
+            />
+          ) : (
+            <CircularProgress size={50} />
+          )}
           <Typography
             variant="h4"
             sx={{
@@ -147,7 +168,7 @@ const MSidebar = (props) => {
               color: "#D3D3D3",
             }}
           >
-            {OrganizationName}
+            {organizationName || "Loading..."} {/* Display the organization name */}
           </Typography>
         </Box>
 
@@ -157,17 +178,7 @@ const MSidebar = (props) => {
         </Box>
 
         {/* Logo at the Bottom */}
-        <Box
-          sx={{
-            position: "absolute", // Fix to bottom
-            bottom: 0, // Attach to the bottom edge
-            left: "50%", // Move to horizontal center
-            transform: "translateX(-50%)", // Adjust for centering
-            paddingBottom: "16px", // Add padding for spacing
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
+        <Box sx={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", paddingBottom: "16px", display: "flex", justifyContent: "center" }}>
           <Logo img={logo} />
         </Box>
       </Sidebar>

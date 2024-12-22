@@ -99,10 +99,24 @@ const AddUser = () => {
         },
         body: JSON.stringify(newUser),
       });
+        if (response.status === 409) {
+          // Handle email conflict
+          setErrorMessage(
+            "Email ID already exists. Please use a different email."
+          );
+          setIsSubmitting(false);
+          return;
+        }
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to create user");
+        if (errorData.message && errorData.message.includes("Email already exists")) {
+          setErrorMessage("Email already exists. Please use a different email address.");
+        } else {
+          setErrorMessage("An error occurred while creating the user.");
+        }
+        setIsSubmitting(false);
+        return;
       }
 
       const result = await response.json();
@@ -122,7 +136,7 @@ const AddUser = () => {
       setOrgId("");
     } catch (error) {
       console.error("Error creating user:", error.message);
-      setStatusMessage({ type: "error", text: error.message });
+      setErrorMessage("An unexpected error occurred.");
     } finally {
       setIsSubmitting(false);
     }
@@ -181,6 +195,7 @@ const AddUser = () => {
               renderInput={(params) => (
                 <TextField {...params} fullWidth required />
               )}
+              minDate={dayjs()} // Disables previous dates before today
             />
           </LocalizationProvider>
 
@@ -192,6 +207,7 @@ const AddUser = () => {
               renderInput={(params) => (
                 <TextField {...params} fullWidth required />
               )}
+              minDate={validFrom || dayjs()} // Disables dates before "Valid From"
             />
           </LocalizationProvider>
 

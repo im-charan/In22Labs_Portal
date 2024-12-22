@@ -1,54 +1,97 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, CardContent, Typography } from "@mui/material";
+import { Box, CardContent, Typography, CircularProgress } from "@mui/material";
 import BlankCard from "../../../components/shared/BlankCard";
-import img1 from "src/assets/images/products/s4.png";
-import img2 from "src/assets/images/products/s5.png";
-import img3 from "src/assets/images/products/s7.png";
-import img4 from "src/assets/images/products/s11.png";
 import BreadcrumbComponent from "../../../components/shared/BreadCrumbComponent";
-import img from "../../../assets/images/products/analytics.png"
-
-const ecoCard = [
-  { id: 1, title: "Financial Dashboard", photo: img },
-  { id: 2, title: "Statistical Dashboard", photo: img },
-  { id: 3, title: "Inventorial Dashboard", photo: img},
-  { id: 4, title: "Readable Dashboard", photo: img },
-];
 
 const Pbpage = () => {
-  const { id } = useParams(); // Get the product ID from the URL
-  const product = ecoCard.find((item) => item.id === parseInt(id)); // Find the product by ID
+  const { orgId, dashboardId } = useParams(); // Extract both orgId and dashboardId
+  const [dashboard, setDashboard] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        setLoading(true);
+  
+        const response = await fetch(`http://localhost:5000/api/client/${dashboardId}`);
+        console.log("Response:", response);
+  
+        if (!response.ok) {
+          throw new Error(`Failed to fetch dashboard. Status: ${response.status}`);
+        }
+  
+        const data = await response.json();
+        console.log("Dashboard data:", data);
+  
+        // Correctly access the 'data' key from the API response
+        setDashboard(data.data);  // Set the 'data' object from the response to your state
+      } catch (err) {
+        console.error("Error fetching dashboard:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchDashboard();
+  }, [dashboardId]); // Depend on dashboardId
+  
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
-  if (!product) {
-    return <Typography>Product not found.</Typography>;
+  if (error) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <Typography variant="h6" color="error">
+          {error || "An unexpected error occurred."}
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (!dashboard) {
+    return (
+      <Typography variant="h6" align="center">
+        Dashboard not found.
+      </Typography>
+    );
   }
 
   return (
     <>
-      {/* Breadcrumb component */}
       <BreadcrumbComponent
-        pageTitle={product.title}
+        pageTitle={dashboard.dashboard_name}
         breadcrumbTitle1="Dashboard"
-        breadcrumbRoute1="/dashboard"
-        breadcrumbTitle2={product.title}
-        breadcrumbRoute2={`/dashboard/product/${product.id}`}
+        breadcrumbRoute1={`/dashboard/${orgId}`}
+        breadcrumbTitle2={dashboard.dashboard_name}
+        breadcrumbRoute2={`/dashboard/${orgId}/${dashboard.dashboard_id}`}
+        marginTop="35px"
       />
       <Box sx={{ mt: 2 }}>
         <BlankCard>
           <Box sx={{ p: 1 }}>
             <Typography component="div">
-              <Box
-                sx={{
-                  p: 1,                   // Padding inside this Box for consistent spacing
-                  border: "1px solid transparent", 
-                  borderRadius: "12px", 
-                  overflow: "hidden", 
-                }}
-              >
-                <img src={product.photo} alt={product.title} width="100%" />
-              </Box>
+              {dashboard.dashboard_url ? (
+                <iframe
+                  src={dashboard.dashboard_url}
+                  title={dashboard.dashboard_name}
+                  width="100%"
+                  height="500px"
+                  style={{ border: "none" }}
+                />
+              ) : (
+                <Typography variant="h6" align="center">
+                  Dashboard URL not available.
+                </Typography>
+              )}
             </Typography>
+          
           </Box>
         </BlankCard>
       </Box>

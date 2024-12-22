@@ -22,8 +22,7 @@ const ListOrganisation = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center" mt={5} mb={2}>
         <BreadcrumbComponent
           pageTitle="Organisations Table"
-          breadcrumbTitle1="Organisation"
-          breadcrumbRoute1="/admin/organisation"
+         
           marginTop="0"
         />
         <Button

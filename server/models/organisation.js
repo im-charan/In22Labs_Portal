@@ -1,4 +1,8 @@
+const multer = require("multer");
 const pool = require("../config/database");
+
+
+
 
 // Validate input data
 const validateOrganisationData = (organisation) => {
@@ -11,16 +15,12 @@ const validateOrganisationData = (organisation) => {
   if (!organisation.org_type || organisation.org_type.trim() === "") {
     throw new Error("Type of organisation is required.");
   }
-  if (
-    !organisation.org_address ||
-    organisation.org_address.trim().length < 10
-  ) {
+  if (!organisation.org_address || organisation.org_address.trim().length < 10) {
     throw new Error("Address must be at least 10 characters long.");
   }
 };
 
-// Create a new organisation
-const createOrganisation = async (organisation) => {
+const createOrganisation = async (organisation,org_logo) => {
   if (
     !organisation.org_name ||
     !organisation.org_type ||
@@ -33,13 +33,21 @@ const createOrganisation = async (organisation) => {
 
   try {
     // Insert the organization into the database
+    validateOrganisationData(organisation);
     const result = await pool.query(
       `INSERT INTO in22labs.organizations (
-         org_name, org_type, org_address, org_status, poc_id, dash_count, org_create, org_update
+         org_name, org_type, org_address, org_status, poc_id, dash_count, org_create, org_update, org_logo
        ) VALUES (
          $1, $2, $3, $4, $5, $6, NOW(), NOW()
-       ) RETURNING org_id`,
+       , $6) RETURNING org_id`,
       [
+        organisation.org_name.trim(),
+        organisation.org_type.trim(),
+        organisation.org_address.trim(),
+        organisation.org_status || 1,
+        organisation.poc_id || null,
+        org_logo, // Pass the logoPath here
+      ]
         organisation.org_name,
         organisation.org_type,
         organisation.org_address,
@@ -69,11 +77,20 @@ const createOrganisation = async (organisation) => {
     return updatedOrgResult.rows[0];
   } catch (error) {
     console.error("Error creating organisation:", error.message);
-    throw new Error("Error creating organisation in the database");
+    throw new Error("Failed to create organisation");
   }
 };
 
-// Delete an organisation by ID
+const getOrganisationIdbyUserName = async (userName) => {
+  try {
+    const result = await pool.query(`SELECT org_id FROM in22labs.users WHERE user_name = $1`, [userName]);
+    return result.rows[0].org_id;
+  } catch (error) {
+    console.error('Error fetching organisationId:', error.message);
+    throw new Error('Error fetching organisationID by user_name');
+  }
+};
+
 const deleteOrganisationById = async (organisationId) => {
   if (!organisationId) throw new Error("Organisation ID is required.");
   try {
@@ -89,7 +106,6 @@ const deleteOrganisationById = async (organisationId) => {
   }
 };
 
-// Get organisation by ID
 const getOrganisationById = async (organisationId) => {
   if (!organisationId) throw new Error("Organisation ID is required.");
   try {
@@ -143,6 +159,5 @@ module.exports = {
   deleteOrganisationById,
   getOrganisationById,
   getAllOrganisations,
-  deleteOrganisationById,
-  getOrganisationIdbyUserName
+  getOrganisationIdbyUserName,
 };

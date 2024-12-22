@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
     Box,
     Typography,
@@ -21,7 +22,7 @@ import axios, { Axios } from 'axios';
 import ReCAPTCHA from "react-google-recaptcha";
 import LoginValidation from './LoginValidation';
 import { useAuth } from './AuthProvider';
-
+import { useUser } from './UserContext';
 
 const AuthLogin = ({ title, subtitle, subtext }) => {
 
@@ -36,6 +37,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const {login} = useAuth();
+  const { setUserData } = useUser();
 
   const handleSubmit = (e) => {
     console.log(userName,password);
@@ -58,6 +60,14 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
           console.log(result.data.user_type);
           const userType = result.data.user_type;
           const orgId = result.data.org_id;
+          const userId = result.data.user_id;
+          console.log("Setting user_id in context:", userId);
+          setUserData({
+            user_type: userType,
+            org_id: orgId,
+            user_id: userId,
+            user_name:userName, // Add user_id to context
+          });
           if(userType === 1){
             navigate('/admin/dashboard')
           }

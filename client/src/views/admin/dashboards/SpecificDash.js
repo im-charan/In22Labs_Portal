@@ -9,11 +9,11 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
-import BlankCard from "../../../components/shared/BlankCard"; // Adjust the path as necessary
+import BlankCard from "../../../components/shared/BlankCard";
 import AdminHeader from "../AdminHeader";
 import BreadcrumbComponent from "../../../components/shared/BreadCrumbComponent";
 import noDashboardsImage from "src/assets/images/backgrounds/empd.jpg";
-import img from "../../../assets/images/products/analytics.png"; // Adjust the path as necessary
+import img from "../../../assets/images/products/analytics.png";
 
 const SpecificDash = () => {
   const { organizationName } = useParams();
@@ -70,7 +70,6 @@ const SpecificDash = () => {
   return (
     <>
       <AdminHeader />
-      {/* Breadcrumb Component */}
       <BreadcrumbComponent
         pageTitle={organizationName}
         breadcrumbTitle1="Organisation"
@@ -98,7 +97,6 @@ const SpecificDash = () => {
         ) : (
           <>
             <Grid container spacing={3}>
-              {/* Render all dashboards */}
               {dashboards.map((dashboard) => (
                 <Grid
                   item
@@ -108,27 +106,31 @@ const SpecificDash = () => {
                   lg={3}
                   key={dashboard.dashboard_id}
                 >
-                  <BlankCard sx={cardStyle}>
-                    <Box sx={{ width: "100%", overflow: "hidden" }}>
-                      <img
-                        src={dashboard.photo || img}
-                        alt={dashboard.dashboard_name}
-                        width="100%"
-                        style={{
-                          maxHeight: "150px", // Reduce image height
-                          objectFit: "contain", // Maintain aspect ratio
-                        }}
-                      />
-                    </Box>
-                    <CardContent sx={{ p: 2 }}>
-                      <Typography variant="h6">
-                        {dashboard.dashboard_name}
-                      </Typography>
-                    </CardContent>
-                  </BlankCard>
+                  <Link
+                    to={`${dashboard.dashboard_id}`} // Dynamic link to Pbpage
+                    style={{ textDecoration: "none" }}
+                  >
+                    <BlankCard sx={{ ...cardStyle, cursor: "pointer" }}>
+                      <Box sx={{ width: "100%", overflow: "hidden" }}>
+                        <img
+                          src={img}
+                          alt={dashboard.dashboard_name}
+                          width="100%"
+                          style={{
+                            maxHeight: "150px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      </Box>
+                      <CardContent sx={{ p: 2 }}>
+                        <Typography variant="h6">
+                          {dashboard.dashboard_name}
+                        </Typography>
+                      </CardContent>
+                    </BlankCard>
+                  </Link>
                 </Grid>
               ))}
-              {/* Add Dashboard Card */}
               <Grid item xs={12} sm={6} md={4} lg={3}>
                 <Link
                   to={`/admin/organisation/${organizationName}/add-dashboard`}
@@ -187,33 +189,33 @@ const SpecificDash = () => {
                 </Link>
               </Grid>
             </Grid>
-            {/* No dashboards message if none exist */}
             {dashboards.length === 0 && (
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  mt: 5,
-                }}
-              >
-                <Box
-                  component="img"
-                  src={noDashboardsImage}
-                  alt="No dashboards available"
-                  sx={{
-                    maxWidth: "100%", // Ensure the image fits within the width of the container
-                    maxHeight: "150px", // Limit image height to avoid overflow
-                    objectFit: "contain", // Keep the image aspect ratio
-                    mb: 3,
-                  }}
-                />
-                <Typography variant="h6" align="center" color="textSecondary">
-                  No dashboards available
-                </Typography>
-              </Box>
-            )}
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      mt: 5,
+    }}
+  >
+    <Box
+      component="img"
+      src={noDashboardsImage}
+      alt="No dashboards available"
+      sx={{
+        maxWidth: "100%",
+        maxHeight: "150px",
+        objectFit: "contain",
+        mb: 3,
+      }}
+    />
+    <Typography variant="h6" align="center" color="textSecondary">
+      No dashboards available
+    </Typography>
+  </Box>
+)}
+
           </>
         )}
       </Box>

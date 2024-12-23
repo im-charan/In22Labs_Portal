@@ -13,30 +13,23 @@ import {
   TextField,
   TableSortLabel,
   CircularProgress,
-  Snackbar,
 } from "@mui/material";
 
 const Organisationstable = () => {
   const navigate = useNavigate();
 
-  // State variables for organisations, loading, and errors
   const [organisations, setOrganisations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Pagination state
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  // Search and filter state
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("All");
 
-  // Fetch organisations when the component mounts
   useEffect(() => {
     const fetchOrganisations = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/organisation"); // Replace with your actual API endpoint
+        const response = await fetch("http://localhost:5000/api/organisation");
         const data = await response.json();
 
         const enrichedData = data.map((org) => ({
@@ -54,17 +47,14 @@ const Organisationstable = () => {
     fetchOrganisations();
   }, []);
 
-  // Handle search term change
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  // Handle filter by type
   const handleFilterChange = (event) => {
     setSelectedType(event.target.value);
   };
 
-  // Handle pagination changes
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -74,19 +64,16 @@ const Organisationstable = () => {
     setPage(0);
   };
 
-  // Filter organisations based on search term and type
-  const filteredData = organisations
-    .filter((org) => {
-      const matchesSearchTerm =
-        org.org_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        org.org_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        org.org_address.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesSelectedType =
-        selectedType === "All" || org.org_type === selectedType;
-      return matchesSearchTerm && matchesSelectedType;
-    });
+  const filteredData = organisations.filter((org) => {
+    const matchesSearchTerm =
+      org.org_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      org.org_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      org.org_address.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSelectedType =
+      selectedType === "All" || org.org_type === selectedType;
+    return matchesSearchTerm && matchesSelectedType;
+  });
 
-  // Paginate filtered data
   const displayedRows = filteredData.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
@@ -104,7 +91,16 @@ const Organisationstable = () => {
 
   return (
     <DashboardCard>
-      <Box sx={{ padding: 2 }}>
+      <Box
+        sx={{
+          padding: 6,
+          mt: -3,
+          mx: -3,
+          border: "2px solid #555", // Border applied to the entire box
+          borderRadius: "9px", // Rounded corners for the box
+          backgroundColor: "background.paper", // Matches theme
+        }}
+      >
         {/* Search and Filter Options */}
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
           <TextField
@@ -177,7 +173,9 @@ const Organisationstable = () => {
                 <TableCell>{index + 1 + page * rowsPerPage}</TableCell>
                 <TableCell
                   sx={{ cursor: "pointer", color: "primary.main" }}
-                  onClick={() => navigate(`/admin/organisation/${org.org_name}`)}
+                  onClick={() =>
+                    navigate(`/admin/organisation/${org.org_name}`)
+                  }
                 >
                   {org.org_name}
                 </TableCell>

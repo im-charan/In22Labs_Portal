@@ -56,7 +56,7 @@ app.get('/', (req, res) => {
 });
 //auth
 app.post('/api/auth', passport.authenticate('local', {
-  successRedirect: '/api/user/12',
+  successRedirect: '/api/user/1',
  failureRedirect: '/api/login'
 }))
 // Google reCAPTCHA verification endpoint

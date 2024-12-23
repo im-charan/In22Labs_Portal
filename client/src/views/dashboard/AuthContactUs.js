@@ -16,13 +16,7 @@ const ContactUsPage = () => (
             margin: 0, // Remove default margin
         }}
     >
-        <BreadcrumbComponent
-            breadcrumbTitle1="Users"
-            breadcrumbRoute1="/dashboard"
-            breadcrumbTitle2="Contact Us"
-            breadcrumbRoute2={`/dashboard/ContactUsPage`}
-            marginTop="0px" // Minimal margin to reduce space
-        />
+    
         <Box
             display="flex"
             justifyContent="center"

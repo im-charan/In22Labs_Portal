@@ -1,10 +1,12 @@
 const express = require('express');
 const {
   createDashboard,
-  getDashboardsByOrganisation,
   getAllDashboards,
   deleteDashboard,
-  fetchOrgIdByName, // Ensure fetchOrgIdByName is imported correctly
+  fetchOrgIdByName, 
+  getDashboardById,
+  getDashboardsByOrganisation
+  // proxyDashboardContent// Ensure fetchOrgIdByName is imported correctly
 } = require('../models/Dashboard'); // Correct import path for the dashboard model
 
 const router = express.Router();
@@ -16,6 +18,7 @@ router.post("/create", async (req, res) => {
   if (!dashboard_name || !dashboard_url || !org_id) {
     return res.status(400).json({ success: false, message: "All fields are required" });
   }
+
 
   try {
     const newDashboard = await createDashboard({ dashboard_name, dashboard_url, org_id });
@@ -33,6 +36,100 @@ router.post("/create", async (req, res) => {
     });
   }
 });
+
+// Route to get all dashboards for an organization
+router.get('/organisation/:orgId', async (req, res) => {
+  const { orgId } = req.params;
+
+  if (!Number.isInteger(Number(orgId))) {
+    return res.status(400).json({ success: false, message: "Invalid organization ID" });
+  }
+
+  try {
+    const dashboards = await getDashboardsByOrganisation(orgId);
+    res.status(200).json({
+      success: true,
+      message: dashboards.length > 0 
+        ? "Dashboards retrieved successfully" 
+        : "No dashboards found for this organization",
+      data: dashboards, // Could be an empty array if no dashboards exist
+    });
+  } catch (error) {
+    console.error(`Error fetching dashboards for orgId: ${orgId}`, error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+
+
+
+
+// //proxy
+// router.get("/proxy/:dashboardId", async (req, res) => {
+//   const { dashboardId } = req.params; // This is correct: it extracts dashboardId from the URL parameter
+
+//   try {
+//     await proxyDashboardContent(req, res);  // Pass the full req and res to the proxy function
+    
+//   } catch (error) {
+//     console.error(`Error fetching content for dashboard ID ${dashboardId}:`, error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Error fetching dashboard content",
+//       error: error.message,
+//     });
+//   }
+// });
+
+// Route to get all dashboards
+router.get("/all", async (req, res) => {
+  try {
+    const dashboards = await getAllDashboards();
+    res.status(200).json({
+      success: true,
+      message: "All dashboards retrieved successfully",
+      data: dashboards,
+    });
+  } catch (error) {
+    console.error("Error fetching all dashboards:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching dashboards",
+      error: error.message, // Log the specific error
+    });
+  }
+});
+ 
+
+
+// Route to get a dashboard by its ID
+router.get("/:dashboardId", async (req, res) => {
+  const { dashboardId } = req.params;
+
+  // Validate dashboardId
+  if (isNaN(parseInt(dashboardId, 10))) {
+    return res.status(400).json({ success: false, message: "Invalid dashboard ID" });
+  }
+
+  try {
+    const dashboard = await getDashboardById(dashboardId);
+    res.status(200).json({
+      success: true,
+      message: "Dashboard retrieved successfully",
+      data: dashboard,  // Return the dashboard object inside 'data'
+    });
+  } catch (error) {
+    console.error("Error fetching dashboard:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching dashboard",
+      error: error.message,
+    });
+  }
+});
+
+
+
 
 // Route to get organization ID by organization name
 router.get("/getIdByName/:orgName", async (req, res) => {
@@ -63,50 +160,9 @@ router.get("/getIdByName/:orgName", async (req, res) => {
   }
 });
 
-// Route to get all dashboards for an organization
-router.get("/organisation/:orgId", async (req, res) => {
-  const { orgId } = req.params;
 
-  // Validate orgId
-  if (!parseInt(orgId, 10)) {
-    return res.status(400).json({ success: false, message: "Invalid organization ID" });
-  }
 
-  try {
-    const dashboards = await getDashboardsByOrganisation(orgId);
-    res.status(200).json({
-      success: true,
-      message: "Dashboards retrieved successfully",
-      data: dashboards,
-    });
-  } catch (error) {
-    console.error("Error fetching dashboards:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error fetching dashboards",
-      error: error.message, // Make sure to log the error message
-    });
-  }
-});
 
-// Route to get all dashboards
-router.get("/all", async (req, res) => {
-  try {
-    const dashboards = await getAllDashboards();
-    res.status(200).json({
-      success: true,
-      message: "All dashboards retrieved successfully",
-      data: dashboards,
-    });
-  } catch (error) {
-    console.error("Error fetching all dashboards:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error fetching dashboards",
-      error: error.message, // Log the specific error
-    });
-  }
-});
 
 // Route to delete a specific dashboard by ID
 router.delete("/delete/:dashboardId", async (req, res) => {

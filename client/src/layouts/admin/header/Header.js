@@ -13,8 +13,8 @@ import PropTypes from "prop-types";
 // components
 import Profile from "./Profile";
 import { IconMenu } from "@tabler/icons-react";
-const userName = "Abdul";
-const OrganizationName = "ABC ORGANIZATION";
+const userName = "Admin";
+
 
 const Header = (props) => {
   const AppBarStyled = styled(AppBar)(({ theme }) => ({

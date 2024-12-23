@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { CardContent, Grid, List, Typography } from "@mui/material";
+import { CardContent, Grid, Typography } from "@mui/material";
 import BlankCard from "../../components/shared/BlankCard";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import img from "../../assets/images/products/dashboard.jpg"; // Import your local image here
-import DashboardCard from "../../components/shared/DashboardCard";
+import { useNavigate, useParams } from "react-router-dom";
+import img from "../../assets/images/products/dashboard.jpg"; // Local image
+import fallbackImg from "../../assets/images/backgrounds/empd.jpg"; // Fallback image
+import BreadcrumbComponent from "../../components/shared/BreadCrumbComponent";
 
 const ListDashboards = () => {
   const navigate = useNavigate();
-  const {orgId} = useParams();
+  const { orgId } = useParams(); // Extract organization ID
   const [dashboards, setDashboards] = useState([]);
+  const [count, setCount] = useState(0); // Dashboard count
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -17,18 +19,16 @@ const ListDashboards = () => {
     const fetchDashboards = async () => {
       try {
         setLoading(true);
-        setError(null);
-
-        const response = await fetch(`http://localhost:5000/api/dashboard/organisation/${orgId}`); // Adjust the API endpoint
-        console.log(orgId);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        const response = await fetch(
+          `http://localhost:5000/api/client/organisation/${orgId}`
+        );
         const result = await response.json();
-        if (result?.data) {
-          setDashboards(result.data); // Ensure to extract data correctly
+
+        if (response.ok && result.success) {
+          setDashboards(result.data || []);
+          setCount(result.count || 0);
         } else {
-          throw new Error("Invalid data format");
+          throw new Error(result.message || "Failed to fetch dashboards");
         }
       } catch (error) {
         console.error("Error fetching dashboards:", error);
@@ -39,10 +39,10 @@ const ListDashboards = () => {
     };
 
     fetchDashboards();
-  }, []);
+  }, [orgId]);
 
-  const handleNavigation = (url) => {
-    window.location.href = url;
+  const handleNavigation = (dashboardId) => {
+    navigate(`/dashboard/${orgId}/${dashboardId}`); // Navigates to Pbpage
   };
 
   if (loading) {
@@ -54,34 +54,52 @@ const ListDashboards = () => {
   }
 
   return (
-    <DashboardCard >
-            <Grid container spacing={3}>
-              {dashboards.map((dashboard) => (
-          <Grid item sm={12} md={4} lg={3} key={dashboard.dashboard_id}>
-            <BlankCard>
-              <Typography
-                component={Link}
-                onClick={() => handleNavigation(dashboard.dashboard_url)}
-              >
-                {/* If dashboard has no URL, use a default image */}
-                      <img
-                  src={img} // Use local image if URL is missing
-                        alt={dashboard.dashboard_name}
-                        width="100%"
-                  loading="lazy" // Improves performance by lazy-loading images
-                      />
-              </Typography>
-              <CardContent sx={{ p: 3, pt: 2 }}>
-                <Typography variant="h5">{dashboard.dashboard_name}</Typography>
-                <Typography variant="subtitle1">
-                  {dashboard.org_name}
-                      </Typography>
-                    </CardContent>
-                  </BlankCard>
-                </Grid>
-              ))}
+    <>
+      <BreadcrumbComponent pageTitle="Dashboard" marginTop="15px" />
+      <br />
+      {count === 0 ? (
+        <div style={{ textAlign: "center" }}>
+          <img
+            src={fallbackImg}
+            alt="No dashboards available"
+            width="40%"
+            style={{ opacity: 0.7 }}
+          />
+          <Typography
+            variant="h6"
+            color="textSecondary"
+            style={{ marginTop: "20px", textAlign: "center" }}
+          >
+            No dashboards available
+          </Typography>
+        </div>
+      ) : (
+        <Grid container spacing={3}>
+          {dashboards.map((dashboard) => (
+            <Grid item sm={12} md={4} lg={3} key={dashboard.dashboard_id}>
+              <BlankCard>
+                <Typography
+                  component="div"
+                  onClick={() => handleNavigation(dashboard.dashboard_id)}
+                  style={{ cursor: "pointer" }} // Pointer cursor for clickable cards
+                >
+                  <img
+                    src={img}
+                    alt={dashboard.dashboard_name}
+                    width="100%"
+                    loading="lazy"
+                  />
+                </Typography>
+                <CardContent sx={{ p: 3, pt: 2 }}>
+                  <Typography variant="h5">{dashboard.dashboard_name}</Typography>
+                  <Typography variant="subtitle1">{dashboard.org_name}</Typography>
+                </CardContent>
+              </BlankCard>
             </Grid>
-    </DashboardCard>
+          ))}
+        </Grid>
+      )}
+    </>
   );
 };
 

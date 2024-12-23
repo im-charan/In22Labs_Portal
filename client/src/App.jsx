@@ -9,7 +9,7 @@ import Router from './routes/Router';
 import { baselightTheme } from "./theme/DefaultColors";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthProvider } from './views/authentication/auth/AuthProvider';
-
+import { UserProvider} from './views/authentication/auth/UserContext';
 function App() {
   
   const routing = useRoutes(Router);
@@ -17,10 +17,12 @@ function App() {
 
   return (
     <AuthProvider>
+       <UserProvider>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {routing}
       </ThemeProvider>
+      </UserProvider>
     </AuthProvider>
   );
 }

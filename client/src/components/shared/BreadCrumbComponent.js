@@ -51,17 +51,22 @@ const BreadcrumbComponent = ({
 
         {/* Breadcrumb Level 2 */}
         {breadcrumbTitle2 && (
-          <Link
-            component={RouterLink}
-            to={breadcrumbRoute2 || '/'}
-            underline="hover"
-            color="inherit"
-          >
-            {breadcrumbTitle2}
-          </Link>
+          breadcrumbRoute2 ? (
+            <Link
+              component={RouterLink}
+              to={breadcrumbRoute2}
+              underline="hover"
+              color="inherit"
+            >
+              {breadcrumbTitle2}
+            </Link>
+          ) : (
+            <Typography color="text.primary">
+              {breadcrumbTitle2}
+            </Typography>
+          )
         )}
       </Breadcrumbs>
-     
     </Box>
   );
 };

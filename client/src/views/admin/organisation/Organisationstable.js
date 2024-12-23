@@ -12,36 +12,32 @@ import {
   TablePagination,
   TextField,
   TableSortLabel,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
 
 const Organisationstable = () => {
   const navigate = useNavigate();
 
-  // State variables for organisations, loading, and errors
   const [organisations, setOrganisations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Pagination state
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  // Search and filter state
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("All");
 
-  // Sorting state
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("");
-
-  // Fetch organisations when the component mounts
   useEffect(() => {
     const fetchOrganisations = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/organisation");  // Replace with your actual API endpoint
-        const data = await response.json();  // Assuming the API returns JSON
-        setOrganisations(data);
+        const response = await fetch("http://localhost:5000/api/organisation");
+        const data = await response.json();
+
+        const enrichedData = data.map((org) => ({
+          ...org,
+          poc: org.poc_name || `${org.poc_id}`,
+        }));
+
+        setOrganisations(enrichedData);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -51,24 +47,14 @@ const Organisationstable = () => {
     fetchOrganisations();
   }, []);
 
-  // Handle search term change
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  // Handle filter by type
   const handleFilterChange = (event) => {
     setSelectedType(event.target.value);
   };
 
-  // Sorting handler
-  const handleSortRequest = (property) => {
-    const isAscending = orderBy === property && order === "asc";
-    setOrder(isAscending ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
-  // Handle pagination changes
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -78,39 +64,43 @@ const Organisationstable = () => {
     setPage(0);
   };
 
-  // Filter and sort organisations
-  const filteredData = organisations
-    .filter((org) => {
-      const matchesSearchTerm =
-        org.org_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        org.org_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        org.org_address.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesSelectedType = selectedType === "All" || org.org_type === selectedType;
-      return matchesSearchTerm && matchesSelectedType;
-    })
-    .sort((a, b) => {
-      if (orderBy) {
-        const valueA = a[orderBy];
-        const valueB = b[orderBy];
-        return (valueA < valueB ? -1 : 1) * (order === "asc" ? 1 : -1);
-      }
-      return 0;
-    });
+  const filteredData = organisations.filter((org) => {
+    const matchesSearchTerm =
+      org.org_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      org.org_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      org.org_address.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSelectedType =
+      selectedType === "All" || org.org_type === selectedType;
+    return matchesSearchTerm && matchesSelectedType;
+  });
 
-  // Paginate filtered data
-  const displayedRows = filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const displayedRows = filteredData.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   if (loading) {
     return <CircularProgress />;
   }
 
   if (error) {
-    return <Typography variant="h6" color="error">{`Error: ${error}`}</Typography>;
+    return (
+      <Typography variant="h6" color="error">{`Error: ${error}`}</Typography>
+    );
   }
 
   return (
     <DashboardCard>
-      <Box sx={{ padding: 2 }}>
+      <Box
+        sx={{
+          padding: 6,
+          mt: -3,
+          mx: -3,
+          border: "2px solid #555", // Border applied to the entire box
+          borderRadius: "9px", // Rounded corners for the box
+          backgroundColor: "background.paper", // Matches theme
+        }}
+      >
         {/* Search and Filter Options */}
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
           <TextField
@@ -131,11 +121,13 @@ const Organisationstable = () => {
             sx={{ width: 200 }}
           >
             <option value="All">All</option>
-            {[...new Set(organisations.map((org) => org.org_type))].map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
+            {[...new Set(organisations.map((org) => org.org_type))].map(
+              (type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              )
+            )}
           </TextField>
         </Box>
 
@@ -144,37 +136,34 @@ const Organisationstable = () => {
           <TableHead>
             <TableRow>
               <TableCell>
-                <Typography variant="h6" sx={{ fontWeight: "bold" }}>S.No</Typography>
-              </TableCell>
-              <TableCell sortDirection={orderBy === "org_name" ? order : false}>
-                <TableSortLabel
-                  active={orderBy === "org_name"}
-                  direction={orderBy === "org_name" ? order : "asc"}
-                  onClick={() => handleSortRequest("org_name")}
-                >
-                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>Organisation Name</Typography>
-                </TableSortLabel>
-              </TableCell>
-              <TableCell sortDirection={orderBy === "org_type" ? order : false}>
-                <TableSortLabel
-                  active={orderBy === "org_type"}
-                  direction={orderBy === "org_type" ? order : "asc"}
-                  onClick={() => handleSortRequest("org_type")}
-                >
-                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>Type</Typography>
-                </TableSortLabel>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  S.No
+                </Typography>
               </TableCell>
               <TableCell>
-                <Typography variant="h6" sx={{ fontWeight: "bold" }}>Location</Typography>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  Organisation Name
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  Type
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  Location
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  POC
+                </Typography>
               </TableCell>
               <TableCell align="center">
-                <TableSortLabel
-                  active={orderBy === "org_id"}
-                  direction={orderBy === "org_id" ? order : "asc"}
-                  onClick={() => handleSortRequest("org_id")}
-                >
-                  <Typography variant="h6" align="center">Dashboard</Typography>
-                </TableSortLabel>
+                <Typography variant="h6" align="center">
+                  Dashboard
+                </Typography>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -184,13 +173,16 @@ const Organisationstable = () => {
                 <TableCell>{index + 1 + page * rowsPerPage}</TableCell>
                 <TableCell
                   sx={{ cursor: "pointer", color: "primary.main" }}
-                  onClick={() => navigate(`/admin/organisation/${org.org_name}`)}
+                  onClick={() =>
+                    navigate(`/admin/organisation/${org.org_name}`)
+                  }
                 >
                   {org.org_name}
                 </TableCell>
                 <TableCell>{org.org_type}</TableCell>
                 <TableCell>{org.org_address}</TableCell>
-                <TableCell align="center">{org.dash_count}</TableCell>
+                <TableCell>{org.poc}</TableCell>
+                <TableCell align="center">{org.dash_count || "N/A"}</TableCell>
               </TableRow>
             ))}
           </TableBody>

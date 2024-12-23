@@ -1,33 +1,58 @@
-const express = require('express');
-const organisationModel = require('../models/organisation'); 
+const express = require("express");
+const multer = require("multer");
+const path = require("path");
+const organisationModel = require("../models/organisation");
 
 const router = express.Router();
 
-// Route to create a new organisation
-router.post('/create', async (req, res) => {
+// Configure Multer storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./uploads/"); // Store files in the "uploads" directory
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}_${file.originalname}`);
+  },
+});
+
+// Initialize Multer with storage configuration
+const upload = multer({ storage });
+
+// Route to create an organisation with logo upload
+router.post("/create", upload.single("org_logo"), async (req, res) => {
   const organisationData = req.body;
+  const logoName = req.file ? req.file.filename : null;
+
   try {
-    const newOrganisation = await organisationModel.createOrganisation(organisationData);
-    res.status(201).json(newOrganisation);  // Return the newly created organisation
+    const newOrganisation = await organisationModel.createOrganisation(
+      organisationData,
+      logoName
+    );
+    res.status(201).json(newOrganisation); // Return the newly created organisation
   } catch (error) {
-    res.status(500).json({ error: 'Error creating organisation' });
+    console.error(error);
+    res.status(500).json({ error: "Error creating organisation" });
   }
 });
+
 
 // Route to get an organisation by ID
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   const organisationId = req.params.id;
   try {
-    const organisation = await organisationModel.getOrganisationById(organisationId);
+    const organisation = await organisationModel.getOrganisationById(
+      organisationId
+    );
     if (!organisation) {
-      return res.status(404).json({ error: 'Organisation not found' });
+      return res.status(404).json({ error: "Organisation not found" });
     }
-    res.status(200).json(organisation);  // Return the found organisation
+    res.status(200).json(organisation); // Return the found organisation
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching organisation' });
+    res.status(500).json({ error: "Error fetching organisation" });
   }
 });
 
+// Route to get organisation ID by username
 router.get('/organisationId/:userName', async (req, res) => {
   const userName = req.params.userName;
   try {
@@ -35,33 +60,40 @@ router.get('/organisationId/:userName', async (req, res) => {
     if (!organisationId) {
       return res.status(404).json({ error: 'Organisation not found' });
     }
-    res.status(200).json(organisationId);  // Return the found organisation
-  }
-  catch (error){
+    res.status(200).json(organisationId);  // Return the found organisationId
+  } catch (error) {
     res.status(500).json({ error: 'Error fetching organisationId' });
   }
-})
+});
 
-// Route to get all organisations
+// Route to get all organisations in LIFO order (newest first)
 router.get('/', async (req, res) => {
   try {
     const organisations = await organisationModel.getAllOrganisations();
-    res.status(200).json(organisations);  // Return all organisations
+    res.status(200).json(organisations);  // Return all organisations in LIFO order
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching organisations' });
+    res.status(500).json({ error: "Error fetching organisations" });
   }
 });
+
 // Route to delete an organisation by ID
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const organisationId = req.params.id; // Extract the ID from request params
   try {
-    const deletedOrganisation = await organisationModel.deleteOrganisationById(organisationId);
+    const deletedOrganisation = await organisationModel.deleteOrganisationById(
+      organisationId
+    );
     if (!deletedOrganisation) {
-      return res.status(404).json({ message: 'Organisation not found' }); // If no rows were deleted
+      return res.status(404).json({ message: "Organisation not found" }); // If no rows were deleted
     }
-    res.status(200).json({ message: 'Organisation deleted successfully', organisation: deletedOrganisation });
+    res
+      .status(200)
+      .json({
+        message: "Organisation deleted successfully",
+        organisation: deletedOrganisation,
+      });
   } catch (error) {
-    res.status(500).json({ error: 'Error deleting organisation' });
+    res.status(500).json({ error: "Error deleting organisation" });
   }
 });
 

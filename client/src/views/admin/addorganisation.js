@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Box,
@@ -14,8 +15,9 @@ const AddOrganisation = () => {
   const [organizationName, setOrganizationName] = useState("");
   const [type, setType] = useState("");
   const [address, setAddress] = useState("");
-  const [statusMessage, setStatusMessage] = useState(null); // For success or error messages
-  const [isSubmitting, setIsSubmitting] = useState(false); // Loading state
+  const [logo, setLogo] = useState(null); // State for storing logo
+  const [statusMessage, setStatusMessage] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Client-Side Validation
   const validateInputs = () => {
@@ -25,14 +27,44 @@ const AddOrganisation = () => {
     if (!type) return "Type of Organisation is required.";
     if (!address.trim() || address.trim().length < 10)
       return "Address must be at least 10 characters long.";
+    if (!logo) return "Organisation Logo is required.";
     return null;
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/png"];
+    const MAX_FILE_SIZE = 1000000; // 1MB
+
+    if (!allowedTypes.includes(file.type)) {
+      setLogoFile(null);
+      setStatusMessage({
+        type: "error",
+        text: "Invalid file type. Please upload a JPG or PNG image.",
+      });
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      setLogoFile(null);
+      setStatusMessage({
+        type: "error",
+        text: "File size is too large. Please upload an image smaller than 1MB.",
+      });
+      return;
+    }
+
+    setLogoFile(file);
+    setImagePreview(URL.createObjectURL(file));
+    setStatusMessage(null); // Clear previous error if valid file is uploaded
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setStatusMessage(null);
 
-    // Validate inputs before submission
     const validationError = validateInputs();
     if (validationError) {
       setStatusMessage({ type: "error", text: validationError });
@@ -41,39 +73,41 @@ const AddOrganisation = () => {
 
     setIsSubmitting(true);
 
-    const newOrganisation = {
-      org_name: organizationName.trim(),
-      org_type: type,
-      org_address: address.trim(),
-    };
+    const formData = new FormData();
+    formData.append("org_name", organizationName.trim());
+    formData.append("org_type", type);
+    formData.append("org_address", address.trim());
+    formData.append("org_logo", logo); // Append logo file
 
     try {
       const response = await fetch(
         "http://localhost:5000/api/organisation/create",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newOrganisation),
+          body: formData,
         }
       );
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to create organisation");
+        throw new Error(errorData.message || "Failed to create organisation.");
       }
 
-      const result = await response.json();
       setStatusMessage({
         type: "success",
         text: "Organisation successfully created!",
       });
 
-      // Reset form fields after successful submission
+      // Reset form fields
       setOrganizationName("");
       setType("");
       setAddress("");
+      setLogo(null);
+
+      // Optionally clear the status message after 3 seconds
+      setTimeout(() => {
+        setStatusMessage(null);
+      }, 3000); // Message disappears after 3 seconds
     } catch (error) {
       console.error("Error creating organisation:", error.message);
       setStatusMessage({ type: "error", text: error.message });
@@ -126,12 +160,7 @@ const AddOrganisation = () => {
             value={organizationName}
             onChange={(e) => setOrganizationName(e.target.value)}
             disabled={isSubmitting}
-            helperText={
-              organizationName.length > 50
-                ? "Maximum 50 characters allowed!"
-                : "Maximum 50 characters allowed."
-            }
-            error={organizationName.length > 50}
+            helperText="Maximum 50 characters allowed."
             inputProps={{ maxLength: 51 }}
           />
 
@@ -151,6 +180,7 @@ const AddOrganisation = () => {
             <MenuItem value="Education">Education</MenuItem>
             <MenuItem value="Finance">Finance</MenuItem>
             <MenuItem value="Retail">Retail</MenuItem>
+            <MenuItem value="Retail">Admin</MenuItem>
           </TextField>
 
           <TextField
@@ -166,6 +196,19 @@ const AddOrganisation = () => {
             helperText="At least 10 characters required."
             error={address.trim().length < 10 && address.trim().length > 0}
           />
+
+          
+          <TextField
+            type="file"
+            fullWidth
+            required
+            onChange={(e) => setLogo(e.target.files[0])}
+            disabled={isSubmitting}
+            helperText="Upload an organisation logo (JPEG/PNG only)."
+            inputProps={{ accept: "image/png, image/jpeg" }}
+          />
+
+         
 
           <Button
             variant="contained"

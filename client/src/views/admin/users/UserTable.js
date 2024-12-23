@@ -32,7 +32,7 @@
 //     try {
 //       const response = await fetch("http://localhost:5000/api/user/all");
 //       if (!response.ok) {
-//         throw new Error(`Error: ${response.status}`);
+//         throw new Error(Error: ${response.status});
 //       }
 //       const data = await response.json();
 //       setUsers(data);
@@ -91,7 +91,7 @@
 //   const displayedRows = filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
 //   const navigatetodashboard = (name) => {
-//     navigate(`/admin/dashboards/${name}`);
+//     navigate(/admin/dashboards/${name});
 //   };
 
 //   return (
@@ -175,7 +175,7 @@
 //                 <TableCell align="center">{user.user_fullname}</TableCell>
 //                 <TableCell
 //                   sx={{ cursor: "pointer", color: "primary.main" }}
-//                   onClick={() => navigate(`/admin/organisation/${user.organizationName}`)}
+//                   onClick={() => navigate(/admin/organisation/${user.organizationName})}
 //                   align="center"
 //                 >
 //                   {user.organizationName}
@@ -305,7 +305,16 @@ const UserTable = () => {
 
   return (
     <DashboardCard>
-      <Box sx={{ padding: 2 }}>
+      <Box
+        sx={{
+          padding: 6,
+          mt: -3,
+          mx: -3,
+          border: "2px solid #555", // Medium grey border
+          borderRadius: "9px", // Rounded corners
+          backgroundColor: "background.paper", // Matches theme
+        }}
+      >
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
           <TextField
             label="Search"
@@ -379,6 +388,7 @@ const UserTable = () => {
               </TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {displayedRows.map((user, index) => (
               <TableRow key={user.user_id}>

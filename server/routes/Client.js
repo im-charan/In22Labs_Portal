@@ -13,19 +13,20 @@ router.get('/organisation/:orgId', async (req, res) => {
 
   try {
     const dashboards = await getDashboardsByOrganisation(orgId);
-    if (!dashboards) {
-      return res.status(404).json({ success: false, message: "No dashboards found" });
-    }
+    const count = dashboards ? dashboards.length : 0;
+
     res.status(200).json({
       success: true,
-      message: "Dashboards retrieved successfully",
-      data: dashboards,
+      message: count > 0 ? "Dashboards retrieved successfully" : "No dashboards found",
+      count,
+      data: dashboards || [], // Return an empty array if no dashboards
     });
   } catch (error) {
     console.error(`Error fetching dashboards for orgId: ${orgId}`, error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+
 
 // Route to get a single dashboard by its ID
 router.get('/:dashboardId', async (req, res) => {

@@ -66,7 +66,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
             user_type: userType,
             org_id: orgId,
             user_id: userId,
-            user_name:userName, // Add user_id to context
+            user_name:userName, 
           });
           if(userType === 1){
             navigate('/admin/dashboard')

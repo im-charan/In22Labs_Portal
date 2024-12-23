@@ -16,8 +16,7 @@ const axios = require('axios');
 
 
 const SITE_SECRET = process.env.SITE_SECRET
-
-const cors = require('cors');        // CORS middleware for handling cross-origin requests
+      // CORS middleware for handling cross-origin requests
 const corsOptions = {
   origin: 'http://localhost:5173/',   // URL of the React app
 };

@@ -82,7 +82,7 @@ const Pbpage = () => {
                   src={dashboard.dashboard_url}
                   title={dashboard.dashboard_name}
                   width="100%"
-                  height="500px"
+                  height="600px"
                   style={{ border: "none" }}
                 />
               ) : (

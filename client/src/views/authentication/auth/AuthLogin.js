@@ -70,6 +70,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
           var date = new Date();
           var current = date.toISOString().slice(0,10);
           console.log(token);
+          
           if(!token){
             setCaptcha('Please authenticate captcha');
             return;
@@ -167,7 +168,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
               <Box marginBottom={2}>
                 {/* {!token && <p className='text-danger'>Authenticate captcha</p>} */}
                 <ReCAPTCHA sitekey={key} ref={recaptcha}/>
-                {captcha && <span className='text-danger'>{captcha}</span>}
+                {captcha && !errors.userName && !errors.password && <span className='text-danger'>{captcha}</span>}
               </Box>
               <Box>
                 <Button

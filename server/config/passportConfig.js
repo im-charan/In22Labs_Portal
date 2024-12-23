@@ -16,30 +16,30 @@ function initialize(passport) {
           var date = new Date();
           var today = date.toISOString().slice(0,10);
           console.log(date);
-          var lastLogin = user.last_login.toISOString().slice(0,10);
-          if(user.user_login_attempts >= 5 && lastLogin === today){
-            return done(null, false, {message: 'Maximum login attempts reached'});
-          }
-          console.log(user.user_password);
-          bcrypt.compare(user_password, user.user_password, (err, isMatch) => {
-            if(err){
-              throw err;
+            var lastLogin = user.last_login.toISOString().slice(0,10);
+            if(user.user_login_attempts >= 5 && lastLogin === today){
+              return done(null, false, {message: 'Maximum login attempts reached'});
             }
-            if(isMatch){
-              if(lastLogin < today && user.user_login_attempts >= 1){
+            console.log(user.user_password);
+            bcrypt.compare(user_password, user.user_password, (err, isMatch) => {
+              if(err){
+                throw err;
+              }
+              if(isMatch){
+                if(lastLogin < today && user.user_login_attempts >= 1){
+                  pool.query(
+                    `UPDATE in22labs.users SET user_login_attempts = 0,user_ip = $2, last_login = now() WHERE user_name = $1`,[user_name,userIp],(err,results) => {
+                      if(err){
+                        throw err;
+                      }
+                    }
+                  )
+                }
                 pool.query(
-                  `UPDATE in22labs.users SET user_login_attempts = 0,user_ip = $2, last_login = now() WHERE user_name = $1`,[user_name,userIp],(err,results) => {
+                  `UPDATE in22labs.users SET last_login = now(), user_ip = $2 WHERE user_id = $1`,[user.user_id,userIp],(err,results) => {
                     if(err){
                       throw err;
                     }
-                  }
-                )
-              }
-              pool.query(
-                `UPDATE in22labs.users SET last_login = now(), user_ip = $2 WHERE user_id = $1`,[user.user_id,userIp],(err,results) => {
-                  if(err){
-                    throw err;
-                  }
                 }
               )
               return done(null, user, {message: 'success'});

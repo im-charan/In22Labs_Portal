@@ -20,6 +20,7 @@ const AddUser = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [organisations, setOrganisations] = useState([]);
   const [statusMessage, setStatusMessage] = useState(null); // Success or error messages
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     const fetchOrganisations = async () => {
@@ -110,7 +111,7 @@ const AddUser = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        if (errorData.message && errorData.message.includes("Email already exists")) {
+        if (errorData.message && errorData.message.includes("Email ID already exists")) {
           setErrorMessage("Email already exists. Please use a different email address.");
         } else {
           setErrorMessage(
@@ -179,6 +180,16 @@ const AddUser = () => {
           <Typography variant="h4" textAlign="center" marginBottom={2}>
             Create User
           </Typography>
+          {statusMessage && !errorMessage &&(
+            <Box display="flex" justifyContent="flex-start" marginTop={0}>
+              <Alert severity={statusMessage.type}>{statusMessage.text}</Alert>
+            </Box>
+          )}
+          {errorMessage && (
+            <Box display="flex" justifyContent="flex-start" marginTop={0}>
+              <Alert severity="error">{errorMessage}</Alert>
+            </Box>
+          )}
 
           <TextField
             label="Full Name"
@@ -258,11 +269,7 @@ const AddUser = () => {
             {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
 
-          {statusMessage && (
-            <Box display="flex" justifyContent="flex-start" marginTop={2}>
-              <Alert severity={statusMessage.type}>{statusMessage.text}</Alert>
-            </Box>
-          )}
+          
         </Box>
       </Box>
     </>

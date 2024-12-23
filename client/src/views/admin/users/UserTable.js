@@ -240,7 +240,7 @@ const UserTable = () => {
         throw new Error(`Error: ${response.status}`);
       }
       const data = await response.json();
-      setUsers(data); // No reverse needed since backend handles LIFO order
+      setUsers(data);
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
@@ -305,7 +305,16 @@ const UserTable = () => {
 
   return (
     <DashboardCard>
-      <Box sx={{ padding: 2 }}>
+      <Box
+        sx={{
+          padding: 6,
+          mt: -3,
+          mx: -3,
+          border: "2px solid #555", // Medium grey border
+          borderRadius: "9px", // Rounded corners
+          backgroundColor: "background.paper", // Matches theme
+        }}
+      >
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
           <TextField
             label="Search"
@@ -379,6 +388,7 @@ const UserTable = () => {
               </TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {displayedRows.map((user, index) => (
               <TableRow key={user.user_id}>

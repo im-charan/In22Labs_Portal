@@ -14,10 +14,10 @@ const SidebarItems = () => {
 
   const logoutItem = {
     id: uniqueId(),
-    title: 'Logout',
+    title: "Logout",
     icon: IconLogout,
-    href: '/',
-  }
+    href: "/auth/login",
+  };
 
   return (
     <Box>

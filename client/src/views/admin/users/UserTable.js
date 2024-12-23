@@ -32,7 +32,7 @@
 //     try {
 //       const response = await fetch("http://localhost:5000/api/user/all");
 //       if (!response.ok) {
-//         throw new Error(`Error: ${response.status}`);
+//         throw new Error(Error: ${response.status});
 //       }
 //       const data = await response.json();
 //       setUsers(data);
@@ -91,7 +91,7 @@
 //   const displayedRows = filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
 //   const navigatetodashboard = (name) => {
-//     navigate(`/admin/dashboards/${name}`);
+//     navigate(/admin/dashboards/${name});
 //   };
 
 //   return (
@@ -175,7 +175,7 @@
 //                 <TableCell align="center">{user.user_fullname}</TableCell>
 //                 <TableCell
 //                   sx={{ cursor: "pointer", color: "primary.main" }}
-//                   onClick={() => navigate(`/admin/organisation/${user.organizationName}`)}
+//                   onClick={() => navigate(/admin/organisation/${user.organizationName})}
 //                   align="center"
 //                 >
 //                   {user.organizationName}
@@ -240,7 +240,7 @@ const UserTable = () => {
         throw new Error(`Error: ${response.status}`);
       }
       const data = await response.json();
-      setUsers(data);
+      setUsers(data); // No reverse needed since backend handles LIFO order
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {

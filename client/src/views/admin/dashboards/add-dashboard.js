@@ -20,14 +20,14 @@ const AddDashboard = () => {
       try {
         // Use encodeURIComponent to encode the organization name before using it in the URL
         const encodedOrgName = encodeURIComponent(organizationName);
-        
+
         // Correct URL pattern with :organizationName
         const response = await fetch(`http://localhost:5000/api/dashboard/getIdByName/${encodedOrgName}`);
-        
+
         if (!response.ok) {
           throw new Error(`Failed to fetch organization ID for "${organizationName}"`);
         }
-  
+
         const { org_id } = await response.json();
         setOrgId(org_id);
       } catch (error) {
@@ -35,7 +35,7 @@ const AddDashboard = () => {
         setStatusMessage({ type: "error", text: "Unable to fetch organization details. Please try again." });
       }
     };
-  
+
     if (organizationName) {
       fetchOrgId();
     } else {
@@ -69,7 +69,7 @@ const validateForm = () => {
 };
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setStatusMessage(null);  // Clear previous messages
+    setStatusMessage(null); // Clear previous messages
     setIsSubmitting(true);
 
     if (!validateForm() || !orgId) {
@@ -102,7 +102,7 @@ const validateForm = () => {
       setStatusMessage({ type: "success", text: "Dashboard successfully created!" });
 
       // Redirect back to the organization page after successful creation
-      navigate(`/admin/organisation/${organizationName}`); 
+      navigate(`/admin/organisation/${organizationName}`);
     } catch (error) {
       console.error("Error creating dashboard:", error.message);
       setStatusMessage({ type: "error", text: "Error creating dashboard. Please try again." });
@@ -115,7 +115,7 @@ const validateForm = () => {
     <>
       <AdminHeader />
       <BreadcrumbComponent
-        pageTitle="Add Dashboard"
+        pageTitle={`Add Dashboard for ${organizationName || "Organization"}`}
         breadcrumbTitle1="Dashboard"
         breadcrumbRoute1={`/admin/organisation/${organizationName}`}
         breadcrumbTitle2="Add Dashboard"

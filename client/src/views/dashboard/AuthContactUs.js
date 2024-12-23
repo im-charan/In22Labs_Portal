@@ -21,7 +21,7 @@ const ContactUsPage = () => (
             breadcrumbRoute1="/dashboard"
             breadcrumbTitle2="Contact Us"
             breadcrumbRoute2={`/dashboard/ContactUsPage`}
-            marginTop="50px" // Minimal margin to reduce space
+            marginTop="60px" // Minimal margin to reduce space
         />
         <Box
             display="flex"

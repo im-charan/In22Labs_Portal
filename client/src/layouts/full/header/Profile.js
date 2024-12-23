@@ -30,7 +30,9 @@ const Profile = () => {
 
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/client/user/${userId}`);
+        const response = await fetch(
+          `http://localhost:5000/api/client/user/${userId}`
+        );
 
         // Check if the response is valid JSON
         const contentType = response.headers.get("Content-Type");
@@ -79,7 +81,10 @@ const Profile = () => {
   }, [userData]);
 
   const calculateRemainingTime = (validTillDate) => {
-    const timeLeft = Math.max(0, Math.floor((validTillDate - Date.now()) / 1000));
+    const timeLeft = Math.max(
+      0,
+      Math.floor((validTillDate - Date.now()) / 1000)
+    );
     setRemainingTime(timeLeft);
   };
 
@@ -139,7 +144,15 @@ const Profile = () => {
       >
         {userData ? (
           <>
-            <MenuItem component={Link} to="/dashboard/ProfilePage" onClick={handleClose2}>
+            <MenuItem
+              component={userData?.user_type === 1 ? "div" : Link} // Prevent navigation for user_type 1
+              to={userData?.user_type === 1 ? null : "/dashboard/ProfilePage"}
+              onClick={userData?.user_type === 1 ? handleClose2 : undefined}
+              sx={{
+                cursor: userData?.user_type === 1 ? "not-allowed" : "pointer",
+                opacity: userData?.user_type === 1 ? 0.6 : 1, // Style for restricted users
+              }}
+            >
               <ListItemIcon>
                 <IconUser width={20} />
               </ListItemIcon>
@@ -151,7 +164,11 @@ const Profile = () => {
             </MenuItem>
             <Divider />
 
-            <Box px={2} py={1} sx={{ backgroundColor: "#f0f4fa", borderRadius: "8px", mt: 1 }}>
+            <Box
+              px={2}
+              py={1}
+              sx={{ backgroundColor: "#f0f4fa", borderRadius: "8px", mt: 1 }}
+            >
               <Typography variant="body2" color="textSecondary">
                 Organization:
               </Typography>
@@ -160,7 +177,11 @@ const Profile = () => {
               </Typography>
             </Box>
 
-            <Box px={2} py={1} sx={{ backgroundColor: "#f0f4fa", borderRadius: "8px", mt: 1 }}>
+            <Box
+              px={2}
+              py={1}
+              sx={{ backgroundColor: "#f0f4fa", borderRadius: "8px", mt: 1 }}
+            >
               <Typography variant="body2" color="textSecondary">
                 Account Validity Ends:
               </Typography>

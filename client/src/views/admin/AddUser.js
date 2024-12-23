@@ -113,7 +113,9 @@ const AddUser = () => {
         if (errorData.message && errorData.message.includes("Email already exists")) {
           setErrorMessage("Email already exists. Please use a different email address.");
         } else {
-          setErrorMessage("An error occurred while creating the user.");
+          setErrorMessage(
+            "Email already exists. Please use a different email address."
+          );
         }
         setIsSubmitting(false);
         return;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   AppBar,
@@ -9,23 +9,59 @@ import {
   Typography,
 } from "@mui/material";
 import PropTypes from "prop-types";
-
-// Components
 import { IconMenu } from "@tabler/icons-react";
-import Profile from "../../layouts/full/header/Profile";
-const AdminName ="Admin";
+import { useUser } from "src/views/authentication/auth/UserContext";
+import ProfileImg from "src/assets/images/profile/user-1.jpg"; // Importing profile image
 
 const AdminHeader = (props) => {
+  const [adminName, setAdminName] = useState("Admin"); // Default to "Admin"
+  const { user } = useUser(); // Access user data from context
+  const userId = user?.user_id; // Get userId from context
+
+  useEffect(() => {
+    if (!userId) {
+      console.error("User ID not available");
+      return;
+    }
+
+    const fetchAdminName = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/user/${userId}`
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            `API error: ${response.status} - ${response.statusText}`
+          );
+        }
+
+        const result = await response.json();
+        console.log("API Response:", result);
+
+        if (result.user_name) {
+          setAdminName(result.user_name); // Update admin name from response
+        } else {
+          console.error(
+            "Invalid response: 'user_name' not found in API response"
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching admin name:", error.message);
+      }
+    };
+
+    fetchAdminName();
+  }, [userId]);
+
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)", // Adding a subtle shadow
     justifyContent: "center",
     backdropFilter: "blur(4px)",
     height: 50, // Adjust height for your needs
     position: "fixed", // Fixed at the top of the page
-    //top: 0,
     left: 0,
     right: 0, // Ensure it spans the full width
-    //width: "100%",
     zIndex: theme.zIndex.appBar, // Make sure it's on top of other content
     borderBottom: "2px solid rgba(74, 118, 211, 0.2)", // Border at the bottom
   }));
@@ -33,10 +69,6 @@ const AdminHeader = (props) => {
   const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
     width: "100%",
     color: theme.palette.text.secondary,
-   // display: "flex",
-   // justifyContent: "space-between", // Space out the items
-    //alignItems: "center",
-    //padding: "0 16px", // Padding inside the toolbar
   }));
 
   return (
@@ -56,10 +88,7 @@ const AdminHeader = (props) => {
           <IconMenu width="20" height="20" />
         </IconButton>
 
-        {/* Add more elements as needed */}
-        {/* Adding In22labs as the heading */}
-      
-        
+        {/* Portal Heading */}
         <Typography
           variant="h3"
           component="div"
@@ -67,8 +96,10 @@ const AdminHeader = (props) => {
         >
           Single Window Portal
         </Typography>
+
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
+          {/* Admin Greeting */}
           <Box
             sx={{
               background: "#ffffff",
@@ -81,9 +112,20 @@ const AdminHeader = (props) => {
               marginRight: "8px", // Adjusts space between message and avatar
             }}
           >
-            Hi, {AdminName}
+            Hi, {adminName}
           </Box>
-          <Profile/>
+
+          {/* Profile Image */}
+          <img
+            src={ProfileImg}
+            alt="Admin Logo"
+            style={{
+              width: "40px", // Adjust width as needed
+              height: "40px", // Adjust height as needed
+              borderRadius: "50%", // Makes it circular
+              pointerEvents: "none", // Disables click events
+            }}
+          />
         </Stack>
       </ToolbarStyled>
     </AppBarStyled>

@@ -55,6 +55,26 @@ const Adminpbpage = () => {
     );
   }
 
+  const handleInspect = () =>{
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+  function ctrlShiftKey(e, keyCode) {
+    return e.ctrlKey && e.shiftKey && e.keyCode === keyCode.charCodeAt(0);
+  }
+
+  document.onkeydown = (e) => {
+    // Disable F12, Ctrl + Shift + I, Ctrl + Shift + J, Ctrl + U
+    if (
+      event.keyCode === 123 ||
+      ctrlShiftKey(e, 'I') ||
+      ctrlShiftKey(e, 'J') ||
+      ctrlShiftKey(e, 'C') ||
+      (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0))
+    )
+      return false;
+  };
+  }
+
   return (
     <>
       <BreadcrumbComponent
@@ -74,6 +94,20 @@ const Adminpbpage = () => {
             overflow: "hidden",
           }}
         >
+        <div
+            onContextMenu={(event) => event.preventDefault()} // Disable right-click
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              zIndex: 10,
+              backgroundColor: "transparent", // Keep it transparent
+            }}
+            onLoad={handleInspect}
+          >
+          </div>
           <iframe
             src={dashboard.dashboard_url}
             title={dashboard.dashboard_name}

@@ -5,6 +5,7 @@ import AdminHeader from "./AdminHeader";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { set } from "lodash";
 
 const AddUser = () => {
   const [userFullName, setUserFullName] = useState("");
@@ -62,7 +63,7 @@ const AddUser = () => {
       setStatusMessage({ type: "error", text: "Password must be at least 6 characters long." });
       return false;
     }
-
+    setErrorMessage(null);
     setStatusMessage(null);
     return true;
   };
@@ -130,6 +131,10 @@ const AddUser = () => {
         text: "User successfully created!",
       });
 
+      setTimeout(() => {
+        setStatusMessage(null);
+        setErrorMessage(null);
+      }, 3000);
       // Reset form fields after successful submission
       setUserFullName("");
       setValidFrom(dayjs());

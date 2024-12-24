@@ -127,7 +127,7 @@ const getAllUsers = async () => {
       FROM in22labs.users u
       LEFT JOIN in22labs.organizations o 
       ON u.org_id = o.org_id
-      ORDER BY u.user_create DESC` // LIFO order
+      ORDER BY u.user_id DESC` // LIFO order
     );
     return result.rows; // Return all users with organization names
   } catch (error) {

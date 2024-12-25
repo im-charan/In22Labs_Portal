@@ -6,8 +6,8 @@ const {
   fetchOrgIdByName, 
   getDashboardById,
   getDashboardsByOrganisation
-  // proxyDashboardContent// Ensure fetchOrgIdByName is imported correctly
-} = require('../models/Dashboard'); // Correct import path for the dashboard model
+  // proxyDashboardContenty
+} = require('../models/Dashboard'); 
 
 const router = express.Router();
 
@@ -64,22 +64,7 @@ router.get('/organisation/:orgId', async (req, res) => {
 
 
 
-// //proxy
-// router.get("/proxy/:dashboardId", async (req, res) => {
-//   const { dashboardId } = req.params; // This is correct: it extracts dashboardId from the URL parameter
 
-//   try {
-//     await proxyDashboardContent(req, res);  // Pass the full req and res to the proxy function
-    
-//   } catch (error) {
-//     console.error(`Error fetching content for dashboard ID ${dashboardId}:`, error);
-//     res.status(500).json({
-//       success: false,
-//       message: "Error fetching dashboard content",
-//       error: error.message,
-//     });
-//   }
-// });
 
 // Route to get all dashboards
 router.get("/all", async (req, res) => {

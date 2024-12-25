@@ -60,6 +60,4 @@ const getUserById = async (userId) => {
 
 
 
-
-
-module.exports = { getDashboardsByOrganisation, getDashboardById, getUserById };
+module.exports = { getDashboardsByOrganisation, getDashboardById, getUserById,  };

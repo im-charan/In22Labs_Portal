@@ -310,8 +310,8 @@ const UserTable = () => {
           padding: 6,
           mt: -3,
           mx: -3,
-          border: "2px solid #555", // Medium grey border
-          borderRadius: "9px", // Rounded corners
+          // border: "2px solid #555", // Medium grey border
+          // borderRadius: "9px", // Rounded corners
           backgroundColor: "background.paper", // Matches theme
         }}
       >

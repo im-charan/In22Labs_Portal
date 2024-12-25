@@ -62,10 +62,10 @@ const ContactUsPage = () => (
                             Contact Us
                         </Typography>
                         <Typography variant="h6" fontWeight="500" color="textSecondary" sx={{ mt: 1 }}>
-                            To call: <strong>9876543210</strong>
+                            Phone : <strong>9500117868</strong>
                         </Typography>
                         <Typography variant="h6" fontWeight="500" color="textSecondary" sx={{ mt: 1 }}>
-                            To email: <strong>info@in22labs.com</strong>
+                            Mail : <strong>hr@in22labs.com</strong>
                         </Typography>
                     </Box>
                 </Grid>

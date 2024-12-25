@@ -129,7 +129,7 @@ const Login2 = () => {
                       color: 'primary.main',
                     }}
                     >
-                    Forget Password?
+                    Forgot Password?
                   </Typography>
                 </Stack>
               }

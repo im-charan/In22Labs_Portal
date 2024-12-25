@@ -13,12 +13,25 @@ const userRoutes = require('./routes/user');
 const clientRoutes = require('./routes/Client');
 const axios = require('axios');
 
+
+
+const SITE_SECRET = process.env.SITE_SECRET
+      // CORS middleware for handling cross-origin requests
+const corsOptions = {
+  origin: 'http://localhost:5173/',   // URL of the React app
+};
+
+
+
 // Initialize Passport
 const initializePassport = require('./config/passportConfig');
 initializePassport(passport);
 
 // Initialize the Express app
 const app = express();
+app.set('trust proxy', true); 
+app.use(express.urlencoded({ extended: true }));
+
 
 // Middleware
 app.use(cors({ origin: 'http://localhost:5173',
@@ -54,6 +67,37 @@ app.use('/api/client', clientRoutes);
 app.get('/', (req, res) => {
   res.send('Welcome to the Backend API!');
 });
+
+app.post('/api/auth', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      console.error('Error during authentication:', err);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+
+    if (!user) {
+      // Authentication failed, send the `info.message` to the client
+      console.log('Authentication failed:', info.message);
+      if(info.message === 'Missing credentials'){
+        return res.status(400).json({ message: ''});
+      }
+      return res.status(401).json({ message: info.message });
+    }
+
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error('Error during login:', err);
+        return res.status(500).json({ message: 'Login failed' });
+      }
+
+      // Authentication succeeded, send a success response
+      console.log('Authentication succeeded:', info.message);
+      return res.status(200).json({ message: info.message, user });
+    });
+  })(req, res, next);
+});
+
+
 //auth
 app.post('/api/auth', passport.authenticate('local', {
   successRedirect: '/api/user/28',

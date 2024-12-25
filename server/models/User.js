@@ -61,12 +61,12 @@ const createUser = async (user) => {
          user_name, valid_from, valid_till, user_email, 
          user_password_ref, user_password, user_fullname, 
          user_ip, user_os, user_type, user_status, 
-         user_login_attempts, org_id, user_create, user_update
+         user_login_attempts, org_id, user_create, user_update, last_login
        ) VALUES (
          $1, $2, $3, $4, 
          $5, $6, $7, 
          $8, $9, $10, $11, 
-         $12, $13, NOW(), NOW()
+         $12, $13, NOW(), NOW(),NOW()
        ) RETURNING *`,
       [
         user.user_name, // User name
@@ -163,7 +163,7 @@ const getUserById = async (userId) => {
 const getUserTypeByUserName = async (userName) => {
   try {
     // SQL query to get a user by ID
-    const result = await pool.query('SELECT user_name, user_type,org_id, user_id FROM in22labs.users WHERE user_name = $1', [userName]);
+    const result = await pool.query('SELECT * FROM in22labs.users WHERE user_name = $1', [userName]);
     return result.rows[0];  // Return the user
   } catch (error) {
     console.error('Error fetching user:', error);

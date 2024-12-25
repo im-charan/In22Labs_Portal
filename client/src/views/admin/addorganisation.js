@@ -180,7 +180,7 @@ const AddOrganisation = () => {
             <MenuItem value="Education">Education</MenuItem>
             <MenuItem value="Finance">Finance</MenuItem>
             <MenuItem value="Retail">Retail</MenuItem>
-            <MenuItem value="Retail">Admin</MenuItem>
+            <MenuItem value="Admin">Admin</MenuItem>
           </TextField>
 
           <TextField

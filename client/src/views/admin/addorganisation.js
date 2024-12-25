@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Box,
@@ -29,36 +28,6 @@ const AddOrganisation = () => {
       return "Address must be at least 10 characters long.";
     if (!logo) return "Organisation Logo is required.";
     return null;
-  };
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const allowedTypes = ["image/jpeg", "image/png"];
-    const MAX_FILE_SIZE = 1000000; // 1MB
-
-    if (!allowedTypes.includes(file.type)) {
-      setLogoFile(null);
-      setStatusMessage({
-        type: "error",
-        text: "Invalid file type. Please upload a JPG or PNG image.",
-      });
-      return;
-    }
-
-    if (file.size > MAX_FILE_SIZE) {
-      setLogoFile(null);
-      setStatusMessage({
-        type: "error",
-        text: "File size is too large. Please upload an image smaller than 1MB.",
-      });
-      return;
-    }
-
-    setLogoFile(file);
-    setImagePreview(URL.createObjectURL(file));
-    setStatusMessage(null); // Clear previous error if valid file is uploaded
   };
 
   const handleSubmit = async (event) => {
@@ -103,11 +72,12 @@ const AddOrganisation = () => {
       setType("");
       setAddress("");
       setLogo(null);
+      document.getElementById("logo-input").value = "";
 
-      // Optionally clear the status message after 3 seconds
+      // Clear the status message after 3 seconds
       setTimeout(() => {
         setStatusMessage(null);
-      }, 3000); // Message disappears after 3 seconds
+      }, 3000);
     } catch (error) {
       console.error("Error creating organisation:", error.message);
       setStatusMessage({ type: "error", text: error.message });
@@ -197,8 +167,8 @@ const AddOrganisation = () => {
             error={address.trim().length < 10 && address.trim().length > 0}
           />
 
-          
           <TextField
+            id="logo-input"
             type="file"
             fullWidth
             required
@@ -207,8 +177,6 @@ const AddOrganisation = () => {
             helperText="Upload an organisation logo (JPEG/PNG only)."
             inputProps={{ accept: "image/png, image/jpeg" }}
           />
-
-         
 
           <Button
             variant="contained"

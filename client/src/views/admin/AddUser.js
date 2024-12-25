@@ -62,7 +62,7 @@ const AddUser = () => {
       setStatusMessage({ type: "error", text: "Password must be at least 6 characters long." });
       return false;
     }
-
+    setErrorMessage(null);
     setStatusMessage(null);
     return true;
   };

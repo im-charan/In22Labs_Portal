@@ -102,7 +102,7 @@ const Adminpbpage = () => {
               left: 0,
               width: "100%",
               height: "100%",
-              zIndex: 10,
+              zIndex: -1,
               backgroundColor: "transparent", // Keep it transparent
             }}
             onLoad={handleInspect}

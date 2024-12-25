@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, CardContent, Typography, CircularProgress } from "@mui/material";
+import { Box, CardContent, Typography, CircularProgress, Menu } from "@mui/material";
 import BlankCard from "../../../components/shared/BlankCard";
 import BreadcrumbComponent from "../../../components/shared/BreadCrumbComponent";
+import { ClassNames } from "@emotion/react";
 
 const Pbpage = () => {
   const { orgId, dashboardId } = useParams(); // Extract both orgId and dashboardId
@@ -86,7 +87,7 @@ const Pbpage = () => {
   
 
   return (
-    <>
+    <div >
       <BreadcrumbComponent
         pageTitle={dashboard.dashboard_name}
         breadcrumbTitle1="Dashboard"
@@ -96,12 +97,12 @@ const Pbpage = () => {
         marginTop="35px"
       />
       <Box sx={{ mt: 2 }}>
-        <BlankCard>
+        <BlankCard >
           <Box sx={{ p: 1 }}>
-            <Typography component="div">
+            <Typography >
               {dashboard.dashboard_url ? (
-                <>
-                <div
+                <div>
+                <div 
                   onContextMenu={(event) => event.preventDefault()} // Disable right-click
                   style={{
                     position: "absolute",
@@ -109,7 +110,7 @@ const Pbpage = () => {
                     left: 0,
                     width: "100%",
                     height: "100%",
-                    zIndex: 10,
+                    zIndex: -1,
                     backgroundColor: "transparent", // Keep it transparent
                   }}
                   onLoad={handleInspect}
@@ -120,9 +121,9 @@ const Pbpage = () => {
                   title={dashboard.dashboard_name}
                   width="100%"
                   height="600px"
-                  style={{ border: "none" }}
+                  style={{ border: "none"}}
                   />
-                </>
+                </div>
               ) : (
                 <Typography variant="h6" align="center">
                   Dashboard URL not available.
@@ -133,8 +134,8 @@ const Pbpage = () => {
           </Box>
         </BlankCard>
       </Box>
-    </>
+    </div>
   );
 };
-
 export default Pbpage;
+

@@ -127,7 +127,7 @@ const getAllUsers = async () => {
       FROM in22labs.users u
       LEFT JOIN in22labs.organizations o 
       ON u.org_id = o.org_id
-      ORDER BY u.user_create DESC` // LIFO order
+      ORDER BY u.user_id DESC` // LIFO order
     );
     return result.rows; // Return all users with organization names
   } catch (error) {
@@ -163,7 +163,7 @@ const getUserById = async (userId) => {
 const getUserTypeByUserName = async (userName) => {
   try {
     // SQL query to get a user by ID
-    const result = await pool.query('SELECT * FROM in22labs.users WHERE user_name = $1', [userName]);
+    const result = await pool.query('SELECT * FROM in22labs.users WHERE user_email = $1', [userName]);
     return result.rows[0];  // Return the user
   } catch (error) {
     console.error('Error fetching user:', error);

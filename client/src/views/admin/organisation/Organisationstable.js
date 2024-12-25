@@ -27,15 +27,31 @@ const Organisationstable = () => {
   const [selectedType, setSelectedType] = useState("All");
 
   useEffect(() => {
+    // const fetchOrganisations = async () => {
+    //   try {
+    //     const response = await fetch("http://localhost:5000/api/organisation");
+    //     const data = await response.json();
+
+    //     const enrichedData = data.map((org) => ({
+    //       ...org,
+    //       poc: org.poc_name || `${org.poc_id}`,
+    //     }));
     const fetchOrganisations = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/organisation");
         const data = await response.json();
-
-        const enrichedData = data.map((org) => ({
-          ...org,
-          poc: org.poc_name || `${org.poc_id}`,
-        }));
+    
+        // Use Promise.all to handle asynchronous operations within .map()
+        const enrichedData = await Promise.all(
+          data.map(async (org) => {
+            const resp = await fetch(`http://localhost:5000/api/user/${org.poc_id}`);
+            const pocData = await resp.json();
+            return {
+              ...org,
+              poc: pocData.user_name, // Assign the fetched POC data to the `poc` field
+            };
+          })
+        );
 
         setOrganisations(enrichedData);
       } catch (error) {
@@ -96,8 +112,8 @@ const Organisationstable = () => {
           padding: 6,
           mt: -3,
           mx: -3,
-          border: "2px solid #555", // Border applied to the entire box
-          borderRadius: "9px", // Rounded corners for the box
+          // border: "2px solid #555", // Border applied to the entire box
+          // borderRadius: "9px", // Rounded corners for the box
           backgroundColor: "background.paper", // Matches theme
         }}
       >

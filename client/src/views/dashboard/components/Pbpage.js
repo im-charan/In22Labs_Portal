@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, CardContent, Typography, CircularProgress } from "@mui/material";
+import { Box, CardContent, Typography, CircularProgress, Menu } from "@mui/material";
 import BlankCard from "../../../components/shared/BlankCard";
 import BreadcrumbComponent from "../../../components/shared/BreadCrumbComponent";
+import { ClassNames } from "@emotion/react";
 
 const Pbpage = () => {
   const { orgId, dashboardId } = useParams(); // Extract both orgId and dashboardId
@@ -63,8 +64,30 @@ const Pbpage = () => {
     );
   }
 
+  const handleInspect = () =>{
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+  function ctrlShiftKey(e, keyCode) {
+    return e.ctrlKey && e.shiftKey && e.keyCode === keyCode.charCodeAt(0);
+  }
+
+  document.onkeydown = (e) => {
+    // Disable F12, Ctrl + Shift + I, Ctrl + Shift + J, Ctrl + U
+    if (
+      event.keyCode === 123 ||
+      ctrlShiftKey(e, 'I') ||
+      ctrlShiftKey(e, 'J') ||
+      ctrlShiftKey(e, 'C') ||
+      (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0))
+    )
+      return false;
+  };
+  }
+
+  
+
   return (
-    <>
+    <div >
       <BreadcrumbComponent
         pageTitle={dashboard.dashboard_name}
         breadcrumbTitle1="Dashboard"
@@ -74,17 +97,33 @@ const Pbpage = () => {
         marginTop="35px"
       />
       <Box sx={{ mt: 2 }}>
-        <BlankCard>
+        <BlankCard >
           <Box sx={{ p: 1 }}>
-            <Typography component="div">
+            <Typography >
               {dashboard.dashboard_url ? (
+                <div>
+                <div 
+                  onContextMenu={(event) => event.preventDefault()} // Disable right-click
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    zIndex: -1,
+                    backgroundColor: "transparent", // Keep it transparent
+                  }}
+                  onLoad={handleInspect}
+                >
+                </div>
                 <iframe
                   src={dashboard.dashboard_url}
                   title={dashboard.dashboard_name}
                   width="100%"
                   height="600px"
-                  style={{ border: "none" }}
-                />
+                  style={{ border: "none"}}
+                  />
+                </div>
               ) : (
                 <Typography variant="h6" align="center">
                   Dashboard URL not available.
@@ -95,8 +134,8 @@ const Pbpage = () => {
           </Box>
         </BlankCard>
       </Box>
-    </>
+    </div>
   );
 };
-
 export default Pbpage;
+

@@ -6,7 +6,7 @@ function initialize(passport) {
   const authenticateUser = (req,user_name, user_password, done) => {
     const userIp = req.ip;
     pool.query(
-      `SELECT * FROM in22labs.users WHERE user_name = $1`,[user_name],(err,results) => {
+      `SELECT * FROM in22labs.users WHERE user_email = $1`,[user_name],(err,results) => {
         if(err){
           throw err;
         }
@@ -28,7 +28,7 @@ function initialize(passport) {
               if(isMatch){
                 if(lastLogin < today && user.user_login_attempts >= 1){
                   pool.query(
-                    `UPDATE in22labs.users SET user_login_attempts = 0,user_ip = $2, last_login = now() WHERE user_name = $1`,[user_name,userIp],(err,results) => {
+                    `UPDATE in22labs.users SET user_login_attempts = 0,user_ip = $2, last_login = now() WHERE user_email = $1`,[user_name,userIp],(err,results) => {
                       if(err){
                         throw err;
                       }
@@ -50,7 +50,7 @@ function initialize(passport) {
               else{
                 if(lastLogin < today && user.user_login_attempts >= 1){
                   pool.query(
-                    `UPDATE in22labs.users SET user_login_attempts = 1,user_ip =$2 WHERE user_name = $1`,[user_name,userIp],(err,results) => {
+                    `UPDATE in22labs.users SET user_login_attempts = 1,user_ip =$2 WHERE user_email = $1`,[user_name,userIp],(err,results) => {
                       if(err){
                         throw err;
                       }
@@ -59,7 +59,7 @@ function initialize(passport) {
                 }
                 else{
                   pool.query(
-                    `UPDATE in22labs.users SET user_login_attempts = user_login_attempts + 1, user_ip = $2 WHERE user_name = $1`,[user_name,userIp],(err,results) => {
+                    `UPDATE in22labs.users SET user_login_attempts = user_login_attempts + 1, user_ip = $2 WHERE user_email = $1`,[user_name,userIp],(err,results) => {
                       if(err){
                         throw err;
                       }

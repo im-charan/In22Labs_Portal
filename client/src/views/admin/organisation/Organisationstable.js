@@ -198,7 +198,7 @@ const Organisationstable = () => {
                 <TableCell>{org.org_type}</TableCell>
                 <TableCell>{org.org_address}</TableCell>
                 <TableCell>{org.poc}</TableCell>
-                <TableCell align="center">{org.dash_count || "N/A"}</TableCell>
+                <TableCell align="center">{org.dash_count || "-"}</TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -1,7 +1,16 @@
 const express = require('express');
-const { getDashboardsByOrganisation, getDashboardById, getUserById } = require('../models/Client');
+const { getDashboardsByOrganisation, getDashboardById, getUserById, getUserByEmail } = require('../models/Client');
 
 const router = express.Router();
+
+const transporter = require('nodemailer').createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER, // Pulls the email from environment variable
+    pass: process.env.EMAIL_PASS, // Pulls the app password from environment variable
+  },
+});
+//afcz qclo csnx cvti
 
 // Route to get all dashboards for an organization
 router.get('/organisation/:orgId', async (req, res) => {
@@ -73,6 +82,37 @@ router.get('/user/:id', async (req, res) => {
   } catch (error) {
     console.error(`Error fetching user with ID: ${userId}`, error);
     res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+
+  // Validate the email format
+  if (!email || !email.includes('@')) {
+    return res.status(400).json({ success: false, message: 'Invalid email format' });
+  }
+
+  try {
+    // Check if user exists in the database
+    const user = await getUserByEmail(email);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Send the email to your address (sherinpshaju@gmail.com) notifying about the forgot password request
+    await transporter.sendMail({
+      from: 'your-email@gmail.com', // Sender email
+      to: 'sherinpshaju@gmail.com', // Hardcoded recipient email
+      subject: 'Forgot Password Request',
+      text: `A password reset request has been made for the following email address: ${email}` // Include the email of the user who requested it
+    });
+
+    // Send a success response to the client
+    res.status(200).json({ success: true, message: 'Password request successfully.' });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ success: false, message: 'Failed to send email' });
   }
 });
 

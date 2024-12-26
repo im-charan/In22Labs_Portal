@@ -56,8 +56,33 @@ const getUserById = async (userId) => {
   }
 };
 
+const getUserByEmail = async (email) => {
+  try {
+    const query = `
+      SELECT user_id, user_email 
+      FROM in22labs.users  -- Specify the schema here
+      WHERE user_email = $1`;  // Query to fetch user by email
+    const result = await pool.query(query, [email]); // Execute the query with email as parameter
+
+    return result.rows[0] || null; // If no rows found, return null
+  } catch (error) {
+    console.error(`Error fetching user with email: ${email}`, error); // Log error details
+    throw error; // Rethrow the error for higher-level handling
+  }
+};
 
 
 
 
-module.exports = { getDashboardsByOrganisation, getDashboardById, getUserById,  };
+module.exports = { 
+  getDashboardsByOrganisation, 
+  getDashboardById, 
+  getUserById, 
+  getUserByEmail // Add the new function
+};
+
+
+
+
+
+

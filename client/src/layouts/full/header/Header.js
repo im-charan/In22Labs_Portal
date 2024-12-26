@@ -24,9 +24,9 @@ const Header = (props) => {
   const theme = useTheme();
 
   // Use MUI's useMediaQuery hook to detect screen sizes
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // For small screens (<600px)
-  const isMediumScreen = useMediaQuery(theme.breakpoints.between("sm", "md")); // For medium screens (600px - 960px)
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up("md")); // For large screens (>960px)
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); 
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between("sm", "md")); 
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up("md")); 
 
   // Access user context and safely get userName
   const { user } = useUser();

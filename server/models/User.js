@@ -123,10 +123,10 @@ const getAllUsers = async () => {
       `SELECT 
         u.*, 
         o.org_name AS organization_name 
-        
       FROM in22labs.users u
       LEFT JOIN in22labs.organizations o 
       ON u.org_id = o.org_id
+      WHERE u.is_admin = false  -- Only fetch users where is_admin is false
       ORDER BY u.user_id DESC` // LIFO order
     );
     return result.rows; // Return all users with organization names
@@ -135,6 +135,7 @@ const getAllUsers = async () => {
     throw error;
   }
 };
+
 
 /**
  * Fetch a single user by ID.

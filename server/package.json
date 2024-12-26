@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
     "deploy": "node server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -27,6 +27,7 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "pg": "^8.13.1",
+    "production": "^0.0.2",
     "public-ip": "^7.0.1",
     "react": "^19.0.0",
     "useragent": "^2.3.0",

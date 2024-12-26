@@ -2,13 +2,9 @@
 const { Pool } = require('pg');
 require('dotenv').config();  // Load environment variables from .env
 
-// Create a pool of connections to the PostgreSQL database using environment variables
+// Create a pool of connections to the PostgreSQL database using the connection string from .env file
 const pool = new Pool({
-  user: process.env.DB_USER,        // Database username from .env file
-  host: process.env.DB_HOST,        // Database host (e.g., localhost or IP address)
-  database: process.env.DB_NAME,    // Database name from .env file
-  password: process.env.DB_PASSWORD, // Database password from .env file
-  port: process.env.DB_PORT,        // Database port (default for PostgreSQL is 5432)
+  connectionString: process.env.DB_CONNECTION_STRING, // Use the full connection string from .env
 });
 
 // Test the connection to the database

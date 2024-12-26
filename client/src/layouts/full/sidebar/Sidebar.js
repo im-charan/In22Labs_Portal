@@ -81,7 +81,15 @@ const MSidebar = (props) => {
               showProfile={false}
             >
               {/* Logo and Organization Name at the Top */}
-              <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100px" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100px",
+                }}
+              >
                 {/* Logo */}
                 {organizationLogo ? (
                   <img
@@ -102,7 +110,8 @@ const MSidebar = (props) => {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {organizationName || "Loading..."} {/* Display the organization name */}
+                  {organizationName || "Loading..."}{" "}
+                  {/* Display the organization name */}
                 </Typography>
               </Box>
 
@@ -110,9 +119,35 @@ const MSidebar = (props) => {
               <Box sx={{ height: "calc(100% - 150px)", overflowY: "auto" }}>
                 <SidebarItems />
               </Box>
+              <Typography
+                sx={{
+                  position: "absolute",
+                  bottom: "100px",
+                  left: "48%",
+                  color: "#D3D3D3",
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  transform: "translateX(-50%)",
+                  paddingBottom: "20px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                Powered by
+              </Typography>
 
               {/* Logo at the Bottom */}
-              <Box sx={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", paddingBottom: "16px", display: "flex", justifyContent: "center" }}>
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  paddingBottom: "16px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
                 <Logo img={logo} />
               </Box>
             </Sidebar>
@@ -147,7 +182,15 @@ const MSidebar = (props) => {
         showProfile={false}
       >
         {/* Organization Name at the Top */}
-        <Box sx={{ display: "flex", flexDirection: "column",justifyContent: "center", alignItems: "center", height: "90px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "90px",
+          }}
+        >
           {/* Mobile Logo */}
           {organizationLogo ? (
             <img
@@ -168,7 +211,8 @@ const MSidebar = (props) => {
               color: "#D3D3D3",
             }}
           >
-            {organizationName || "Loading..."} {/* Display the organization name */}
+            {organizationName || "Loading..."}{" "}
+            {/* Display the organization name */}
           </Typography>
         </Box>
 
@@ -176,9 +220,47 @@ const MSidebar = (props) => {
         <Box sx={{ height: "calc(100% - 150px)", overflowY: "auto" }}>
           <SidebarItems />
         </Box>
+        {/* Powered by text */}
+        {/* <Box
+          sx={{
+            position: "absolute",
+            bottom: "120px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        > */}
+        <Typography
+          sx={{
+            position: "absolute",
+            bottom: "100px",
+            left: "48%",
+            color: "#D3D3D3",
+            fontSize: "14px",
+            fontWeight: "bold",
+            transform: "translateX(-50%)",
+            paddingBottom: "20px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          Powered by
+        </Typography>
+        {/* </Box> */}
 
         {/* Logo at the Bottom */}
-        <Box sx={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", paddingBottom: "16px", display: "flex", justifyContent: "center" }}>
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            left: "50%",
+            transform: "translateX(-50%)",
+            paddingBottom: "16px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <Logo img={logo} />
         </Box>
       </Sidebar>

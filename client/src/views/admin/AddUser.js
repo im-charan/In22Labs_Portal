@@ -240,7 +240,7 @@ const AddUser = () => {
           />
 
           <TextField
-            label="Password Reference"
+            label="Password"
             variant="outlined"
             fullWidth
             value={userPasswordRef}

@@ -6,7 +6,9 @@ import { useRef } from "react";
 
 // components
 import PageContainer from "../../components/container/PageContainer";
-import Logo from "../../layouts/full/shared/logo/Logo";
+//import Logo from "../../layouts/full/shared/logo/Logo";
+import logo from "../../../assets/images/logos/dark1-logo.svg";  // Default logo for the sidebar footer
+
 import AuthLogin from "./auth/AuthLogin";
 import ReactLogo from "../../layouts/full/shared/logo/Logo";
 import logindesign from '../authentication/login-design.svg';
@@ -105,7 +107,7 @@ const Login2 = () => {
             >
             <Box
             component="img"
-            src="/src/assets/images/logos/dark1-logo.svg"
+            src={logo}
             alt="Logo"
             sx={{
               width: 'auto',

@@ -48,10 +48,11 @@ const AdminSidebar = (props) => {
           {/* ------------------------------------------- */}
           <Box
             sx={{
-              height: '100%', position: 'relative'
+              height: '100%',
             }}
           >
-             <Sidebar
+
+            <Sidebar
               width={'270px'}
               collapsewidth="80px"
               open={props.isSidebarOpen}

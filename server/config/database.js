@@ -5,6 +5,9 @@ require('dotenv').config();  // Load environment variables from .env
 // Create a pool of connections to the PostgreSQL database using the connection string from .env file
 const pool = new Pool({
   connectionString: process.env.DB_CONNECTION_STRING, // Use the full connection string from .env
+  ssl: {
+    rejectUnauthorized: false,  // Required to work with Render's PostgreSQL SSL
+  },
 });
 
 // Test the connection to the database

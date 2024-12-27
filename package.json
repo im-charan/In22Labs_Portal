@@ -1,10 +1,12 @@
+
 {
   "name": "in22labs_portal",
   "version": "1.0.0",
   "scripts": {
     "build": "if-env TYPE=server && (cd server && npm install) || (cd client && npm install)",
-    "server": "node ./server/server.js",
-    "client": "cd client && npm start"
+    "server": "cd server && npm start",
+    "client": "cd client && npm run dev",
+    "start": "concurrently \"npm run server\" \"npm run client\""
   },
   "dependencies": {
     "dayjs": "^1.11.13",
@@ -12,5 +14,8 @@
     "if-env": "^1.0.4",
     "multer": "^1.4.5-lts.1",
     "request-ip": "^3.3.0"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
   }
 }

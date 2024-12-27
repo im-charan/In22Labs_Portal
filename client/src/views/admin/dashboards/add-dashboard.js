@@ -85,7 +85,7 @@ const validateForm = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/dashboard/create", {
+      const response = await fetch(`${backendUrl}/api/dashboard/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

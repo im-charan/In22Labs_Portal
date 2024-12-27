@@ -13,12 +13,13 @@ const MSidebar = (props) => {
   const userId = user?.user_id;
   const [organizationName, setOrganizationName] = useState("");
   const [organizationLogo, setOrganizationLogo] = useState("");
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  
   // Fetch user data and organization name based on userId
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/client/user/${userId}`);
+        const response = await fetch(`${backendUrl}/api/client/user/${userId}`);
         const data = await response.json();
 
         if (response.ok && data.success) {
@@ -93,7 +94,7 @@ const MSidebar = (props) => {
                 {/* Logo */}
                 {organizationLogo ? (
                   <img
-                    src={`http://localhost:5000/uploads/${organizationLogo}`}
+                    src={`${backendUrl}/uploads/${organizationLogo}`}
                     alt={`${organizationName} logo`}
                     style={logoStyles}
                   />

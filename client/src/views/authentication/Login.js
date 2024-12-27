@@ -19,9 +19,10 @@ import axios from 'axios';
 
 
 const Login2 = () => {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const fetchApi = async() =>{
-    const response = await axios.get('http://Localhost:5000/api/user/1');
+    const response = await axios.get(`${backendUrl}/api/user/1`);
     console.log(response.data);
   }
 

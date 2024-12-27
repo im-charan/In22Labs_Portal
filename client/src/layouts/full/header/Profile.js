@@ -23,7 +23,8 @@ const Profile = () => {
 
   const { user } = useUser(); // Access user data from context
   const userId = user?.user_id; // Get userId from context
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  
   // Fetch user data
   useEffect(() => {
     if (!userId) return; // Do not fetch if userId is not available
@@ -31,7 +32,7 @@ const Profile = () => {
     const fetchUserData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/client/user/${userId}`
+          `${backendUrl}/api/client/user/${userId}`
         );
 
         // Check if the response is valid JSON

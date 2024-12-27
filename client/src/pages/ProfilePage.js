@@ -10,11 +10,12 @@ const ProfilePage = () => {
 
   const { user } = useUser(); // Access user data from context
   const userId = user?.user_id; 
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/client/user/${userId}`); // Replace with your API endpoint
+        const response = await fetch(`${backendUrl}/api/client/user/${userId}`); // Replace with your API endpoint
         const result = await response.json();
 
         if (response.ok && result.success) {

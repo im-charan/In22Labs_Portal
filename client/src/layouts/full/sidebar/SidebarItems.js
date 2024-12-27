@@ -9,7 +9,8 @@ import { useUser } from "src/views/authentication/auth/UserContext";
 const SidebarItems = () => {
   const { pathname } = useLocation();
   const pathDirect = pathname;
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  
   // Access user context to get userId
   const { user } = useUser();
   const userId = user?.user_id;
@@ -23,7 +24,7 @@ const SidebarItems = () => {
 
       try {
         // Adjust the fetch URL to match the API structure
-        const response = await fetch(`http://localhost:5000/api/client/user/${userId}`);
+        const response = await fetch(`${backendUrl}/api/client/user/${userId}`);
         const userData = await response.json();
 
         if (userData.success && userData.data && userData.data.org_id) {

@@ -1,9 +1,8 @@
-
 {
   "name": "in22labs_portal",
   "version": "1.0.0",
   "scripts": {
-    "install": "npm install --prefix client && npm install --prefix server",
+    "install": "npm install && npm install --prefix client && npm install --prefix server",
     "build": "npm run build --prefix client",
     "start": "npm run build && npm run server",
     "server": "npm start --prefix server",
@@ -11,6 +10,7 @@
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "dependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
     "dayjs": "^1.11.13",
     "express-rate-limit": "^7.5.0",
     "if-env": "^1.0.4",

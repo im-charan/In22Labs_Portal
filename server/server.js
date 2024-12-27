@@ -14,7 +14,6 @@ const clientRoutes = require('./routes/Client');
 const axios = require('axios');
 
 
-
 const SITE_SECRET = process.env.SITE_SECRET
       // CORS middleware for handling cross-origin requests
 const corsOptions = {

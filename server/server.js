@@ -33,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // Middleware
-app.use(cors({ origin: 'https://in22labs-portal-client.onrender.com/',
+app.use(cors({ origin: 'https://in22labs-portal-client.onrender.com',
   credentials: true,
  }));  // Allow requests from frontend
 app.use(express.urlencoded({ extended: true }));     // Handle URL-encoded form data

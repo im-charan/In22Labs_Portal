@@ -17,7 +17,7 @@ const AdminHeader = (props) => {
   const [adminName, setAdminName] = useState("Admin"); // Default to "Admin"
   const { user } = useUser(); // Access user data from context
   const userId = user?.user_id; // Get userId from context
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   useEffect(() => {
     if (!userId) {
       console.error("User ID not available");
@@ -27,7 +27,7 @@ const AdminHeader = (props) => {
     const fetchAdminName = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/user/${userId}`
+          `${backendUrl}/api/user/${userId}`
         );
 
         if (!response.ok) {

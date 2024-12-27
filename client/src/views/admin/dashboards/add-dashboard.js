@@ -7,7 +7,7 @@ import AdminHeader from "../AdminHeader";
 const AddDashboard = () => {
   const { organizationName } = useParams(); // Extract org_name from the URL
   const navigate = useNavigate();
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [dashboardName, setDashboardName] = useState("");
   const [powerBIUrl, setDashboardUrl] = useState("");
   const [orgId, setOrgId] = useState(null);
@@ -22,7 +22,7 @@ const AddDashboard = () => {
         const encodedOrgName = encodeURIComponent(organizationName);
 
         // Correct URL pattern with :organizationName
-        const response = await fetch(`http://localhost:5000/api/dashboard/getIdByName/${encodedOrgName}`);
+        const response = await fetch(`${backendUrl}/api/dashboard/getIdByName/${encodedOrgName}`);
 
         if (!response.ok) {
           throw new Error(`Failed to fetch organization ID for "${organizationName}"`);

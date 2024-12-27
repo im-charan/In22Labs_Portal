@@ -25,7 +25,7 @@ const Organisationstable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("All");
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   useEffect(() => {
     // const fetchOrganisations = async () => {
     //   try {
@@ -38,13 +38,13 @@ const Organisationstable = () => {
     //     }));
     const fetchOrganisations = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/organisation");
+        const response = await fetch(`${backendUrl}/api/organisation`);
         const data = await response.json();
     
         // Use Promise.all to handle asynchronous operations within .map()
         const enrichedData = await Promise.all(
           data.map(async (org) => {
-            const resp = await fetch(`http://localhost:5000/api/user/${org.poc_id}`);
+            const resp = await fetch(`${backendUrl}/api/user/${org.poc_id}`);
             const pocData = await resp.json();
             return {
               ...org,

@@ -10,12 +10,13 @@ const Pbpage = () => {
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
         setLoading(true);
   
-        const response = await fetch(`http://localhost:5000/api/client/${dashboardId}`);
+        const response = await fetch(`${backendUrl}/api/client/${dashboardId}`);
         console.log("Response:", response);
   
         if (!response.ok) {

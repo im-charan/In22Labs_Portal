@@ -17,7 +17,7 @@ const AddOrganisation = () => {
   const [logo, setLogo] = useState(null); // State for storing logo
   const [statusMessage, setStatusMessage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   // Client-Side Validation
   const validateInputs = () => {
     if (!organizationName.trim()) return "Organisation Name is required.";
@@ -50,7 +50,7 @@ const AddOrganisation = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/organisation/create",
+        `${backendUrl}/api/organisation/create`,
         {
           method: "POST",
           body: formData,

@@ -22,7 +22,7 @@ const AddUser = () => {
   const [organisations, setOrganisations] = useState([]);
   const [statusMessage, setStatusMessage] = useState(null); // Success or error messages
   const [errorMessage, setErrorMessage] = useState(null);
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   useEffect(() => {
     const fetchOrganisations = async () => {
       try {
@@ -94,7 +94,7 @@ const AddUser = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/user/create", {
+      const response = await fetch(`${backendUrl}/api/user/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

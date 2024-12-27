@@ -10,12 +10,12 @@ const UserDashboards = () => {
   const [dashboards, setDashboards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   // Fetch dashboards data from API
   useEffect(() => {
     const fetchDashboards = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/dashboard/all"); // Adjust the API endpoint
+        const response = await fetch(`${backendUrl}/api/dashboard/all`); // Adjust the API endpoint
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

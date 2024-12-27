@@ -24,7 +24,7 @@ import { useAuth } from './AuthProvider';
 import { useUser } from './UserContext';
 
 const AuthLogin = ({ title, subtitle, subtext }) => {
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [islogin, setIsLogin] = useState('');
   const recaptcha = useRef();
   const key = import.meta.env.VITE_SITE_KEY;
@@ -47,12 +47,12 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
     setErrors(LoginValidation({userName, password}));
     const token = recaptcha.current.getValue();
 
-    axios.post('http://localhost:5000/api/auth', {user_name : userName, user_password: password})
+    axios.post(`${backendUrl}/api/auth`, {user_name : userName, user_password: password})
     .then(result => {console.log(result)
       if(result.status === 200){
         login();
         setIsLogin('');
-        axios.get(`http://localhost:5000/api/user/name/${userName}`)
+        axios.get(`${backendUrl}/api/user/name/${userName}`)
         .then(result => { 
           console.log(result.data.user_type);
           const userType = result.data.user_type;

@@ -6,7 +6,7 @@ const AuthForgetPassword = ({ title, subtitle, subtext }) => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false); // Add loading state
-
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const handleSubmit = async () => {
         if (!email) {
             setMessage("Please enter your email address");
@@ -16,7 +16,7 @@ const AuthForgetPassword = ({ title, subtitle, subtext }) => {
         setLoading(true); // Set loading state to true
 
         try {
-            const response = await fetch('http://localhost:5000/api/client/forgot-password', {
+            const response = await fetch('${backendUrl}/api/client/forgot-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

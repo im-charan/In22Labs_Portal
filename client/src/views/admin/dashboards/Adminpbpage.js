@@ -7,12 +7,12 @@ const Adminpbpage = () => {
   const { id } = useParams(); // Get 'id' from the URL
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
         // Fetch the dashboard metadata (name, URL, etc.)
-        const response = await fetch(`http://localhost:5000/api/dashboard/${id}`, {
+        const response = await fetch(`${backendUrl}/api/dashboard/${id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

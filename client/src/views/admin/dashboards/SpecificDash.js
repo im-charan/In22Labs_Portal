@@ -20,7 +20,7 @@ const SpecificDash = () => {
   const [dashboards, setDashboards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const cardStyle = {
     height: "250px",
     display: "flex",
@@ -37,7 +37,7 @@ const SpecificDash = () => {
 
         const encodedOrgName = encodeURIComponent(organizationName);
         const orgIdResponse = await fetch(
-          `http://localhost:5000/api/dashboard/getIdByName/${encodedOrgName}`
+          `${backendUrl}/api/dashboard/getIdByName/${encodedOrgName}`
         );
 
         if (!orgIdResponse.ok) {
@@ -47,7 +47,7 @@ const SpecificDash = () => {
         const { org_id } = await orgIdResponse.json();
 
         const dashboardsResponse = await fetch(
-          `http://localhost:5000/api/dashboard/organisation/${org_id}`
+          `${backendUrl}/api/dashboard/organisation/${org_id}`
         );
 
         if (!dashboardsResponse.ok) {

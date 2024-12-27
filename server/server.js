@@ -18,7 +18,7 @@ const axios = require('axios');
 const SITE_SECRET = process.env.SITE_SECRET
       // CORS middleware for handling cross-origin requests
 const corsOptions = {
-  origin: 'http://localhost:5173/',   // URL of the React app
+  origin: 'https://in22labs-portal-client.onrender.com/',   // URL of the React app
 };
 
 
@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // Middleware
-app.use(cors({ origin: 'http://localhost:5173',
+app.use(cors({ origin: 'https://in22labs-portal-client.onrender.com/',
   credentials: true,
  }));  // Allow requests from frontend
 app.use(express.urlencoded({ extended: true }));     // Handle URL-encoded form data

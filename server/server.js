@@ -21,6 +21,7 @@ const SITE_SECRET = process.env.SITE_SECRET
 // };
 
 
+console.log("Database password in production:", process.env.DB_PASSWORD);
 
 // Initialize Passport
 const initializePassport = require('./config/passportConfig');
@@ -40,9 +41,9 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   console.log('Development mode: React app served by Vite development server');
 }
-
 app.set('trust proxy', true); 
 app.use(express.urlencoded({ extended: true }));
+
 
 
 // Middleware
@@ -52,7 +53,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? 'https://your-production-domain.com' 
+    ? 'https://your-producton-domain.com' 
     : 'http://localhost:5173', // Vite dev server
   credentials: true,
 };

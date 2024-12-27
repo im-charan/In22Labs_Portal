@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate;
 import { Box, Grid, Button, Typography } from "@mui/material";
 import PageContainer from 'src/components/container/PageContainer';
 
-import UserTable from "./users/userTable";
+import UserTable from "./users/UserTable";
 
 import { useParams } from "react-router-dom"; // Import useParams
 

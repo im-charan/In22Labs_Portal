@@ -5,7 +5,7 @@ const flash = require('express-flash');
 const passport = require('passport'); // Passport middleware for authentication
     // For file uploads
 const cors = require('cors');         // CORS middleware for handling cross-origin requests
-
+const path = require('path');
 // Import routes
 const dashboardRoutes = require('./routes/dashboard');
 const organisationRoutes = require('./routes/organisation');
@@ -14,12 +14,11 @@ const clientRoutes = require('./routes/Client');
 const axios = require('axios');
 
 
-
 const SITE_SECRET = process.env.SITE_SECRET
-      // CORS middleware for handling cross-origin requests
-const corsOptions = {
-  origin: 'http://localhost:5173/',   // URL of the React app
-};
+// CORS middleware for handling cross-origin requests
+// const corsOptions = {
+//   origin: 'http://localhost:5173/',   // URL of the React app
+// };
 
 
 
@@ -29,14 +28,35 @@ initializePassport(passport);
 
 // Initialize the Express app
 const app = express();
+
+if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the React app's build directory
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+
+  // Handle SPA routing: Return React's index.html for unrecognized routes
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client/dist/index.html'));
+  });
+} else {
+  console.log('Development mode: React app served by Vite development server');
+}
+
 app.set('trust proxy', true); 
 app.use(express.urlencoded({ extended: true }));
 
 
 // Middleware
-app.use(cors({ origin: 'http://localhost:5173',
+// app.use(cors({ origin: 'http://localhost:5173',
+//   credentials: true,
+//  }));  // Allow requests from frontend
+
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? 'https://your-production-domain.com' 
+    : 'http://localhost:5173', // Vite dev server
   credentials: true,
- }));  // Allow requests from frontend
+};
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));     // Handle URL-encoded form data
 app.use(express.json());                             // Parse JSON request bodies
 app.use('/uploads', express.static('uploads'));
@@ -99,10 +119,10 @@ app.post('/api/auth', (req, res, next) => {
 
 
 //auth
-app.post('/api/auth', passport.authenticate('local', {
-  successRedirect: '/api/user/28',
- failureRedirect: '/api/login'
-}))
+// app.post('/api/auth', passport.authenticate('local', {
+//   successRedirect: '/api/user/28',
+//  failureRedirect: '/api/login'
+// }))
 // Google reCAPTCHA verification endpoint
 app.post('/verify', async (request, response) => {
   const { captchaValue } = request.body;

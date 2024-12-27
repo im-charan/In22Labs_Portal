@@ -3,10 +3,12 @@
   "name": "in22labs_portal",
   "version": "1.0.0",
   "scripts": {
-    "build": "if-env TYPE=server && (cd server && npm install) || (cd client && npm install)",
-    "server": "cd server && npm start",
-    "client": "cd client && npm run dev",
-    "start": "concurrently \"npm run server\" \"npm run client\""
+    "install": "npm install --prefix client && npm install --prefix server",
+    "build": "npm run build --prefix client",
+    "start": "npm run build && node server/server.js", 
+    "server": "npm start --prefix server",
+    "client": "npm run dev --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "dependencies": {
     "dayjs": "^1.11.13",

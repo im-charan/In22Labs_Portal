@@ -64,7 +64,7 @@ const Login2 = () => {
           },
           }}
           > */}
-    <Box item sx={{backgroundImage: url(`${bg}`), position: 'relative' , height: '100vh', backgroundSize: 'cover'}}>
+    <Box item sx={{backgroundImage: `url(${bg})`, position: 'relative' , height: '100vh', backgroundSize: 'cover'}}>
 
 
       <Grid container sx={{ height: "100vh" }} flexDirection='row'>

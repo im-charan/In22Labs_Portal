@@ -43,11 +43,11 @@ const AdminHeader = () => {
     const fetchAdminName = async () => {
       try {
         const response = await fetch(
-          http://localhost:5000/api/user/${userId}
+         ` http://localhost:5000/api/user/${userId}`
         );
         if (!response.ok) {
           throw new Error(
-            API error: ${response.status} - ${response.statusText}
+           ` API error: ${response.status} - ${response.statusText}`
           );
         }
         const result = await response.json();

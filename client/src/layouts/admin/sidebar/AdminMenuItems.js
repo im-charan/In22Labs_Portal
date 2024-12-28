@@ -32,6 +32,13 @@ const AdminMenuitems = [
     icon: IconBuilding,
     href: '/admin/organisation',
   },
+    {
+    id: uniqueId(),
+    title: "Logout",
+    icon: IconLogout,
+    href: "/auth/login",
+    
+  }
 ];
 
 export default AdminMenuitems;

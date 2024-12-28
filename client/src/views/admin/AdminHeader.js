@@ -7,17 +7,33 @@ import {
   Stack,
   IconButton,
   Typography,
+  Drawer,
+  List,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { IconMenu } from "@tabler/icons-react";
 import { useUser } from "src/views/authentication/auth/UserContext";
-import ProfileImg from "src/assets/images/profile/user-1.jpg"; // Importing profile image
+import ProfileImg from "src/assets/images/profile/user-1.jpg";
+import Logo from "../../assets/images/logos/dark1-logo.svg"; // Import the logo here
+import { useLocation } from "react-router";
+import { uniqueId } from "lodash";
+import AdminMenuitems from "../../layouts/admin/sidebar/AdminMenuItems";
+import NavItem from "../../layouts/admin/sidebar/NavItem/index";
+import NavGroup from "../../layouts/admin/sidebar/NavGroup/NavGroup";
+import { IconLogout } from "@tabler/icons-react";
+import { useMediaQuery } from "@mui/material"; // Import useMediaQuery
 
-const AdminHeader = (props) => {
-  const [adminName, setAdminName] = useState("Admin"); // Default to "Admin"
-  const { user } = useUser(); // Access user data from context
-  const userId = user?.user_id; // Get userId from context
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+const AdminHeader = () => {
+  const [adminName, setAdminName] = useState("Admin");
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const { user } = useUser();
+  const userId = user?.user_id;
+  const { pathname } = useLocation();
+  const pathDirect = pathname;
+
+  // Media query for detecting desktop screens (>= 960px)
+  const isDesktop = useMediaQuery((theme) => theme.breakpoints.up("md"));
+
   useEffect(() => {
     if (!userId) {
       console.error("User ID not available");
@@ -27,20 +43,16 @@ const AdminHeader = (props) => {
     const fetchAdminName = async () => {
       try {
         const response = await fetch(
-          `${backendUrl}/api/user/${userId}`
+          http://localhost:5000/api/user/${userId}
         );
-
         if (!response.ok) {
           throw new Error(
-            `API error: ${response.status} - ${response.statusText}`
+            API error: ${response.status} - ${response.statusText}
           );
         }
-
         const result = await response.json();
-        console.log("API Response:", result);
-
         if (result.user_name) {
-          setAdminName(result.user_name); // Update admin name from response
+          setAdminName(result.user_name);
         } else {
           console.error(
             "Invalid response: 'user_name' not found in API response"
@@ -54,81 +66,156 @@ const AdminHeader = (props) => {
     fetchAdminName();
   }, [userId]);
 
+  const toggleDrawer = () => setDrawerOpen(!isDrawerOpen);
+
+  // Close the sidebar on desktop and reset drawer state
+  useEffect(() => {
+    if (isDesktop) {
+      setDrawerOpen(false); // Close the drawer on desktop
+    }
+  }, [isDesktop]);
+
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)", // Adding a subtle shadow
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
     justifyContent: "center",
-    backdropFilter: "blur(4px)",
-    height: 50, // Adjust height for your needs
-    position: "fixed", // Fixed at the top of the page
-    left: 0,
-    right: 0, // Ensure it spans the full width
-    zIndex: theme.zIndex.appBar, // Make sure it's on top of other content
-    borderBottom: "2px solid rgba(74, 118, 211, 0.2)", // Border at the bottom
+    height: 50,
+    position: "fixed",
+    zIndex: theme.zIndex.appBar,
+    borderBottom: "2px solid rgba(74, 118, 211, 0.2)",
   }));
 
   const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
     width: "100%",
-    color: theme.palette.text.secondary,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between", // Aligns the content to the left and right
   }));
 
+  const logoutItem = {
+    id: uniqueId(),
+    title: "Logout",
+    icon: IconLogout,
+    href: "/auth/login",
+  };
+
   return (
-    <AppBarStyled position="sticky" color="default">
-      <ToolbarStyled>
-        <IconButton
-          color="inherit"
-          aria-label="menu"
-          onClick={props.toggleMobileSidebar}
-          sx={{
-            display: {
-              lg: "none",
-              xs: "inline",
-            },
-          }}
-        >
-          <IconMenu width="20" height="20" />
-        </IconButton>
-
-        {/* Portal Heading */}
-        <Typography
-          variant="h3"
-          component="div"
-          sx={{ marginLeft: 33, fontWeight: "bold" }}
-        >
-          Single Window Portal
-        </Typography>
-
-        <Box flexGrow={1} />
-        <Stack spacing={1} direction="row" alignItems="center">
-          {/* Admin Greeting */}
+    <>
+      <AppBarStyled position="sticky" color="default">
+        <ToolbarStyled>
           <Box
             sx={{
-              background: "#ffffff",
-              color: "#5d87ff",
-              padding: "4px 10px",
-              borderRadius: "8px",
-              fontSize: "0.875rem",
-              fontWeight: "bold",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-              marginRight: "8px", // Adjusts space between message and avatar
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-start", // Ensures the logo is left-aligned
             }}
           >
-            Hi, {adminName}
+            <IconButton
+              color="inherit"
+              aria-label="menu"
+              onClick={toggleDrawer}
+              sx={{
+                display: {
+                  xs: "inline", // Visible on small screens
+                  lg: "none", // Hidden on larger screens
+                },
+              }}
+            >
+              <IconMenu width="20" height="20" />
+            </IconButton>
+            {/* <Typography
+              variant="h5"
+              sx={{
+                fontWeight: "bold",
+                marginLeft: {lg:"250px",isDrawerOpen ? "250px" : "16px",}, // Adjust margin based on sidebar state
+                transition: "margin-left 0.3s ease", // Smooth transition when toggling sidebar
+              }}
+            >
+              Single Window Portal
+            </Typography> */}
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: "bold",
+                marginLeft: {
+                  lg: "260px", // Apply 250px margin for large screens
+                  xs: isDrawerOpen ? "250px" : "16px", // Apply 250px for small screens if drawer is open, else 16px
+                },
+                transition: "margin-left 0.3s ease", // Smooth transition when toggling sidebar
+              }}
+            >
+              Single Window Portal
+            </Typography>
           </Box>
 
-          {/* Profile Image */}
+          {/* Profile Section */}
+          <Stack spacing={1} direction="row" alignItems="center">
+            <Box
+              sx={{
+                background: "#ffffff",
+                color: "#5d87ff",
+                padding: "4px 10px",
+                borderRadius: "8px",
+                fontSize: "0.875rem",
+                fontWeight: "bold",
+                marginRight: "8px",
+              }}
+            >
+              Hi, {adminName}
+            </Box>
+            <img
+              src={ProfileImg}
+              alt="Admin Logo"
+              style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+            />
+          </Stack>
+        </ToolbarStyled>
+      </AppBarStyled>
+      <Drawer
+        anchor="left"
+        open={isDrawerOpen}
+        onClose={toggleDrawer}
+        sx={{
+          "& .MuiDrawer-paper": { width: "250px", boxSizing: "border-box" },
+        }}
+      >
+        {/* Logo Section */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "16px 0",
+            borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+          }}
+        >
           <img
-            src={ProfileImg}
-            alt="Admin Logo"
-            style={{
-              width: "40px", // Adjust width as needed
-              height: "40px", // Adjust height as needed
-              borderRadius: "50%", // Makes it circular
-              pointerEvents: "none", // Disables click events
-            }}
+            src={Logo}
+            alt="Logo"
+            style={{ width: "120px", height: "auto" }}
           />
-        </Stack>
-      </ToolbarStyled>
-    </AppBarStyled>
+        </Box>
+        <Box sx={{ px: 3 }}>
+          <List sx={{ pt: 0 }} className="sidebarNav">
+            {AdminMenuitems.map((item) => {
+              if (item.subheader) {
+                return <NavGroup item={item} key={item.subheader} />;
+              } else {
+                return (
+                  <NavItem item={item} key={item.id} pathDirect={pathDirect} />
+                );
+              }
+            })}
+          </List>
+        </Box>
+        {/* <Box sx={{ px: 3 }}>
+          <NavItem
+            item={logoutItem}
+            key={logoutItem.id}
+            pathDirect={pathDirect}
+          /> */}
+        {/* </Box> */}
+      </Drawer>
+    </>
   );
 };
 

@@ -1,25 +1,28 @@
-import { useMediaQuery, Box, Drawer } from '@mui/material';
-import SidebarItems from './AdminSidebarItems';
-import { Sidebar, Logo } from 'react-mui-sidebar';
-import logo from '../../../assets/images/logos/dark1-logo.svg'
-import { Stack } from '@mui/material';
-const AdminSidebar = (props) => {
+import { useMediaQuery, Box, Drawer } from "@mui/material";
+import SidebarItems from "./AdminSidebarItems";
+import { Sidebar, Logo } from "react-mui-sidebar";
+import logo from "../../../assets/images/logos/dark1-logo.svg";
+import { Stack } from "@mui/material";
 
+const AdminSidebar = (props) => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
-  const sidebarWidth = '200px';
+  const sidebarWidth = "200px";
 
   // Custom CSS for short scrollbar
   const scrollbarStyles = {
-    '&::-webkit-scrollbar': {
-      width: '7px',
-
+    "&::-webkit-scrollbar": {
+      width: "7px",
     },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#eff2f7',
-      borderRadius: '15px',
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "#eff2f7",
+      borderRadius: "15px",
     },
   };
 
+  const handleSidebarCollapse = (collapsed) => {
+    // Function to handle sidebar collapse
+    props.onSidebarCollapse(collapsed);
+  };
 
   if (lgUp) {
     return (
@@ -38,7 +41,7 @@ const AdminSidebar = (props) => {
           variant="permanent"
           PaperProps={{
             sx: {
-              boxSizing: 'border-box',
+              boxSizing: "border-box",
               ...scrollbarStyles,
             },
           }}
@@ -48,49 +51,47 @@ const AdminSidebar = (props) => {
           {/* ------------------------------------------- */}
           <Box
             sx={{
-              height: '100%', position: 'relative'
+              height: "100%",
             }}
           >
-             <Sidebar
-              width={'270px'}
+            <Sidebar
+              width={"270px"}
               collapsewidth="80px"
               open={props.isSidebarOpen}
               themeColor="#5d87ff"
               themeSecondaryColor="#49beff"
               showProfile={false}
+              isCollapse={props.isSidebarCollapsed} // Add collapse state prop
+              onCollapseChange={handleSidebarCollapse} // Handle collapse change
             >
               {/* ------------------------------------------- */}
               {/* Logo */}
               {/* ------------------------------------------- */}
-             
               <Box
                 sx={{
-                  width: '100%',  // Take up full width
-                    // Take full height
+                  width: "100%", // Take up full width
                 }}
               >
                 <Stack
                   sx={{
-                    alignItems: 'center',  
-                    display: 'flex',  
+                    alignItems: "center",
+                    display: "flex",
                   }}
                 >
                   <Logo img={logo} /> {/* The logo */}
                 </Stack>
-              </Box> {/* The logo */}
-               
-              <Box>
-                {/* ------------------------------------------- */}
-                {/* Sidebar Items */}
-                {/* ------------------------------------------- */}
-                <SidebarItems />
               </Box>
-            </Sidebar >
+              {/* ------------------------------------------- */}
+              {/* Sidebar Items */}
+              {/* ------------------------------------------- */}
+              <SidebarItems isSidebarCollapsed={props.isSidebarCollapsed} />
+            </Sidebar>
           </Box>
-        </Drawer >
-      </Box >
+        </Drawer>
+      </Box>
     );
   }
+
   return (
     <Drawer
       anchor="left"
@@ -99,14 +100,13 @@ const AdminSidebar = (props) => {
       variant="temporary"
       PaperProps={{
         sx: {
-
           boxShadow: (theme) => theme.shadows[8],
           ...scrollbarStyles,
         },
       }}
     >
       <Sidebar
-        width={'270px'}
+        width={"270px"}
         collapsewidth="80px"
         isCollapse={false}
         mode="light"
@@ -118,15 +118,15 @@ const AdminSidebar = (props) => {
         {/* ------------------------------------------- */}
         {/* Logo */}
         {/* ------------------------------------------- */}
-
         <Logo img={logo} />
 
         {/* ------------------------------------------- */}
         {/* Sidebar For Mobile */}
         {/* ------------------------------------------- */}
-        <SidebarItems />
+        <SidebarItems isSidebarCollapsed={props.isSidebarCollapsed} />
       </Sidebar>
     </Drawer>
   );
 };
+
 export default AdminSidebar;

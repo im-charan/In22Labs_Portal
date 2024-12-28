@@ -6,9 +6,7 @@ import { useRef } from "react";
 
 // components
 import PageContainer from "../../components/container/PageContainer";
-//import Logo from "../../layouts/full/shared/logo/Logo";
-import logo from "../../../assets/images/logos/dark1-logo.svg";  // Default logo for the sidebar footer
-
+import Logo from "../../layouts/full/shared/logo/Logo";
 import AuthLogin from "./auth/AuthLogin";
 import ReactLogo from "../../layouts/full/shared/logo/Logo";
 import logindesign from '../authentication/login-design.svg';
@@ -21,10 +19,9 @@ import axios from 'axios';
 
 
 const Login2 = () => {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const fetchApi = async() =>{
-    const response = await axios.get(`${backendUrl}/api/user/1`);
+    const response = await axios.get('http://Localhost:5000/api/user/1');
     console.log(response.data);
   }
 
@@ -67,7 +64,7 @@ const Login2 = () => {
           },
           }}
           > */}
-    <Box item sx={{backgroundImage: `url(${bg})`, position: 'relative' , height: '100vh', backgroundSize: 'cover'}}>
+    <Box item sx={{backgroundImage: url(${bg}), position: 'relative' , height: '100vh', backgroundSize: 'cover'}}>
 
 
       <Grid container sx={{ height: "100vh" }} flexDirection='row'>
@@ -107,7 +104,7 @@ const Login2 = () => {
             >
             <Box
             component="img"
-            src={logo}
+            src="/src/assets/images/logos/dark1-logo.svg"
             alt="Logo"
             sx={{
               width: 'auto',

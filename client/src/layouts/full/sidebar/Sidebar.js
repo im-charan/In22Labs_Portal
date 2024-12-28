@@ -195,7 +195,7 @@ const MSidebar = (props) => {
           {/* Mobile Logo */}
           {organizationLogo ? (
             <img
-              src={`http://localhost:5000/uploads/${organizationLogo}`}
+              src={`${backendUrl}/uploads/${organizationLogo}`}
               alt={`${organizationName} logo`}
               style={logoStyles}
             />

@@ -22,35 +22,35 @@ const fetchOrgIdByName = async (orgName) => {
 
 
 
-//proxy const 
-proxyDashboardContent = async (req, res) => {
-  const { dashboardId } = req.params;
-  const dashboardUrl = `https://www.youtube.com/embed/${dashboardId}`;
+// //proxy const 
+// proxyDashboardContent = async (req, res) => {
+//   const { dashboardId } = req.params;
+//   const dashboardUrl = `https://www.youtube.com/embed/${dashboardId}`;
 
-  try {
-    // Fetch the HTML content of the dashboard
-    const response = await axios.get(dashboardUrl);
+//   try {
+//     // Fetch the HTML content of the dashboard
+//     const response = await axios.get(dashboardUrl);
 
-    // Modify the HTML content to include a base tag that rewrites links to be relative to the proxy URL
-    const htmlContent = response.data.replace(
-      /<head>/,
-      `<head><base href="http://localhost:5000/api/dashboard/proxy/${dashboardId}/" />`
-    );
+//     // Modify the HTML content to include a base tag that rewrites links to be relative to the proxy URL
+//     const htmlContent = response.data.replace(
+//       /<head>/,
+//       `<head><base href="http://localhost:5000/api/dashboard/proxy/${dashboardId}/" />`
+//     );
 
-    // Set Content-Type header to text/html
-    res.setHeader('Content-Type', 'text/html');
+//     // Set Content-Type header to text/html
+//     res.setHeader('Content-Type', 'text/html');
 
-    // Return the modified HTML content
-    res.send(htmlContent);
-  } catch (error) {
-    console.error(`Error fetching content for dashboard ID ${dashboardId}:`, error);
-    res.status(500).json({
-      success: false,
-      message: "Error fetching dashboard content",
-      error: error.message,
-    });
-  }
-};
+//     // Return the modified HTML content
+//     res.send(htmlContent);
+//   } catch (error) {
+//     console.error(`Error fetching content for dashboard ID ${dashboardId}:`, error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Error fetching dashboard content",
+//       error: error.message,
+//     });
+//   }
+// };
 
 // Create a new dashboard
 const createDashboard = async (dashboard) => {

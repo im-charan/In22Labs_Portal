@@ -30,6 +30,7 @@ const AdminHeader = () => {
   const userId = user?.user_id;
   const { pathname } = useLocation();
   const pathDirect = pathname;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   // Media query for detecting desktop screens (>= 960px)
   const isDesktop = useMediaQuery((theme) => theme.breakpoints.up("md"));
@@ -43,7 +44,7 @@ const AdminHeader = () => {
     const fetchAdminName = async () => {
       try {
         const response = await fetch(
-         ` http://localhost:5000/api/user/${userId}`
+         ` ${backendUrl}/api/user/${userId}`
         );
         if (!response.ok) {
           throw new Error(

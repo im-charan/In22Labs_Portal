@@ -16,7 +16,7 @@ const AuthForgetPassword = ({ title, subtitle, subtext }) => {
         setLoading(true); // Set loading state to true
 
         try {
-            const response = await fetch('${backendUrl}/api/client/forgot-password', {
+            const response = await fetch(`${backendUrl}/api/client/forgot-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

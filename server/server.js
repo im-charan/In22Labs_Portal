@@ -17,7 +17,8 @@ const axios = require('axios');
 const SITE_SECRET = process.env.SITE_SECRET
       // CORS middleware for handling cross-origin requests
 const corsOptions = {
-  origin: 'https://in22labs-portal-client.onrender.com/',   // URL of the React app
+  origin: 'https://in22labs-portal-client.onrender.com/',  
+  //  // URL of the React app
 };
 
 
@@ -109,12 +110,6 @@ app.post('/verify', async (request, response) => {
     `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.SITE_SECRET}&response=${captchaValue}`
   );
   response.send(data);
-});
-//redirection
-const path = require('path');
-app.use(express.static(path.join(__dirname, 'dist')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 // Start the server

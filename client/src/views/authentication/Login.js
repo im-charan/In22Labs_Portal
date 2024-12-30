@@ -152,6 +152,7 @@ import axios from "axios";
 // Components
 import AuthLogin from "./auth/AuthLogin";
 import Logo from "../../layouts/full/shared/logo/Logo";
+import in22labslogo from "../../assets/images/logos/dark1-logo.svg";
 
 // Assets
 import logindesign from "../authentication/login-design.svg";
@@ -234,8 +235,7 @@ const Login2 = () => {
             >
               {/* Logo */}
               <img
-                component="img"
-                src="../../assets/images/logos/dark1-logo.svg"
+                src={in22labslogo}
                 alt="hahssssa"
                 sx={{
                   width: "auto",

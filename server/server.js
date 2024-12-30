@@ -110,7 +110,9 @@ app.post('/verify', async (request, response) => {
   );
   response.send(data);
 });
-
+app.get('*', (req, res) => {
+  res.redirect('https://in22labs-portal-client.onrender.com');
+});
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

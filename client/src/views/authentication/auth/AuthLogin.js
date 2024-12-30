@@ -30,24 +30,30 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
   const recaptcha = useRef();
   const key = import.meta.env.VITE_SITE_KEY;
   const [captcha, setCaptcha] = useState('');
-  
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [agreeTermsError, setAgreeTermsError] = useState("");
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
   const {login} = useAuth();
   const { setUserData } = useUser();
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const handleSubmit = (e) => {
     console.log(userName,password);
     console.log(login);
     e.preventDefault();
     setErrors(LoginValidation({userName, password}));
     const token = recaptcha.current.getValue();
-
+      if (!agreeTerms) {
+        setAgreeTermsError("You must agree to the terms and conditions.");
+        return;
+      } else {
+        setAgreeTermsError("");
+      }
     axios.post(`${backendUrl}/api/auth`, {user_name : userName, user_password: password})
     .then(result => {console.log(result)
       if(result.status === 200){
@@ -103,93 +109,134 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
   
   
   return (
-
     <>
-        {title ? (
-            <Typography fontWeight="700" variant="h2" mb={1}>
-                {title}
-            </Typography>
-        ) : null}
+      {title ? (
+        <Typography fontWeight="700" variant="h2" mb={1}>
+          {title}
+        </Typography>
+      ) : null}
 
-        {subtext}
+      {subtext}
 
-        <Stack>
-          {islogin && !captcha && (!errors.username && !errors.password) && <span className='text-danger'>{islogin}</span>}
-            <Box mt="25px">
-              <TextField
-              color='primary'
-              id="outlined-input"
-              placeholder='Username'
-              label="Username"
-              type="text"
-              size='medium'
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AccountCircle color='primary'/>
-                  </InputAdornment>
-                ),
-              }}
-              onChange={(e) => setUserName(e.target.value)}
-              />
-              {errors.userName && <span className='text-danger'>{errors.userName}</span>}
-            </Box>
-            <Box mt="25px">
-              
-              <TextField
-                color='primary'
-                id="outlined-password-input"
-                placeholder='Password'
-                label="Password"
-                autoComplete="current-password"
-                size='medium'
-                fullWidth
-                type={showPassword ? "text" : "password"}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <VisibilityIcon
-                        style={{ cursor: "pointer" }}
-                        onClick={() => setShowPassword(!showPassword)}
-                        />
-                    </InputAdornment>
-                  ),
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockIcon color='primary'/>
-                    </InputAdornment>
-                  ),
-                }}
-                onChange={(e) => setPassword(e.target.value)}
+      <Stack>
+        {islogin && !captcha && !errors.username && !errors.password && (
+          <span className="text-danger">{islogin}</span>
+        )}
+        <Box mt="25px">
+          <TextField
+            color="primary"
+            id="outlined-input"
+            placeholder="Username"
+            label="Username"
+            type="text"
+            size="medium"
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AccountCircle color="primary" />
+                </InputAdornment>
+              ),
+            }}
+            onChange={(e) => setUserName(e.target.value)}
+          />
+          {errors.userName && (
+            <span className="text-danger">{errors.userName}</span>
+          )}
+        </Box>
+        <Box mt="25px">
+          <TextField
+            color="primary"
+            id="outlined-password-input"
+            placeholder="Password"
+            label="Password"
+            autoComplete="current-password"
+            size="medium"
+            fullWidth
+            type={showPassword ? "text" : "password"}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <VisibilityIcon
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setShowPassword(!showPassword)}
+                  />
+                </InputAdornment>
+              ),
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LockIcon color="primary" />
+                </InputAdornment>
+              ),
+            }}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {errors.password && (
+            <span className="text-danger">{errors.password}</span>
+          )}
+        </Box>
+        <Stack
+          justifyContent="center"
+          direction="column"
+          alignItems="center"
+          my={2}
+          marginTop={4}
+        >
+          {/* Move Terms and Conditions Above CAPTCHA */}
+          <Stack
+            marginBottom={2}
+            display="flex"
+            flexDirection="column"
+            alignItems="flex-start"
+            width="100%"
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={agreeTerms}
+                  onChange={(e) => setAgreeTerms(e.target.checked)}
                 />
-                {errors.password && <span className='text-danger'>{errors.password}</span>}
-            </Box>
-            <Stack justifyContent="center" direction="column" alignItems="center" my={2} marginTop={4}>
-              <Box marginBottom={2}>
-                {/* {!token && <p className='text-danger'>Authenticate captcha</p>} */}
-                <ReCAPTCHA sitekey={key} ref={recaptcha}/>
-                {captcha && !errors.userName && !errors.password && <span className='text-danger'>{captcha}</span>}
-              </Box>
-              <Box>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  size="small"
-                  component={Link}
-                  // to="/dashboard"
-                  type="submit"
-                  onClick={handleSubmit}
-                >
-                Login 
-                </Button>
-              </Box>
-            </Stack>
-        {subtitle}
+              }
+              label={
+                <Typography variant="body2">
+                  I read and agree to the{" "}
+                  <Link to="/terms-and-conditions" target="_blank">
+                    terms and conditions
+                  </Link>
+                  .
+                </Typography>
+              }
+            />
+            {agreeTermsError && (
+              <span className="text-danger" style={{ marginLeft: 12 }}>
+                {agreeTermsError}
+              </span>
+            )}
+          </Stack>
+          <Box marginBottom={2}>
+            {/* {!token && <p className='text-danger'>Authenticate captcha</p>} */}
+            <ReCAPTCHA sitekey={key} ref={recaptcha} />
+            {captcha && !errors.userName && !errors.password && (
+              <span className="text-danger">{captcha}</span>
+            )}
+          </Box>
+          <Box>
+            <Button
+              color="primary"
+              variant="contained"
+              size="small"
+              component={Link}
+              // to="/dashboard"
+              type="submit"
+              onClick={handleSubmit}
+            >
+              Login
+            </Button>
+          </Box>
         </Stack>
-        
+        {subtitle}
+      </Stack>
     </>
-
   );
 };
 

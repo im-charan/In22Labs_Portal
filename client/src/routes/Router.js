@@ -50,7 +50,7 @@ const Router = [
     path: "/",
     element: <FullLayout />,
     children: [
-     { path: "/", element: <ProtectedRoutes element ={<Navigate to='/auth/login'/>} /> },
+     { path: "/", element: <ProtectedRoutes element ={<Navigate to='/dashboard'/>} /> },
       { path: "/dashboard/:orgId", exact: true, element: (<ProtectedRoutes element ={<Dashboard/>} />) },
       { path: "/sample-page", exact: true, element: <SamplePage /> },
       { path: "/icons", exact: true, element: <Icons /> },

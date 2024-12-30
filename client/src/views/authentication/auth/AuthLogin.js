@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
     Box,
     Typography,
@@ -24,7 +25,7 @@ import { useAuth } from './AuthProvider';
 import { useUser } from './UserContext';
 
 const AuthLogin = ({ title, subtitle, subtext }) => {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const [islogin, setIsLogin] = useState('');
   const recaptcha = useRef();
   const key = import.meta.env.VITE_SITE_KEY;
@@ -39,7 +40,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
 
   const {login} = useAuth();
   const { setUserData } = useUser();
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const handleSubmit = (e) => {
     console.log(userName,password);
     console.log(login);

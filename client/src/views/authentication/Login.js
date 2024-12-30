@@ -235,7 +235,7 @@ const Login2 = () => {
               {/* Logo */}
               <Box
                 component="img"
-                src="/src/assets/images/logos/dark1-logo.svg"
+                src="../../assets/images/logos/dark1-logo.svg"
                 alt="Logo"
                 sx={{
                   width: "auto",

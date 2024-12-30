@@ -110,9 +110,13 @@ app.post('/verify', async (request, response) => {
   );
   response.send(data);
 });
+//redirection
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'dist')));
 app.get('*', (req, res) => {
-  res.redirect('https://in22labs-portal-client.onrender.com');
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

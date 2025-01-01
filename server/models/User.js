@@ -189,6 +189,19 @@ const deleteUser = async (userId) => {
   }
 };
 
+const disableUser = async (userId) => {
+  try {
+    const result = await pool.query(
+      `UPDATE in22labs.users SET user_status = 0 WHERE user_id = $1 RETURNING *`,
+      [userId]
+    );
+    return result.rows[0]; // Return the deleted user
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   createUser,
   getAllUsers,

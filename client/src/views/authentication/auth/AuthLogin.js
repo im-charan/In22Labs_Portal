@@ -59,6 +59,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
           const userType = result.data.user_type;
           const orgId = result.data.org_id;
           const userId = result.data.user_id;
+          const userStatus = result.data.user_status;
           console.log("Setting user_id in context:", userId);
           setUserData({
             user_type: userType,
@@ -70,7 +71,10 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
           var date = new Date();
           var current = date.toISOString().slice(0,10);
           console.log(token);
-          
+          if(userStatus !== 1){
+            setIsLogin('Your account is not active');
+            return;
+          }
           if(!token){
             setCaptcha('Please authenticate captcha');
             return;

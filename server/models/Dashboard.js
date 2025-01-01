@@ -186,6 +186,7 @@ const deleteDashboard = async (dashboardId) => {
     throw error;
   }
 };
+
 const getDashboardsByOrganisation = async (orgId) => {
   try {
     const query = `

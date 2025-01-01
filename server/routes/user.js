@@ -68,6 +68,33 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+router.put("/disable", async (req, res) => {
+  const { selectedUserIds } = req.body;
+  
+  if (!Array.isArray(selectedUserIds) || selectedUserIds.length === 0) {
+    return res.status(400).json({ error: "Invalid input" });
+  }
+
+  try {
+    const result = await pool.query(
+      'UPDATE users SET user_status = $1 WHERE user_id = ANY($2::int[]) RETURNING *',
+      [0, selectedUserIds]
+    );
+
+    res.json({
+      success: true,
+      users: result.rows
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+
+
+
 // Route to delete a user by ID
 router.delete('/:id', async (req, res) => {
   const userId = req.params.id;

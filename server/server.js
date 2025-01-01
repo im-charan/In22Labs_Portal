@@ -57,7 +57,8 @@ const corsOptions = {
     : 'http://localhost:5173', // Vite dev server
   credentials: true,
 };
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+app.use(cors('*'));
 app.use(express.urlencoded({ extended: true }));     // Handle URL-encoded form data
 app.use(express.json());                             // Parse JSON request bodies
 app.use('/uploads', express.static('uploads'));

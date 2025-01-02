@@ -6,8 +6,16 @@ import {
   Typography,
   Grid,
   CardContent,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import BlankCard from "../../../components/shared/BlankCard";
 import AdminHeader from "../AdminHeader";
@@ -20,13 +28,27 @@ const SpecificDash = () => {
   const [dashboards, setDashboards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [dashboardToDelete, setDashboardToDelete] = useState(null);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const cardStyle = {
     height: "250px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
+  };
+
+  const handleOpen = (dashboardId) => {
+    console.log(dashboardId);
+    setDashboardToDelete(dashboardId);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setDashboardToDelete(null);
   };
 
   useEffect(() => {
@@ -37,7 +59,7 @@ const SpecificDash = () => {
 
         const encodedOrgName = encodeURIComponent(organizationName);
         const orgIdResponse = await fetch(
-          `${backendUrl}/api/dashboard/getIdByName/${encodedOrgName}`
+         ` ${backendUrl}/api/dashboard/getIdByName/${encodedOrgName}`
         );
 
         if (!orgIdResponse.ok) {
@@ -47,13 +69,15 @@ const SpecificDash = () => {
         const { org_id } = await orgIdResponse.json();
 
         const dashboardsResponse = await fetch(
-          `${backendUrl}/api/dashboard/organisation/${org_id}`
+         ` ${backendUrl}/api/dashboard/organisation/${org_id}`
         );
 
         if (!dashboardsResponse.ok) {
           throw new Error("Failed to fetch dashboards");
         }
-
+        setDashboards((prevDashboards) =>
+          prevDashboards.filter((dashboard) => dashboard.dashboard_id !== dashboardToDelete)
+        );
         const { data } = await dashboardsResponse.json();
         setDashboards(data || []);
       } catch (err) {
@@ -61,11 +85,37 @@ const SpecificDash = () => {
         setError(err.message);
       } finally {
         setLoading(false);
+        handleClose();
       }
     };
 
     fetchDashboards();
   }, [organizationName]);
+
+  const deleteDashboard = async () => {
+    try {
+      const response = await fetch(
+        `${backendUrl}/api/dashboard/delete/${dashboardToDelete}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete dashboard");
+      }
+
+      // Remove the deleted dashboard from the state
+      setDashboards((prevDashboards) =>
+        prevDashboards.filter((dashboard) => dashboard.dashboard_id !== dashboardToDelete)
+      );
+      handleClose();
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+      handleClose();
+    }
+  };
 
   return (
     <>
@@ -106,29 +156,43 @@ const SpecificDash = () => {
                   lg={3}
                   key={dashboard.dashboard_id}
                 >
-                  <Link
-                    to={`${dashboard.dashboard_id}`} // Dynamic link to Pbpage
-                    style={{ textDecoration: "none" }}
-                  >
-                    <BlankCard sx={{ ...cardStyle, cursor: "pointer" }}>
-                      <Box sx={{ width: "100%", overflow: "hidden" }}>
-                        <img
-                          src={img}
-                          alt={dashboard.dashboard_name}
-                          width="100%"
-                          style={{
-                            maxHeight: "150px",
-                            objectFit: "contain",
-                          }}
-                        />
-                      </Box>
-                      <CardContent sx={{ p: 2 }}>
-                        <Typography variant="h6">
-                          {dashboard.dashboard_name}
+                  <BlankCard sx={cardStyle}>
+                    <Box sx={{ width: "100%", overflow: "hidden" }}>
+                      <img
+                        src={img}
+                        alt={dashboard.dashboard_name}
+                        width="100%"
+                        style={{
+                          maxHeight: "150px",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </Box>
+                    <CardContent sx={{ p: 2 }}>
+                      <Typography variant="h6">
+                        {dashboard.dashboard_name}
+                      </Typography>
+                    </CardContent>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+                      <Link
+                        to={`${dashboard.dashboard_id}`}
+                        style={{ textDecoration: "none", flexGrow: 1 }}
+                      >
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ textAlign: "center", color: "primary.main" }}
+                        >
+                          View
                         </Typography>
-                      </CardContent>
-                    </BlankCard>
-                  </Link>
+                      </Link>
+                      <IconButton
+                        onClick={() => handleOpen(dashboard.dashboard_id)}
+                        color="error"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
+                  </BlankCard>
                 </Grid>
               ))}
               <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -190,35 +254,58 @@ const SpecificDash = () => {
               </Grid>
             </Grid>
             {dashboards.length === 0 && (
-  <Box
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      mt: 5,
-    }}
-  >
-    <Box
-      component="img"
-      src={noDashboardsImage}
-      alt="No dashboards available"
-      sx={{
-        maxWidth: "100%",
-        maxHeight: "150px",
-        objectFit: "contain",
-        mb: 3,
-      }}
-    />
-    <Typography variant="h6" align="center" color="textSecondary">
-      No dashboards available
-    </Typography>
-  </Box>
-)}
-
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mt: 5,
+                }}
+              >
+                <Box
+                  component="img"
+                  src={noDashboardsImage}
+                  alt="No dashboards available"
+                  sx={{
+                    maxWidth: "100%",
+                    maxHeight: "150px",
+                    objectFit: "contain",
+                    mb: 3,
+                  }}
+                />
+                <Typography variant="h6" align="center" color="textSecondary">
+                  No dashboards available
+                </Typography>
+              </Box>
+              
+            )}
           </>
         )}
       </Box>
+      <Dialog
+  open={open}
+  onClose={handleClose}
+  aria-labelledby="delete-confirmation-dialog"
+>
+  <DialogTitle id="delete-confirmation-dialog">
+    Confirm Deletion
+  </DialogTitle>
+  <DialogContent>
+    <DialogContentText>
+      Are you sure you want to delete this dashboard? This action cannot be undone.
+    </DialogContentText>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleClose} color="primary">
+      Cancel
+    </Button>
+    <Button onClick={deleteDashboard} color="error">
+      Delete
+    </Button>
+  </DialogActions>
+</Dialog>
+
     </>
   );
 };

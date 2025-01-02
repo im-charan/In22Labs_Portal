@@ -16,7 +16,7 @@
     "@mui/lab": "^5.0.0-alpha.133",
     "@mui/material": "^5.15.14",
     "@mui/system": "^5.14.11",
-    "@mui/x-date-pickers": "^7.22.2",
+    "@mui/x-date-pickers": "^7.23.3",
     "@svgr/rollup": "^8.1.0",
     "@tabler/icons-react": "^2.35.0",
     "axios": "^1.7.9",

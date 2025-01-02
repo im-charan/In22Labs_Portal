@@ -1,7 +1,8 @@
 const express = require('express');
 const userModel = require('../models/User'); // Import the user model
-
+const pool = require("../config/database");
 const router = express.Router();
+
 
 // Route to create a new user
 router.post('/create', async (req, res) => {
@@ -25,19 +26,7 @@ router.get('/all', async (req, res) => {
   }
 });
 
-// Route to get a user by ID
-router.get('/:id', async (req, res) => {
-  const userId = req.params.id;
-  try {
-    const user = await userModel.getUserById(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    res.status(200).json(user); // Return the found user
-  } catch (error) {
-    res.status(500).json({ error: 'Error fetching user' });
-  }
-});
+
 
 // Route to get a user by username
 router.get('/name/:name', async (req, res) => {
@@ -52,21 +41,146 @@ router.get('/name/:name', async (req, res) => {
     res.status(500).json({ error: 'Error fetching user' });
   }
 });
-
-// Route to update a user by ID
-router.put('/:id', async (req, res) => {
+//Route to get a user by ID
+router.get('/:id', async (req, res) => {
   const userId = req.params.id;
-  const userDetails = req.body;
   try {
-    const updatedUser = await userModel.updateUser(userId, userDetails);
-    if (!updatedUser) {
+    const user = await userModel.getUserById(userId);
+    if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-    res.status(200).json(updatedUser); // Return the updated user
+    res.status(200).json(user); // Return the found user
   } catch (error) {
-    res.status(500).json({ error: 'Error updating user' });
+    res.status(500).json({ error: 'Error fetching user' });
   }
 });
+
+// //Route to update a user by ID
+// router.put("/:id", async (req, res) => {
+//   const userId = req.params.id; // Get userId from request parameters
+//   const userDetails = req.body; // Get user details from the request body
+
+//   try {
+//     const updatedUser = await updateUser(userId, userDetails); // Call updateUser function
+
+//     res.status(200).json(updatedUser); // Return the updated user data
+//   } catch (error) {
+//     console.error("Error updating user:", error);
+//     res.status(500).json({ error: error.message || "Error updating user" });
+//   }
+// });
+
+// Route to update a user by ID
+router.put("/:id", async (req, res) => {
+  const userId = req.params.id; // Get userId from request parameters
+  const userDetails = req.body; // Get user details from the request body
+
+  try {
+    const updatedUser = await userModel.updateUser(userId, userDetails); // Correct call to updateUser function
+
+    res.status(200).json(updatedUser); // Return the updated user data
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ error: error.message || "Error updating user" });
+  }
+});
+//disable user 
+router.put("/status/disable", async (req, res) => {
+  const { selectedUserIds } = req.body;
+
+  // Validate input
+  if (!Array.isArray(selectedUserIds) || selectedUserIds.length === 0) {
+    return res.status(400).json({ error: "Invalid input" });
+  }
+
+  try {
+    const result = await userModel.disableUser(selectedUserIds);
+
+    // If no users were updated, return an error
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "No users found with the given IDs" });
+    }
+
+    // Successfully disabled users, return success response
+    res.json({success: true, message:` ${result.rowCount} users disabled successfully `});
+  } catch (error) {
+    console.error("Error disabling users:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.put("/status/disablebyorg", async (req, res) => {
+  const { selectedOrgIds } = req.body;
+
+  // Validate input
+  if (!Array.isArray(selectedOrgIds) || selectedOrgIds.length === 0) {
+    return res.status(400).json({ error: "Invalid input" });
+  }
+
+  try {
+    const result = await userModel.disableUserByOrg(selectedOrgIds);
+
+    // If no users were updated, return an error
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "No users found with the given IDs" });
+    }
+
+    // Successfully disabled users, return success response
+    res.json({ success: true, message:` ${result.rowCount} users disabled successfully `});
+  } catch (error) {
+    console.error("Error disabling users:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+router.put("/status/activate", async (req, res) => {
+  const { selectedUserIds } = req.body;
+
+  // Validate input
+  if (!Array.isArray(selectedUserIds) || selectedUserIds.length === 0) {
+    return res.status(400).json({ error: "Invalid input" });
+  }
+
+  try {
+    const result = await userModel.activateUser(selectedUserIds);
+    
+      if (result.rowCount === 0) {
+        return res.status(404).json({ error: "No users found with the given IDs" });
+      }
+      res.json({ success: true, message: `${result.rowCount} users activated successfully `});
+    }
+
+  catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.put("/status/activatebyorg", async (req, res) => {
+  const { selectedOrgIds } = req.body;
+
+  // Validate input
+  if (!Array.isArray(selectedOrgIds) || selectedOrgIds.length === 0) {
+    return res.status(400).json({ error: "Invalid input" });
+  }
+
+  try {
+    const result = await userModel.activateUserByOrg(selectedOrgIds);
+    
+      if (result.rowCount === 0) {
+        return res.status(404).json({ error: "No users found with the given IDs" });
+      }
+      res.json({ success: true, message: `${result.rowCount} users activated successfully `});
+    }
+
+  catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
 
 // Route to delete a user by ID
 router.delete('/:id', async (req, res) => {

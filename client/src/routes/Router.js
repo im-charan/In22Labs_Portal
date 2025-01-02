@@ -1,7 +1,7 @@
 import React, { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import Loadable from '../layouts/full/shared/loadable/Loadable';
-import { element } from 'prop-types';
+import { element, exact } from 'prop-types';
 import ListUsers from '../views/admin/ListUsers';
 import ListDashboards from '../views/admin/ListDashboards';
 import AdminLayout from '../layouts/admin/AdminLayout'; 
@@ -18,7 +18,7 @@ import AddDashboard from '../views/admin/dashboards/add-dashboard';
 import AddUser from '../views/admin/AddUser';
 import Adminpbpage from '../views/admin/dashboards/Adminpbpage';
 import ProtectedRoutes from './ProtectedRoutes';
-;
+import UserProfile from '../views/admin/users/UserProfile';
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')));
@@ -75,7 +75,8 @@ const Router = [
      {path:'addorganisation',exact:true,element: (<ProtectedRoutes element ={<AddOrganisation/>} />)},
      {path:'organisation/:organizationName/add-dashboard',exact:true,element: (<ProtectedRoutes element ={<AddDashboard/>} />)},
      {path:'organisation/:organizationName/:id', exact:true,element:(<ProtectedRoutes element ={<Adminpbpage/>}/>)},
-      {path:'dashboard/:id', exact:true, element:(<ProtectedRoutes element = {<Adminpbpage/>}/>)}
+      {path:'dashboard/:id', exact:true, element:(<ProtectedRoutes element = {<Adminpbpage/>}/>)},
+      {path:'users/profile/:userId',exact:true, element:(<ProtectedRoutes element = {<UserProfile/>}/>)},
     ],
   }
 ];

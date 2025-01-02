@@ -216,7 +216,7 @@ const MSidebar = (props) => {
             {/* Display the organization name */}
           </Typography>
         </Box>
-
+<Box sx={{marginTop:"20px"}}/>
         {/* Sidebar Items */}
         <Box sx={{ height: "calc(100% - 150px)", overflowY: "auto" }}>
           <SidebarItems />

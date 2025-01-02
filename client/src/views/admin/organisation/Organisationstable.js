@@ -13,6 +13,8 @@ import {
   TextField,
   TableSortLabel,
   CircularProgress,
+  Button,
+  Alert,
 } from "@mui/material";
 
 const Organisationstable = () => {
@@ -25,31 +27,27 @@ const Organisationstable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("All");
+  const [selectedOrgIds, setSelectedOrgIds] = useState([]); // Track selected organizations for disable/activate
+  const [statusMessage, setStatusMessage] = useState("");
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  useEffect(() => {
-    // const fetchOrganisations = async () => {
-    //   try {
-    //     const response = await fetch("http://localhost:5000/api/organisation");
-    //     const data = await response.json();
 
-    //     const enrichedData = data.map((org) => ({
-    //       ...org,
-    //       poc: org.poc_name || `${org.poc_id}`,
-    //     }));
+  
     const fetchOrganisations = async () => {
       try {
         const response = await fetch(`${backendUrl}/api/organisation`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch data from API");
+        }
         const data = await response.json();
-    
-        // Use Promise.all to handle asynchronous operations within .map()
+
         const enrichedData = await Promise.all(
           data.map(async (org) => {
             const resp = await fetch(`${backendUrl}/api/user/${org.poc_id}`);
             const pocData = await resp.json();
             return {
               ...org,
-              poc: pocData.user_name, // Assign the fetched POC data to the `poc` field
-            };
+              poc: pocData.user_name,
+            };``
           })
         );
 
@@ -60,8 +58,10 @@ const Organisationstable = () => {
         setLoading(false);
       }
     };
-    fetchOrganisations();
-  }, []);
+
+    useEffect(() => {
+      fetchOrganisations();
+}, []);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -78,6 +78,80 @@ const Organisationstable = () => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handleSelectOrg = (orgId) => {
+    setSelectedOrgIds((prev) =>
+      prev.includes(orgId)
+        ? prev.filter((id) => id !== orgId)
+        : [...prev, orgId]
+    );
+  };
+
+  const handleSelectAllOrgs = (event) => {
+    if (event.target.checked) {
+      setSelectedOrgIds(organisations.map((org) => org.org_id));
+    } else {
+      setSelectedOrgIds([]);
+    }
+  };
+
+  const handleDisableOrganisations = async () => {
+    try {
+      const response = await fetch(`${backendUrl}/api/user/status/disablebyorg`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ selectedOrgIds }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to disable organizations");
+      }
+
+      setStatusMessage({ type: "success", message: "Organizations disabled successfully" });
+      await fetchOrganisations();
+      setSelectedOrgIds([]);
+    } catch (error) {
+      setStatusMessage({ type: "error", message: `Error: ${error.message} `});
+      console.error(error);
+    } finally {
+      setTimeout(() => setStatusMessage(""), 3000);
+    }
+  };
+
+  const handleActivateOrganisations = async () => {
+    try {
+      const response = await fetch(`${backendUrl}/api/user/status/activatebyorg`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ selectedOrgIds }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to activate organizations");
+      }
+
+      setStatusMessage({ type: "success", message: "Organizations activated successfully" });
+      await fetchOrganisations();
+      setSelectedOrgIds([]);
+    } catch (error) {
+      setStatusMessage({ type: "error", message: `Error: ${error.message}` });
+      console.error(error);
+    } finally {
+      setTimeout(() => setStatusMessage(""), 3000);
+    }
+  };
+  
+  const areAllSelectedOrgsDisabled = () => {
+    return selectedOrgIds.every(
+      (id) => organisations.find((org) => org.org_id === id)?.org_status === 0
+    );
+  };
+  
+  const areAllSelectedOrgsActive = () => {
+    return selectedOrgIds.every(
+      (id) => organisations.find((org) => org.org_id === id)?.org_status === 1
+    );
   };
 
   const filteredData = organisations.filter((org) => {
@@ -107,14 +181,13 @@ const Organisationstable = () => {
 
   return (
     <DashboardCard>
+      {statusMessage && <Alert severity={statusMessage.type}>{statusMessage.message}</Alert>}
       <Box
         sx={{
           padding: 6,
           mt: -3,
           mx: -3,
-          // border: "2px solid #555", // Border applied to the entire box
-          // borderRadius: "9px", // Rounded corners for the box
-          backgroundColor: "background.paper", // Matches theme
+          backgroundColor: "background.paper",
         }}
       >
         {/* Search and Filter Options */}
@@ -145,12 +218,37 @@ const Organisationstable = () => {
               )
             )}
           </TextField>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDisableOrganisations}
+            disabled={selectedOrgIds.length === 0 || !areAllSelectedOrgsActive() }
+            sx={{ ml: 2 }}
+          >
+            Disable Organisations
+          </Button>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={handleActivateOrganisations}
+            disabled={selectedOrgIds.length === 0 || !areAllSelectedOrgsDisabled() }
+            sx={{ ml: 2 }}
+          >
+            Activate Organisations
+          </Button>
         </Box>
 
         {/* Table with organisations */}
         <Table sx={{ mt: 2 }} aria-label="Organisations Table">
           <TableHead>
             <TableRow>
+              <TableCell>
+                <input
+                  type="checkbox"
+                  onChange={handleSelectAllOrgs}
+                  checked={selectedOrgIds.length === organisations.length}
+                />
+              </TableCell>
               <TableCell>
                 <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                   S.No
@@ -181,11 +279,23 @@ const Organisationstable = () => {
                   Dashboard
                 </Typography>
               </TableCell>
+              <TableCell align="center">
+                <Typography variant="h6" align="center">
+                  Status
+                </Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {displayedRows.map((org, index) => (
               <TableRow key={org.org_id}>
+                <TableCell>
+                  <input
+                    type="checkbox"
+                    checked={selectedOrgIds.includes(org.org_id)}
+                    onChange={() => handleSelectOrg(org.org_id)}
+                  />
+                </TableCell>
                 <TableCell>{index + 1 + page * rowsPerPage}</TableCell>
                 <TableCell
                   sx={{ cursor: "pointer", color: "primary.main" }}
@@ -199,6 +309,13 @@ const Organisationstable = () => {
                 <TableCell>{org.org_address}</TableCell>
                 <TableCell>{org.poc}</TableCell>
                 <TableCell align="center">{org.dash_count || "-"}</TableCell>
+                <TableCell align="center">
+                                      {org.org_status === 1 ? (
+                                        <span style={{ color: "green" }}>Active</span>
+                                      ) : (
+                                        <span style={{ color: "red" }}>Disabled</span>
+                                      )}
+                                    </TableCell>
               </TableRow>
             ))}
           </TableBody>

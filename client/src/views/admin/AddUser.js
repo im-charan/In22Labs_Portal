@@ -6,6 +6,9 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { set } from "lodash";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+dayjs.extend(advancedFormat); // This allows more formatting options
+
 
 const AddUser = () => {
   const [userFullName, setUserFullName] = useState("");
@@ -23,6 +26,8 @@ const AddUser = () => {
   const [statusMessage, setStatusMessage] = useState(null); // Success or error messages
   const [errorMessage, setErrorMessage] = useState(null);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+
   useEffect(() => {
     const fetchOrganisations = async () => {
       try {
@@ -37,21 +42,43 @@ const AddUser = () => {
     fetchOrganisations();
   }, []);
 
+
   const validateForm = () => {
     if (!/^[a-zA-Z\s]+$/.test(userFullName)) {
-      setStatusMessage({ type: "error", text: "Full name should contain only alphabets and spaces." });
+      setStatusMessage({
+        type: "error",
+        text: "Full name should contain only alphabets and spaces.",
+      });
       return false;
     }
+
 
     if (validFrom && validFrom.isBefore(dayjs(), "day")) {
-      setStatusMessage({ type: "error", text: "Valid From date must be today or a future date." });
+      setStatusMessage({
+        type: "error",
+        text: "Valid From date must be today or a future date.",
+      });
       return false;
     }
 
-    if (validFrom && validTill && validTill.isBefore(validFrom, "day")) {
-      setStatusMessage({ type: "error", text: "Valid Till date must be after Valid From date." });
+
+    if (validTill && validTill.isBefore(dayjs(), "day")) {
+      setStatusMessage({
+        type: "error",
+        text: "Valid Till date must be today or a future date.",
+      });
       return false;
     }
+
+
+    if (validFrom && validTill && validTill.isBefore(validFrom, "day")) {
+      setStatusMessage({
+        type: "error",
+        text: "Valid Till date must be the same as or after the Valid From date.",
+      });
+      return false;
+    }
+
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(userEmail)) {
@@ -59,28 +86,53 @@ const AddUser = () => {
       return false;
     }
 
-    if (userPasswordRef.length < 6) {
-      setStatusMessage({ type: "error", text: "Password must be at least 6 characters long." });
+
+    // Password Validation
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{6,}$/;
+    if (!passwordRegex.test(userPasswordRef)) {
+      setStatusMessage({
+        type: "error",
+        text: "Password must be at least 6 characters long, with one uppercase letter, one lowercase letter, one number, and one special character.",
+      });
       return false;
     }
     setErrorMessage(null);
     setStatusMessage(null);
     return true;
   };
+  // On date change
+  const handleValidFromChange = (newValue) => {
+    setValidFrom(dayjs(newValue).startOf("day")); // Start of the day
+  };
+
+
+  const handleValidTillChange = (newValue) => {
+    setValidTill(dayjs(newValue).endOf("day")); // End of the day
+  };
+
 
   const handleSubmit = async (event) => {
+    console.log("Password being sent:", userPasswordRef);
+
     event.preventDefault();
     setIsSubmitting(true);
+
+    console.log("Password being sent:", userPasswordRef);
 
     if (!validateForm()) {
       setIsSubmitting(false);
       return;
     }
 
+
     const newUser = {
       user_name: userEmail.split("@")[0],
-      valid_from: validFrom?.format("YYYY-MM-DD"),
-      valid_till: validTill?.format("YYYY-MM-DD"),
+      // valid_from: validFrom?.format("YYYY-MM-DD"),
+      // valid_till: validTill?.format("YYYY-MM-DD"),
+      valid_from: validFrom?.startOf("day").format("YYYY-MM-DD HH:mm:ss"),
+      valid_till: validTill?.endOf("day").format("YYYY-MM-DD HH:mm:ss"),
+
+
       user_email: userEmail,
       user_password_ref: userPasswordRef,
       user_status: userStatus,
@@ -92,6 +144,8 @@ const AddUser = () => {
       user_create: new Date().toISOString(),
       user_update: new Date().toISOString(),
     };
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 
     try {
       const response = await fetch(`${backendUrl}/api/user/create`, {
@@ -101,19 +155,25 @@ const AddUser = () => {
         },
         body: JSON.stringify(newUser),
       });
-        if (response.status === 409) {
-          // Handle email conflict
-          setErrorMessage(
-            "Email ID already exists. Please use a different email."
-          );
-          setIsSubmitting(false);
-          return;
-        }
+      if (response.status === 409) {
+        // Handle email conflict
+        setErrorMessage(
+          "Email ID already exists. Please use a different email."
+        );
+        setIsSubmitting(false);
+        return;
+      }
+
 
       if (!response.ok) {
         const errorData = await response.json();
-        if (errorData.message && errorData.message.includes("Email ID already exists")) {
-          setErrorMessage("Email already exists. Please use a different email address.");
+        if (
+          errorData.message &&
+          errorData.message.includes("Email ID already exists")
+        ) {
+          setErrorMessage(
+            "Email already exists. Please use a different email address."
+          );
         } else {
           setErrorMessage(
             "Email already exists. Please use a different email address."
@@ -123,13 +183,16 @@ const AddUser = () => {
         return;
       }
 
+
       const result = await response.json();
       console.log("User created successfully:", result);
+
 
       setStatusMessage({
         type: "success",
         text: "User successfully created!",
       });
+
 
       setTimeout(() => {
         setStatusMessage(null);
@@ -149,6 +212,7 @@ const AddUser = () => {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <>
@@ -185,7 +249,7 @@ const AddUser = () => {
           <Typography variant="h4" textAlign="center" marginBottom={2}>
             Create User
           </Typography>
-          {statusMessage && !errorMessage &&(
+          {statusMessage && !errorMessage && (
             <Box display="flex" justifyContent="flex-start" marginTop={0}>
               <Alert severity={statusMessage.type}>{statusMessage.text}</Alert>
             </Box>
@@ -196,6 +260,7 @@ const AddUser = () => {
             </Box>
           )}
 
+
           <TextField
             label="Full Name"
             variant="outlined"
@@ -205,29 +270,36 @@ const AddUser = () => {
             required
           />
 
+
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="Valid From"
               value={validFrom}
-              onChange={(newValue) => setValidFrom(newValue)}
+              // onChange={(newValue) => setValidFrom(newValue)}
+              onChange={handleValidFromChange}
               renderInput={(params) => (
                 <TextField {...params} fullWidth required />
               )}
               minDate={dayjs()} // Disables previous dates before today
+              format="DD/MM/YYYY" // Display format
             />
           </LocalizationProvider>
+
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="Valid Till"
               value={validTill}
-              onChange={(newValue) => setValidTill(newValue)}
+              // onChange={(newValue) => setValidTill(newValue)}
+              onChange={handleValidTillChange}
               renderInput={(params) => (
                 <TextField {...params} fullWidth required />
               )}
               minDate={validFrom || dayjs()} // Disables dates before "Valid From"
+              format="DD/MM/YYYY" // Display format
             />
           </LocalizationProvider>
+
 
           <TextField
             label="Email ID"
@@ -239,6 +311,7 @@ const AddUser = () => {
             required
           />
 
+
           <TextField
             label="Password"
             variant="outlined"
@@ -247,6 +320,7 @@ const AddUser = () => {
             onChange={(e) => setUserPasswordRef(e.target.value)}
             required
           />
+
 
           <TextField
             label="Organization"
@@ -264,6 +338,7 @@ const AddUser = () => {
             ))}
           </TextField>
 
+
           <Button
             variant="contained"
             color="primary"
@@ -273,12 +348,11 @@ const AddUser = () => {
           >
             {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
-
-          
         </Box>
       </Box>
     </>
   );
 };
+
 
 export default AddUser;

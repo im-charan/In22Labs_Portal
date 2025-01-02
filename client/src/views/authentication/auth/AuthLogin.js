@@ -73,13 +73,21 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
             user_id: userId,
             user_name:userName, 
           });
-          const validtill = result.data.valid_till;
+          var till = new Date(result.data.valid_till);
+          var from = new Date(result.data.valid_from);
+          const validtill = till.toISOString().slice(0,10);
+          const validfrom = from.toISOString().slice(0,10);
+
           var date = new Date();
           var current = date.toISOString().slice(0,10);
           console.log(token);
           
           if(!token){
             setCaptcha('Please authenticate captcha');
+            return;
+          }
+          if(validfrom > current && validfrom !== null){
+            setIsLogin('Your account is not active yet');
             return;
           }
           if(validtill < current && validtill !== null){

@@ -52,8 +52,8 @@ const AdminHeader = () => {
           );
         }
         const result = await response.json();
-        if (result.user_name) {
-          setAdminName(result.user_name);
+        if (result.user_fullname) {
+          setAdminName(result.user_fullname);
         } else {
           console.error(
             "Invalid response: 'user_name' not found in API response"

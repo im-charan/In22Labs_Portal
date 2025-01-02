@@ -20,38 +20,6 @@ const fetchOrgIdByName = async (orgName) => {
   }
 };
 
-
-
-// //proxy const 
-// proxyDashboardContent = async (req, res) => {
-//   const { dashboardId } = req.params;
-//   const dashboardUrl = `https://www.youtube.com/embed/${dashboardId}`;
-
-//   try {
-//     // Fetch the HTML content of the dashboard
-//     const response = await axios.get(dashboardUrl);
-
-//     // Modify the HTML content to include a base tag that rewrites links to be relative to the proxy URL
-//     const htmlContent = response.data.replace(
-//       /<head>/,
-//       `<head><base href="http://localhost:5000/api/dashboard/proxy/${dashboardId}/" />`
-//     );
-
-//     // Set Content-Type header to text/html
-//     res.setHeader('Content-Type', 'text/html');
-
-//     // Return the modified HTML content
-//     res.send(htmlContent);
-//   } catch (error) {
-//     console.error(`Error fetching content for dashboard ID ${dashboardId}:`, error);
-//     res.status(500).json({
-//       success: false,
-//       message: "Error fetching dashboard content",
-//       error: error.message,
-//     });
-//   }
-// };
-
 // Create a new dashboard
 const createDashboard = async (dashboard) => {
   const client = await pool.connect();
@@ -174,11 +142,21 @@ const updateDashboard = async (dashboardId, dashboard) => {
 // Delete a dashboard
 const deleteDashboard = async (dashboardId) => {
   try {
+    await pool.query(
+      'BEGIN;'
+    )
     const query = `
       DELETE FROM in22labs.dashboards 
       WHERE dashboard_id = $1 
       RETURNING *
     `;
+    await pool.query(
+      'UPDATE in22labs.organizations SET dash_count = dash_count - 1 WHERE org_id = (SELECT org_id FROM in22labs.dashboards WHERE dashboard_id = $1)',
+      [dashboardId]
+    )
+    await pool.query(
+      'COMMIT;'
+    )
     const result = await pool.query(query, [dashboardId]);
     return result.rows[0];
   } catch (error) {
@@ -211,6 +189,5 @@ module.exports = {
   getAllDashboards,
   deleteDashboard,
   getDashboardById
- 
-  // Export the proxy function
+
 };

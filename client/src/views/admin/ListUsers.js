@@ -26,7 +26,7 @@ const ListUsers = () => {
         <BreadcrumbComponent  
           pageTitle="User Table" 
        
-          marginTop="0" // Adjust marginTop for alignment
+          marginTop="20px" // Adjust marginTop for alignment
         />
         <Button variant="contained" onClick={handleCreateUserClick}>
           Create User

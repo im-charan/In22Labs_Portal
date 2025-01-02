@@ -9,10 +9,7 @@ import {
 import { uniqueId } from 'lodash';
 
 const AdminMenuitems = [
-  {
-    navlabel: true,
-    subheader: 'Admin',
-  },
+  
   {
     id: uniqueId(),
     title: 'All Clients Dashboards',

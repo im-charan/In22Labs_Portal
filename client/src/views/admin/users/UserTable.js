@@ -81,6 +81,7 @@ const UserTable = () => {
         (user.organization_name?.toLowerCase() || "").includes(
           searchTerm.toLowerCase()
         );
+        user.user_email.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesSelectedOrganization =
         selectedOrganization === "All" ||
         user.organization_name === selectedOrganization;

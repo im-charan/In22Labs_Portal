@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Typography, Grid } from '@mui/material';
 import PageContainer from 'src/components/container/PageContainer';
-import BreadcrumbComponent from 'src/components/shared/BreadCrumbComponent';
 
 const ContactUsPage = () => (
     <PageContainer

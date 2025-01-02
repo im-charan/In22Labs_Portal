@@ -19,11 +19,10 @@ const ListOrganisation = () => {
       description="List of organisations"
     >
       <AdminHeader />
-      <Box display="flex" justifyContent="space-between" alignItems="center" mt={5} mb={2}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mt={5} mb={2} ml={2}>
         <BreadcrumbComponent
           pageTitle="Organisations Table"
-         
-          marginTop="0"
+          marginTop="20px"
         />
         <Button
           variant="contained"
